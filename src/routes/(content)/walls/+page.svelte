@@ -21,10 +21,11 @@
 			overview: string;
 			end?: string;
 		};
+		jump: 'none' | 'once' | 'twice'; // stand, single jump, double jump
 	}
 
 	let WALLS: Record<string, Wall> = {
-		WALL_1: {
+		A_SITE_PLANT: {
 			position: {
 				start: { x: 59.95, y: 56 },
 				angle: -50 * (Math.PI / 180)
@@ -32,9 +33,10 @@
 			images: {
 				deploy: '/walls/wall_1_deploy.jpg',
 				overview: '/walls/wall_1_overview.jpg'
-			}
+			},
+			jump: 'none'
 		},
-		WALL_2: {
+		MID: {
 			position: {
 				start: { x: 44.25, y: 55.5 },
 				angle: -62 * (Math.PI / 180)
@@ -43,7 +45,20 @@
 				deploy: '/walls/wall_2_deploy.jpg',
 				overview: '/walls/wall_2_overview.jpg',
 				end: '/walls/wall_2_end.jpg'
-			}
+			},
+			jump: 'none'
+		},
+		A_SITE_ATTACK: {
+			position: {
+				start: { x: 60.5, y: 52.5 },
+				angle: -58 * (Math.PI / 180)
+			},
+			images: {
+				deploy: '/walls/wall_3_deploy.jpg',
+				overview: '/walls/wall_3_overview.jpg',
+				end: '/walls/wall_3_end.jpg'
+			},
+			jump: 'twice'
 		}
 	};
 
@@ -96,8 +111,27 @@
 	<div>
 		{#if selectedWall}
 			<div class="flex flex-col gap-4">
-				<h2>{selectedWall}</h2>
-
+				<div class="flex items-center justify-between">
+					<h2>{selectedWall}</h2>
+					<div
+						class={[
+							'text-center text-gray-400',
+							{
+								'text-green-400': WALLS[selectedWall].jump === 'none',
+								'text-blue-400': WALLS[selectedWall].jump === 'once',
+								'text-red-400': WALLS[selectedWall].jump === 'twice'
+							}
+						]}
+					>
+						{#if WALLS[selectedWall].jump === 'none'}
+							Stand
+						{:else if WALLS[selectedWall].jump === 'once'}
+							Jump
+						{:else if WALLS[selectedWall].jump === 'twice'}
+							Double Jump
+						{/if}
+					</div>
+				</div>
 				<img
 					class="rounded-sm shadow-[0_0_10px_rgba(255,255,255,0.2)]"
 					src={WALLS[selectedWall].images.deploy}
