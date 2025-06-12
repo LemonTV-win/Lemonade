@@ -7,6 +7,6 @@
 	}
 
 	body {
-		@apply flex h-dvh items-center justify-center;
+		@apply flex h-dvh flex-col items-center justify-center;
 	}
 }
