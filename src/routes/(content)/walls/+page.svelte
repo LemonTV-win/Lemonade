@@ -83,7 +83,7 @@
 					x2={MAP_SIZE.x * (points[1].x / 100)}
 					y2={MAP_SIZE.y * (points[1].y / 100)}
 					stroke="transparent"
-					stroke-width="20"
+					stroke-width="15"
 					cursor="pointer"
 					role="button"
 					tabindex="0"
