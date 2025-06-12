@@ -35,7 +35,8 @@
 
 	function handleMouseMove(event: MouseEvent) {
 		const svg = event.currentTarget as SVGElement;
-		const rect = svg.getBoundingClientRect();
+		const mapImage = svg.querySelector('image') as SVGImageElement;
+		const rect = mapImage.getBoundingClientRect();
 		const x = ((event.clientX - rect.left) / rect.width) * 100;
 		const y = ((event.clientY - rect.top) / rect.height) * 100;
 		mousePosition = { x, y };
