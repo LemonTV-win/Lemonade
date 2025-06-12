@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { MAPS, type GameMap } from '$lib/data/game';
-
+	import { browser } from '$app/environment';
 	const MAP_SIZE = {
 		x: 500,
 		y: 500
@@ -26,7 +26,9 @@
 	}
 
 	let selectedWall: string | null = $state(Object.keys(WALLS)[0]);
-	let selectedMap: GameMap = $state('ocarnus');
+	let selectedMap: GameMap = $state(
+		browser ? (localStorage.getItem('selectedMap') as GameMap) || 'ocarnus' : 'ocarnus'
+	);
 	let mousePosition: Point = $state({ x: 0, y: 0 });
 
 	let walls: Map<string, Wall> = $derived(
@@ -44,6 +46,12 @@
 
 	$effect(() => {
 		selectedWall = [...walls.keys()][0];
+	});
+
+	$effect(() => {
+		if (browser) {
+			localStorage.setItem('selectedMap', selectedMap);
+		}
 	});
 </script>
 
