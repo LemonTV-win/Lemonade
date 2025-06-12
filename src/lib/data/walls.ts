@@ -1,6 +1,8 @@
 import type { Point, Position } from '$lib/data/geometry';
+import type { GameMap } from '$lib/data/game';
 
 export interface Wall {
+	map: GameMap;
 	name: string;
 	position: Position;
 	deploy_position: Point;
@@ -15,6 +17,7 @@ export interface Wall {
 
 export let WALLS: Record<string, Wall> = {
 	A_SITE_PLANT: {
+		map: 'orcanus',
 		name: 'A Site Plant',
 		position: {
 			start: { x: 59.95, y: 56 },
@@ -31,6 +34,7 @@ export let WALLS: Record<string, Wall> = {
 		jump: 'none'
 	},
 	MID_TO_A: {
+		map: 'orcanus',
 		name: 'Mid to A',
 		position: {
 			start: { x: 44.25, y: 55.5 },
@@ -49,6 +53,7 @@ export let WALLS: Record<string, Wall> = {
 		jump: 'none'
 	},
 	A_SITE_ATTACK: {
+		map: 'orcanus',
 		name: 'A Site Attack',
 		position: {
 			start: { x: 60.5, y: 52.5 },
