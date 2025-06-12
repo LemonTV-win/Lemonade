@@ -19,6 +19,7 @@
 		images: {
 			deploy: string;
 			overview: string;
+			end?: string;
 		};
 	}
 
@@ -32,10 +33,21 @@
 				deploy: '/walls/wall_1_deploy.jpg',
 				overview: '/walls/wall_1_overview.jpg'
 			}
+		},
+		WALL_2: {
+			position: {
+				start: { x: 44.25, y: 55.5 },
+				angle: -62 * (Math.PI / 180)
+			},
+			images: {
+				deploy: '/walls/wall_2_deploy.jpg',
+				overview: '/walls/wall_2_overview.jpg',
+				end: '/walls/wall_2_end.jpg'
+			}
 		}
 	};
 
-	const LENGTH = 24.5;
+	const LENGTH = 24.25;
 	function getPoints(start: Point, angle: number): [Point, Point] {
 		const x = start.x + LENGTH * Math.cos(angle);
 		const y = start.y + LENGTH * Math.sin(angle);
@@ -44,42 +56,73 @@
 			{ x, y }
 		];
 	}
+
+	let selectedWall: string | null = $state(Object.keys(WALLS)[0]);
 </script>
 
 <main class="my-auto grid grid-cols-2 gap-4 p-4">
 	<svg class="h-full w-full" viewBox={`0 0 ${MAP_SIZE.x} ${MAP_SIZE.y}`}>
 		<image xlink:href="/minimaps/ocarnus.png" x="0" y="0" width={MAP_SIZE.x} height={MAP_SIZE.y} />
-		{#each Object.entries(WALLS) as [key, wall]}
+		{#each Object.entries(WALLS).sort((a, b) => a[1].position.start.x - b[1].position.start.x) as [key, wall]}
 			{@const points = getPoints(wall.position.start, wall.position.angle)}
 			<line
 				x1={MAP_SIZE.x * (points[0].x / 100)}
 				y1={MAP_SIZE.y * (points[0].y / 100)}
 				x2={MAP_SIZE.x * (points[1].x / 100)}
 				y2={MAP_SIZE.y * (points[1].y / 100)}
-				stroke="red"
+				stroke="transparent"
+				stroke-width="20"
+				cursor="pointer"
+				role="button"
+				tabindex="0"
+				onclick={() => (selectedWall = key)}
+				onkeydown={(e) => {
+					if (e.key === 'Enter') selectedWall = key;
+				}}
+			/>
+
+			<!-- Visible wall line -->
+			<line
+				x1={MAP_SIZE.x * (points[0].x / 100)}
+				y1={MAP_SIZE.y * (points[0].y / 100)}
+				x2={MAP_SIZE.x * (points[1].x / 100)}
+				y2={MAP_SIZE.y * (points[1].y / 100)}
+				stroke={key === selectedWall ? 'yellow' : 'red'}
+				stroke-width={2}
+			/>
 			/>
 		{/each}
 	</svg>
 	<div>
-		{#each Object.entries(WALLS) as [key, wall]}
+		{#if selectedWall}
 			<div class="flex flex-col gap-4">
-				<h2>{key}</h2>
+				<h2>{selectedWall}</h2>
 
 				<img
 					class="rounded-sm shadow-[0_0_10px_rgba(255,255,255,0.2)]"
-					src={wall.images.deploy}
-					alt={`${key} deploy`}
+					src={WALLS[selectedWall].images.deploy}
+					alt={`${selectedWall} deploy`}
 					width={500}
 				/>
 
 				<img
 					class="rounded-sm shadow-[0_0_10px_rgba(255,255,255,0.2)]"
-					src={wall.images.overview}
-					alt={`${key} overview`}
+					src={WALLS[selectedWall].images.overview}
+					alt={`${selectedWall} overview`}
 					width={500}
 				/>
+
+				{#if WALLS[selectedWall].images.end}
+					<img
+						class="rounded-sm shadow-[0_0_10px_rgba(255,255,255,0.2)]"
+						src={WALLS[selectedWall].images.end}
+						alt={`${selectedWall} end`}
+					/>
+				{/if}
 			</div>
-		{/each}
+		{:else}
+			<p class="text-center text-gray-400">Select a wall</p>
+		{/if}
 	</div>
 </main>
 
