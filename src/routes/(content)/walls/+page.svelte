@@ -160,6 +160,7 @@
 	</div>
 	<div class="max-h-[500px] p-4">
 		{#if selectedWall}
+			{@const wall = WALLS[selectedWall]}
 			<div class="flex flex-col gap-4">
 				<div class="flex items-center justify-between">
 					<h2>{selectedWall}</h2>
@@ -167,17 +168,17 @@
 						class={[
 							'text-center text-gray-400',
 							{
-								'text-green-400': WALLS[selectedWall].jump === 'none',
-								'text-blue-400': WALLS[selectedWall].jump === 'once',
-								'text-red-400': WALLS[selectedWall].jump === 'twice'
+								'text-green-400': wall.jump === 'none',
+								'text-blue-400': wall.jump === 'once',
+								'text-red-400': wall.jump === 'twice'
 							}
 						]}
 					>
-						{#if WALLS[selectedWall].jump === 'none'}
+						{#if wall.jump === 'none'}
 							Stand
-						{:else if WALLS[selectedWall].jump === 'once'}
+						{:else if wall.jump === 'once'}
 							Jump
-						{:else if WALLS[selectedWall].jump === 'twice'}
+						{:else if wall.jump === 'twice'}
 							Double Jump
 						{/if}
 					</div>
@@ -186,7 +187,7 @@
 					<div class="group relative">
 						<img
 							class="h-auto max-h-[300px] w-full rounded-sm object-contain shadow-[0_0_10px_rgba(255,255,255,0.2)] transition-transform duration-300 hover:scale-105"
-							src={WALLS[selectedWall].images.deploy}
+							src={wall.images.deploy}
 							alt={`${selectedWall} deploy`}
 						/>
 						<div
@@ -199,7 +200,7 @@
 					<div class="group relative">
 						<img
 							class="h-auto max-h-[300px] w-full rounded-sm object-contain shadow-[0_0_10px_rgba(255,255,255,0.2)] transition-transform duration-300 hover:scale-105"
-							src={WALLS[selectedWall].images.overview}
+							src={wall.images.overview}
 							alt={`${selectedWall} overview`}
 						/>
 						<div
@@ -209,11 +210,11 @@
 						</div>
 					</div>
 
-					{#if WALLS[selectedWall].images.end}
+					{#if wall.images.end}
 						<div class="group relative">
 							<img
 								class="h-auto max-h-[300px] w-full rounded-sm object-contain shadow-[0_0_10px_rgba(255,255,255,0.2)] transition-transform duration-300 hover:scale-105"
-								src={WALLS[selectedWall].images.end}
+								src={wall.images.end}
 								alt={`${selectedWall} end`}
 							/>
 							<div
@@ -223,12 +224,12 @@
 							</div>
 						</div>
 					{/if}
-					{#if WALLS[selectedWall].video}
+					{#if wall.video}
 						<div class="group relative">
 							<!-- svelte-ignore a11y_media_has_caption -->
 							<video
 								class="h-auto max-h-[300px] w-full rounded-sm object-contain shadow-[0_0_10px_rgba(255,255,255,0.2)] transition-transform duration-300 hover:scale-105"
-								src={WALLS[selectedWall].video}
+								src={wall.video}
 								controls
 							></video>
 						</div>
