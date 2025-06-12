@@ -60,8 +60,24 @@
 
 <style>
 	:global(body) {
-		background-image: radial-gradient(circle at center, #1a1a1a, #000000);
+		background-image:
+			radial-gradient(circle at center, #1a1a1ad5, #000000d5), url('/maps/ocarnus.png');
 		background-attachment: fixed;
+		background-size: cover;
+		background-position: center;
+		background-repeat: no-repeat;
+	}
+
+	:global(body::before) {
+		content: '';
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		background-color: rgba(0, 0, 0, 0.75);
+		backdrop-filter: blur(10px);
+		z-index: -1;
 	}
 
 	.background-pattern {

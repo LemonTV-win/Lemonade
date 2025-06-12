@@ -133,12 +133,6 @@
 		background-position: center;
 		background-repeat: no-repeat;
 		position: relative;
-
-		display: flex;
-		flex-direction: column;
-		min-height: 100dvh;
-		justify-content: space-between;
-		align-items: center;
 	}
 
 	:global(body::before) {
