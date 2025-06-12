@@ -98,7 +98,7 @@
 </script>
 
 <main class="my-auto grid grid-cols-2 gap-4 p-4">
-	<div class="relative">
+	<div class="relative h-[500px]">
 		<svg
 			class="h-full w-full"
 			viewBox={`0 0 ${MAP_SIZE.x} ${MAP_SIZE.y}`}
@@ -156,7 +156,7 @@
 			X: {mousePosition.x.toFixed(2)}%, Y: {mousePosition.y.toFixed(2)}%
 		</div>
 	</div>
-	<div>
+	<div class="max-h-[500px] p-4">
 		{#if selectedWall}
 			<div class="flex flex-col gap-4">
 				<div class="flex items-center justify-between">
@@ -180,27 +180,48 @@
 						{/if}
 					</div>
 				</div>
-				<img
-					class="rounded-sm shadow-[0_0_10px_rgba(255,255,255,0.2)]"
-					src={WALLS[selectedWall].images.deploy}
-					alt={`${selectedWall} deploy`}
-					width={500}
-				/>
+				<div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+					<div class="group relative">
+						<img
+							class="h-auto max-h-[300px] w-full rounded-sm object-contain shadow-[0_0_10px_rgba(255,255,255,0.2)] transition-transform duration-300 hover:scale-105"
+							src={WALLS[selectedWall].images.deploy}
+							alt={`${selectedWall} deploy`}
+						/>
+						<div
+							class="absolute right-0 bottom-0 left-0 bg-black/50 p-2 opacity-0 transition-opacity group-hover:opacity-100"
+						>
+							Deploy Position
+						</div>
+					</div>
 
-				<img
-					class="rounded-sm shadow-[0_0_10px_rgba(255,255,255,0.2)]"
-					src={WALLS[selectedWall].images.overview}
-					alt={`${selectedWall} overview`}
-					width={500}
-				/>
+					<div class="group relative">
+						<img
+							class="h-auto max-h-[300px] w-full rounded-sm object-contain shadow-[0_0_10px_rgba(255,255,255,0.2)] transition-transform duration-300 hover:scale-105"
+							src={WALLS[selectedWall].images.overview}
+							alt={`${selectedWall} overview`}
+						/>
+						<div
+							class="absolute right-0 bottom-0 left-0 bg-black/50 p-2 opacity-0 transition-opacity group-hover:opacity-100"
+						>
+							Overview
+						</div>
+					</div>
 
-				{#if WALLS[selectedWall].images.end}
-					<img
-						class="rounded-sm shadow-[0_0_10px_rgba(255,255,255,0.2)]"
-						src={WALLS[selectedWall].images.end}
-						alt={`${selectedWall} end`}
-					/>
-				{/if}
+					{#if WALLS[selectedWall].images.end}
+						<div class="group relative">
+							<img
+								class="h-auto max-h-[300px] w-full rounded-sm object-contain shadow-[0_0_10px_rgba(255,255,255,0.2)] transition-transform duration-300 hover:scale-105"
+								src={WALLS[selectedWall].images.end}
+								alt={`${selectedWall} end`}
+							/>
+							<div
+								class="absolute right-0 bottom-0 left-0 bg-black/50 p-2 opacity-0 transition-opacity group-hover:opacity-100"
+							>
+								End Result
+							</div>
+						</div>
+					{/if}
+				</div>
 			</div>
 		{:else}
 			<p class="text-center text-gray-400">Select a wall</p>
