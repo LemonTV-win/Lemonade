@@ -17,7 +17,7 @@ export interface Wall {
 
 export let WALLS: Record<string, Wall> = {
 	A_SITE_PLANT: {
-		map: 'orcanus',
+		map: 'ocarnus',
 		name: 'A Site Plant',
 		position: {
 			start: { x: 59.95, y: 56 },
@@ -34,7 +34,7 @@ export let WALLS: Record<string, Wall> = {
 		jump: 'none'
 	},
 	MID_TO_A: {
-		map: 'orcanus',
+		map: 'ocarnus',
 		name: 'Mid to A',
 		position: {
 			start: { x: 44.25, y: 55.5 },
@@ -53,7 +53,7 @@ export let WALLS: Record<string, Wall> = {
 		jump: 'none'
 	},
 	A_SITE_ATTACK: {
-		map: 'orcanus',
+		map: 'ocarnus',
 		name: 'A Site Attack',
 		position: {
 			start: { x: 60.5, y: 52.5 },

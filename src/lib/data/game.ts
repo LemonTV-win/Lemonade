@@ -6,6 +6,6 @@ export const MAPS = [
 	// 'space_lab',
 	// 'cauchy_district',
 	// 'cosmite',
-	'orcanus'
+	'ocarnus'
 ] as const;
 export type GameMap = (typeof MAPS)[number];
