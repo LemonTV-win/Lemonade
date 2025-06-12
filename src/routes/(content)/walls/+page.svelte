@@ -15,6 +15,7 @@
 	}
 
 	interface Wall {
+		name: string;
 		position: Position;
 		deploy_position: Point;
 		images: {
@@ -28,6 +29,7 @@
 
 	let WALLS: Record<string, Wall> = {
 		A_SITE_PLANT: {
+			name: 'A Site Plant',
 			position: {
 				start: { x: 59.95, y: 56 },
 				angle: -50 * (Math.PI / 180)
@@ -42,7 +44,8 @@
 			},
 			jump: 'none'
 		},
-		MID: {
+		MID_TO_A: {
+			name: 'Mid to A',
 			position: {
 				start: { x: 44.25, y: 55.5 },
 				angle: -62 * (Math.PI / 180)
@@ -60,6 +63,7 @@
 			jump: 'none'
 		},
 		A_SITE_ATTACK: {
+			name: 'A Site Attack',
 			position: {
 				start: { x: 60.5, y: 52.5 },
 				angle: -58 * (Math.PI / 180)
@@ -163,7 +167,7 @@
 			{@const wall = WALLS[selectedWall]}
 			<div class="flex flex-col gap-4">
 				<div class="flex items-center justify-between">
-					<h2>{selectedWall}</h2>
+					<h2>{wall.name}</h2>
 					<div
 						class={[
 							'text-center text-gray-400',
