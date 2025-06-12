@@ -3,8 +3,10 @@ import type { GameMap } from '$lib/data/game';
 
 export interface Wall {
 	map: GameMap;
-	direction: 'vertical' | 'horizontal';
 	name: string;
+	direction: 'vertical' | 'horizontal';
+	ultimate: boolean; // iron wall
+	transparent: boolean; // awaken 3
 	position: Position;
 	deploy_position: Point;
 	images: {
@@ -21,6 +23,8 @@ export let WALLS: Record<string, Wall> = {
 		map: 'ocarnus',
 		name: 'A Site Plant',
 		direction: 'vertical',
+		ultimate: false,
+		transparent: false,
 		position: {
 			start: { x: 59.95, y: 56 },
 			angle: -50 * (Math.PI / 180)
@@ -37,8 +41,10 @@ export let WALLS: Record<string, Wall> = {
 	},
 	MID_TO_A: {
 		map: 'ocarnus',
-		direction: 'vertical',
 		name: 'Mid to A',
+		direction: 'vertical',
+		ultimate: false,
+		transparent: false,
 		position: {
 			start: { x: 44.25, y: 55.5 },
 			angle: -62 * (Math.PI / 180)
@@ -57,8 +63,10 @@ export let WALLS: Record<string, Wall> = {
 	},
 	A_SITE_ATTACK: {
 		map: 'ocarnus',
-		direction: 'vertical',
 		name: 'A Site Attack',
+		direction: 'vertical',
+		ultimate: false,
+		transparent: false,
 		position: {
 			start: { x: 60.5, y: 52.5 },
 			angle: -58 * (Math.PI / 180)
