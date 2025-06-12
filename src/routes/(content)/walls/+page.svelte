@@ -15,10 +15,15 @@
 		windy_town: 'Windy Town'
 	};
 
+	const MAP_SCALE_FACTOR: Record<GameMap, number> = {
+		ocarnus: 1,
+		windy_town: 0.94
+	};
+
 	const LENGTH = 24.25;
-	function getPoints(start: Point, angle: number): [Point, Point] {
-		const x = start.x + LENGTH * Math.cos(angle);
-		const y = start.y + LENGTH * Math.sin(angle);
+	function getPoints(start: Point, angle: number, scale: number = 1): [Point, Point] {
+		const x = start.x + LENGTH * Math.cos(angle) * scale;
+		const y = start.y + LENGTH * Math.sin(angle) * scale;
 		return [
 			{ x: start.x, y: start.y },
 			{ x, y }
@@ -81,7 +86,11 @@
 				height={MAP_SIZE.y}
 			/>
 			{#each [...walls.entries()].sort((a, b) => a[1].position.start.x - b[1].position.start.x) as [key, wall]}
-				{@const points = getPoints(wall.position.start, wall.position.angle)}
+				{@const points = getPoints(
+					wall.position.start,
+					wall.position.angle,
+					MAP_SCALE_FACTOR[selectedMap]
+				)}
 
 				{#if key === selectedWall}
 					<image
