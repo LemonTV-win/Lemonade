@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { MAPS, type GameMap } from '$lib/data/game';
+
 	const MAP_SIZE = {
 		x: 500,
 		y: 500
@@ -7,6 +9,11 @@
 	import type { Point, Position } from '$lib/data/geometry';
 
 	import { WALLS, type Wall } from '$lib/data/walls';
+
+	const MAP_NAME: Record<GameMap, string> = {
+		ocarnus: 'Ocarnus',
+		windy_town: 'Windy Town'
+	};
 
 	const LENGTH = 24.25;
 	function getPoints(start: Point, angle: number): [Point, Point] {
@@ -19,7 +26,12 @@
 	}
 
 	let selectedWall: string | null = $state(Object.keys(WALLS)[0]);
+	let selectedMap: GameMap = $state('ocarnus');
 	let mousePosition: Point = $state({ x: 0, y: 0 });
+
+	let walls: Map<string, Wall> = $derived(
+		new Map(Object.entries(WALLS).filter(([_, wall]) => wall.map === selectedMap))
+	);
 
 	function handleMouseMove(event: MouseEvent) {
 		const svg = event.currentTarget as SVGElement;
@@ -32,6 +44,13 @@
 
 <main class="my-auto grid grid-cols-2 gap-4 p-4">
 	<div class="relative h-[500px]">
+		<div class="absolute top-2 right-2 z-10">
+			<select bind:value={selectedMap} class="rounded bg-black/50 px-2 py-1 text-sm text-white">
+				{#each MAPS as map}
+					<option value={map}>{MAP_NAME[map]}</option>
+				{/each}
+			</select>
+		</div>
 		<svg
 			class="h-full w-full"
 			viewBox={`0 0 ${MAP_SIZE.x} ${MAP_SIZE.y}`}
@@ -39,13 +58,13 @@
 			role="presentation"
 		>
 			<image
-				xlink:href="/minimaps/ocarnus.png"
+				xlink:href="/minimaps/{selectedMap}.png"
 				x="0"
 				y="0"
 				width={MAP_SIZE.x}
 				height={MAP_SIZE.y}
 			/>
-			{#each Object.entries(WALLS).sort((a, b) => a[1].position.start.x - b[1].position.start.x) as [key, wall]}
+			{#each [...walls.entries()].sort((a, b) => a[1].position.start.x - b[1].position.start.x) as [key, wall]}
 				{@const points = getPoints(wall.position.start, wall.position.angle)}
 
 				{#if key === selectedWall}
