@@ -46,7 +46,7 @@
 	}
 </script>
 
-<main class="grid grid-cols-2 gap-4 p-4">
+<main class="my-auto grid grid-cols-2 gap-4 p-4">
 	<svg class="h-full w-full" viewBox={`0 0 ${MAP_SIZE.x} ${MAP_SIZE.y}`}>
 		<image xlink:href="/minimaps/ocarnus.png" x="0" y="0" width={MAP_SIZE.x} height={MAP_SIZE.y} />
 		{#each Object.entries(WALLS) as [key, wall]}
@@ -65,10 +65,42 @@
 			<div class="flex flex-col gap-4">
 				<h2>{key}</h2>
 
-				<img class="rounded-sm" src={wall.images.deploy} alt={`${key} deploy`} width={500} />
+				<img
+					class="rounded-sm shadow-[0_0_10px_rgba(255,255,255,0.2)]"
+					src={wall.images.deploy}
+					alt={`${key} deploy`}
+					width={500}
+				/>
 
-				<img class="rounded-sm" src={wall.images.overview} alt={`${key} overview`} width={500} />
+				<img
+					class="rounded-sm shadow-[0_0_10px_rgba(255,255,255,0.2)]"
+					src={wall.images.overview}
+					alt={`${key} overview`}
+					width={500}
+				/>
 			</div>
 		{/each}
 	</div>
 </main>
+
+<style>
+	:global(body) {
+		background-image: url('/maps/ocarnus.png');
+		background-size: cover;
+		background-position: center;
+		background-repeat: no-repeat;
+		position: relative;
+	}
+
+	:global(body::before) {
+		content: '';
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		background-color: rgba(0, 0, 0, 0.75);
+		backdrop-filter: blur(10px);
+		z-index: -1;
+	}
+</style>

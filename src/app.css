@@ -1,2 +1,12 @@
 @import 'tailwindcss';
 @plugin '@tailwindcss/forms';
+
+@layer base {
+	html {
+		@apply text-gray-100;
+	}
+
+	body {
+		@apply flex h-dvh items-center justify-center;
+	}
+}
