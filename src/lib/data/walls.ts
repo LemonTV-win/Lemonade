@@ -3,6 +3,7 @@ import type { GameMap } from '$lib/data/game';
 
 export interface Wall {
 	map: GameMap;
+	direction: 'vertical' | 'horizontal';
 	name: string;
 	position: Position;
 	deploy_position: Point;
@@ -19,6 +20,7 @@ export let WALLS: Record<string, Wall> = {
 	A_SITE_PLANT: {
 		map: 'ocarnus',
 		name: 'A Site Plant',
+		direction: 'vertical',
 		position: {
 			start: { x: 59.95, y: 56 },
 			angle: -50 * (Math.PI / 180)
@@ -35,6 +37,7 @@ export let WALLS: Record<string, Wall> = {
 	},
 	MID_TO_A: {
 		map: 'ocarnus',
+		direction: 'vertical',
 		name: 'Mid to A',
 		position: {
 			start: { x: 44.25, y: 55.5 },
@@ -54,6 +57,7 @@ export let WALLS: Record<string, Wall> = {
 	},
 	A_SITE_ATTACK: {
 		map: 'ocarnus',
+		direction: 'vertical',
 		name: 'A Site Attack',
 		position: {
 			start: { x: 60.5, y: 52.5 },
