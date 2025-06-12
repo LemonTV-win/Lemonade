@@ -3,10 +3,39 @@
 
 @layer base {
 	html {
-		@apply text-gray-100;
+		@apply scroll-smooth text-gray-100;
+		font-family:
+			'Inter',
+			system-ui,
+			-apple-system,
+			sans-serif;
 	}
 
 	body {
-		@apply flex h-dvh flex-col items-center justify-center;
+		@apply flex h-dvh flex-col bg-black;
+	}
+
+	/* Custom scrollbar */
+	::-webkit-scrollbar {
+		width: 8px;
+		height: 8px;
+	}
+
+	::-webkit-scrollbar-track {
+		@apply bg-black;
+	}
+
+	::-webkit-scrollbar-thumb {
+		@apply rounded-full bg-amber-800/50;
+	}
+
+	::-webkit-scrollbar-thumb:hover {
+		@apply bg-amber-700/70;
+	}
+}
+
+@layer utilities {
+	.text-shadow {
+		text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
 	}
 }

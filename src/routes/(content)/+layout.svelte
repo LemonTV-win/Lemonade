@@ -1,13 +1,25 @@
 <script lang="ts">
-	import '../app.css';
+	import '../../app.css';
 
 	let { children } = $props();
 </script>
 
 <header class="p-4">
 	<p class="flex items-center gap-2 text-lg font-medium">
-		<img src="/favicon-96x96.png" alt="Lemonade" width={24} height={24} />
-		<span>Lemonade</span>
+		<a href="/" class="group flex items-center gap-3">
+			<img
+				src="/favicon-96x96.png"
+				alt="Lemonade"
+				width={32}
+				height={32}
+				class="transition-transform duration-300 group-hover:rotate-12"
+			/>
+			<span
+				class="bg-gradient-to-r from-yellow-300 to-amber-500 bg-clip-text text-xl font-semibold text-transparent"
+			>
+				Lemonade
+			</span>
+		</a>
 	</p>
 </header>
 
