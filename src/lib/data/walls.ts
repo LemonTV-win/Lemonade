@@ -94,12 +94,12 @@ export let WALLS: Record<string, Wall> = {
 			ultimate: false,
 			transparent: false,
 			position: {
-				start: { x: 59.06, y: 45.38 },
-				angle: -50 * (Math.PI / 180)
+				start: { x: 65.11, y: 44.98 },
+				angle: -47 * (Math.PI / 180)
 			},
 			deploy_position: {
-				x: 59.54,
-				y: 44.38
+				x: 65.83,
+				y: 44.58
 			},
 			images: {
 				deploy: '/walls/wall_wt_a_plant_deploy.jpg',
@@ -115,12 +115,12 @@ export let WALLS: Record<string, Wall> = {
 			ultimate: true,
 			transparent: false,
 			position: {
-				start: { x: 59.06, y: 45.38 },
-				angle: -45 * (Math.PI / 180)
+				start: { x: 64.88, y: 44.58 },
+				angle: -34.5 * (Math.PI / 180)
 			},
 			deploy_position: {
-				x: 59.54,
-				y: 44.38
+				x: 65.83,
+				y: 44.58
 			},
 			images: {
 				deploy: '/walls/wall_wt_a_ult_deploy.jpg',
