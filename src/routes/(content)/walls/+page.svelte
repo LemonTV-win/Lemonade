@@ -22,6 +22,7 @@
 			overview: string;
 			end?: string;
 		};
+		video?: string;
 		jump: 'none' | 'once' | 'twice'; // stand, single jump, double jump
 	}
 
@@ -55,6 +56,7 @@
 				overview: '/walls/wall_2_overview.jpg',
 				end: '/walls/wall_2_end.jpg'
 			},
+			video: '/walls/wall_2_video.mp4',
 			jump: 'none'
 		},
 		A_SITE_ATTACK: {
@@ -219,6 +221,16 @@
 							>
 								End Result
 							</div>
+						</div>
+					{/if}
+					{#if WALLS[selectedWall].video}
+						<div class="group relative">
+							<!-- svelte-ignore a11y_media_has_caption -->
+							<video
+								class="h-auto max-h-[300px] w-full rounded-sm object-contain shadow-[0_0_10px_rgba(255,255,255,0.2)] transition-transform duration-300 hover:scale-105"
+								src={WALLS[selectedWall].video}
+								controls
+							></video>
 						</div>
 					{/if}
 				</div>
