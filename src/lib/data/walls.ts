@@ -128,6 +128,30 @@ export let WALLS: Record<string, Wall> = {
 				end: '/walls/wall_wt_a_ult_end.jpg'
 			},
 			jump: 'none'
+		},
+		WT_B_DEFAULT: {
+			map: 'windy_town',
+			name: 'B Site Default',
+			direction: 'vertical',
+			ultimate: false,
+			transparent: false,
+			position: {
+				start: {
+					x: 24.11,
+					y: 41.18
+				},
+				angle: -54 * (Math.PI / 180)
+			},
+			deploy_position: {
+				x: 23.91,
+				y: 41.78
+			},
+			images: {
+				deploy: '/walls/wall_wt_b_default_deploy.jpg',
+				overview: '/walls/wall_wt_b_default_overview.jpg',
+				end: '/walls/wall_wt_b_default_end.jpg'
+			},
+			jump: 'none'
 		}
 	}
 };
