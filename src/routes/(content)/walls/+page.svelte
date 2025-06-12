@@ -12,12 +12,24 @@
 
 	const MAP_NAME: Record<GameMap, string> = {
 		ocarnus: 'Ocarnus',
-		windy_town: 'Windy Town'
+		windy_town: 'Windy Town',
+		base_404: 'Base 404',
+		area_88: 'Area 88',
+		port_euler: 'Port Euler',
+		space_lab: 'Space Lab',
+		cauchy_district: 'Cauchy District',
+		cosmite: 'Cosmite'
 	};
 
 	const MAP_SCALE_FACTOR: Record<GameMap, number> = {
 		ocarnus: 1,
-		windy_town: 0.94
+		windy_town: 0.94,
+		base_404: 1,
+		area_88: 1,
+		port_euler: 1,
+		space_lab: 1,
+		cauchy_district: 1,
+		cosmite: 1
 	};
 
 	const LENGTH = 24.25;
@@ -68,7 +80,10 @@
 				class="min-w-32 rounded bg-black/50 px-2 py-1 text-sm text-white"
 			>
 				{#each MAPS as map}
-					<option value={map}>{MAP_NAME[map]}</option>
+					<option value={map}
+						>{MAP_NAME[map]} ({Object.values(WALLS).filter((wall) => wall.map === map)
+							.length})</option
+					>
 				{/each}
 			</select>
 		</div>
