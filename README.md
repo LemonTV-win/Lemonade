@@ -1,4 +1,4 @@
-# 🍋🥤 LemonJuice
+# 🍋🥤 Lemonade
 
 [![Project stage: Research][project-stage-badge: Research]][project-stage-page]
 
