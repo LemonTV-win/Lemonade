@@ -40,12 +40,19 @@
 		const y = ((event.clientY - rect.top) / rect.height) * 100;
 		mousePosition = { x, y };
 	}
+
+	$effect(() => {
+		selectedWall = [...walls.keys()][0];
+	});
 </script>
 
 <main class="my-auto grid grid-cols-2 gap-4 p-4">
 	<div class="relative h-[500px]">
-		<div class="absolute top-2 right-2 z-10">
-			<select bind:value={selectedMap} class="rounded bg-black/50 px-2 py-1 text-sm text-white">
+		<div class="absolute top-2 right-2 z-10 flex gap-2">
+			<select
+				bind:value={selectedMap}
+				class="min-w-32 rounded bg-black/50 px-2 py-1 text-sm text-white"
+			>
 				{#each MAPS as map}
 					<option value={map}>{MAP_NAME[map]}</option>
 				{/each}
@@ -113,7 +120,14 @@
 			{@const wall = WALLS[selectedWall]}
 			<div class="flex flex-col gap-4">
 				<div class="flex items-center justify-between">
-					<h2>{wall.name}</h2>
+					<select
+						bind:value={selectedWall}
+						class="text-md min-w-64 rounded bg-black/50 px-2 py-1 text-white focus:ring-0 focus:outline-none"
+					>
+						{#each [...walls.entries()] as [key, wall]}
+							<option value={key} class="bg-black">{wall.name}</option>
+						{/each}
+					</select>
 					<div
 						class={[
 							'text-center text-gray-400',
