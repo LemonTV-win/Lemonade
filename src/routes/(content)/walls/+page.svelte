@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { MAPS, type GameMap } from '$lib/data/game';
 	import { browser } from '$app/environment';
+	import FilterPanel from '$lib/components/FilterPanel.svelte';
 	const MAP_SIZE = {
 		x: 500,
 		y: 500
@@ -32,10 +33,52 @@
 		cosmite: 1
 	};
 
+	let selectedWall: string | null = $state(Object.keys(WALLS)[0]);
+	let selectedMap: GameMap = $state(
+		browser ? (localStorage.getItem('selectedMap') as GameMap) || 'ocarnus' : 'ocarnus'
+	);
+	let mousePosition: Point = $state({ x: 0, y: 0 });
+	let selectedFilters = $state<{
+		direction?: ('vertical' | 'horizontal')[];
+		ultimate?: boolean[];
+		transparent?: boolean[];
+		jump?: ('none' | 'once' | 'twice')[];
+	}>({});
+
 	const mapWallCounts = $derived(
 		Object.fromEntries(
 			MAPS.map((map) => [map, Object.values(WALLS).filter((wall) => wall.map === map).length])
 		)
+	);
+
+	const filteredWallCounts = $derived(
+		Object.fromEntries(
+			MAPS.map((map) => [
+				map,
+				Object.values(WALLS).filter((wall) => {
+					if (wall.map !== map) return false;
+					if (
+						selectedFilters.direction?.length &&
+						!selectedFilters.direction.includes(wall.direction)
+					)
+						return false;
+					if (selectedFilters.ultimate?.length && !selectedFilters.ultimate.includes(wall.ultimate))
+						return false;
+					if (
+						selectedFilters.transparent?.length &&
+						!selectedFilters.transparent.includes(wall.transparent)
+					)
+						return false;
+					if (selectedFilters.jump?.length && !selectedFilters.jump.includes(wall.jump))
+						return false;
+					return true;
+				}).length
+			])
+		)
+	);
+
+	const hasActiveFilters = $derived(
+		Object.values(selectedFilters).some((filter) => filter && filter.length > 0)
 	);
 
 	const sortedMaps = $derived([...MAPS].sort((a, b) => mapWallCounts[b] - mapWallCounts[a]));
@@ -50,14 +93,28 @@
 		];
 	}
 
-	let selectedWall: string | null = $state(Object.keys(WALLS)[0]);
-	let selectedMap: GameMap = $state(
-		browser ? (localStorage.getItem('selectedMap') as GameMap) || 'ocarnus' : 'ocarnus'
-	);
-	let mousePosition: Point = $state({ x: 0, y: 0 });
-
 	let walls: Map<string, Wall> = $derived(
-		new Map(Object.entries(WALLS).filter(([_, wall]) => wall.map === selectedMap))
+		new Map(
+			Object.entries(WALLS)
+				.filter(([_, wall]) => wall.map === selectedMap)
+				.filter(([_, wall]) => {
+					if (
+						selectedFilters.direction?.length &&
+						!selectedFilters.direction.includes(wall.direction)
+					)
+						return false;
+					if (selectedFilters.ultimate?.length && !selectedFilters.ultimate.includes(wall.ultimate))
+						return false;
+					if (
+						selectedFilters.transparent?.length &&
+						!selectedFilters.transparent.includes(wall.transparent)
+					)
+						return false;
+					if (selectedFilters.jump?.length && !selectedFilters.jump.includes(wall.jump))
+						return false;
+					return true;
+				})
+		)
 	);
 
 	function handleMouseMove(event: MouseEvent) {
@@ -83,12 +140,17 @@
 <main class="my-auto grid grid-cols-2 gap-4 p-4">
 	<div class="relative h-[500px]">
 		<div class="absolute top-2 right-2 z-10 flex gap-2">
+			<FilterPanel bind:selectedFilters />
 			<select
 				bind:value={selectedMap}
 				class="min-w-32 rounded bg-black/50 px-2 py-1 text-sm text-white"
 			>
 				{#each sortedMaps as map}
-					<option value={map}>{MAP_NAME[map]} ({mapWallCounts[map]})</option>
+					<option value={map}>
+						{MAP_NAME[map]} ({hasActiveFilters
+							? `${filteredWallCounts[map]}/${mapWallCounts[map]}`
+							: mapWallCounts[map]})
+					</option>
 				{/each}
 			</select>
 		</div>
@@ -153,7 +215,7 @@
 			X: {mousePosition.x.toFixed(2)}%, Y: {mousePosition.y.toFixed(2)}%
 		</div>
 	</div>
-	<div class="max-h-[500px] p-4">
+	<div class="max-h-[500px] p-2">
 		{#if selectedWall}
 			{@const wall = WALLS[selectedWall]}
 			<div class="flex flex-col gap-4">
