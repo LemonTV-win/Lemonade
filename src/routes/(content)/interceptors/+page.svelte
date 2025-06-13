@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { MAPS, type GameMap } from '$lib/data/game';
 	import { browser } from '$app/environment';
-	import FilterPanel from '$lib/components/FilterPanel.svelte';
 	const MAP_SIZE = {
 		x: 500,
 		y: 500
@@ -38,12 +37,6 @@
 		browser ? (localStorage.getItem('selectedMap') as GameMap) || 'ocarnus' : 'ocarnus'
 	);
 	let mousePosition: Point = $state({ x: 0, y: 0 });
-	let selectedFilters = $state<{
-		direction?: ('vertical' | 'horizontal')[];
-		ultimate?: boolean[];
-		transparent?: boolean[];
-		jump?: ('none' | 'once' | 'twice')[];
-	}>({});
 
 	const mapInterceptorCounts = $derived(
 		Object.fromEntries(
@@ -87,7 +80,6 @@
 <main class="my-auto grid grid-cols-2 gap-4 p-4">
 	<div class="relative h-[500px]">
 		<div class="absolute top-2 right-2 z-10 flex gap-2">
-			<FilterPanel bind:selectedFilters />
 			<select
 				bind:value={selectedMap}
 				class="min-w-32 rounded bg-black/50 px-2 py-1 text-sm text-white"
