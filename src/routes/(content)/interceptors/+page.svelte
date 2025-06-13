@@ -49,6 +49,8 @@
 			localStorage.setItem('selectedMap', selectedMap);
 		}
 	});
+
+	const INTERCEPTOR_RADIUS = 30;
 </script>
 
 <main class="my-auto grid grid-cols-2 gap-4 p-4">
@@ -93,7 +95,7 @@
 					<circle
 						cx={MAP_SIZE.x * (interceptor.position.x / 100)}
 						cy={MAP_SIZE.y * (interceptor.position.y / 100)}
-						r="30"
+						r={INTERCEPTOR_RADIUS * MAP_SCALE_FACTOR[selectedMap]}
 						fill="transparent"
 						stroke="yellow"
 						stroke-width="1"
