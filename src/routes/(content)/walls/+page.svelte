@@ -32,6 +32,14 @@
 		cosmite: 1
 	};
 
+	const mapWallCounts = $derived(
+		Object.fromEntries(
+			MAPS.map((map) => [map, Object.values(WALLS).filter((wall) => wall.map === map).length])
+		)
+	);
+
+	const sortedMaps = $derived([...MAPS].sort((a, b) => mapWallCounts[b] - mapWallCounts[a]));
+
 	const LENGTH = 24.25;
 	function getPoints(start: Point, angle: number, scale: number = 1): [Point, Point] {
 		const x = start.x + LENGTH * Math.cos(angle) * scale;
@@ -79,11 +87,8 @@
 				bind:value={selectedMap}
 				class="min-w-32 rounded bg-black/50 px-2 py-1 text-sm text-white"
 			>
-				{#each MAPS as map}
-					<option value={map}
-						>{MAP_NAME[map]} ({Object.values(WALLS).filter((wall) => wall.map === map)
-							.length})</option
-					>
+				{#each sortedMaps as map}
+					<option value={map}>{MAP_NAME[map]} ({mapWallCounts[map]})</option>
 				{/each}
 			</select>
 		</div>
