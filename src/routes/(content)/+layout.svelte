@@ -1,11 +1,12 @@
 <script lang="ts">
 	import '../../app.css';
+	import NavMenu from '$lib/components/NavMenu.svelte';
 
 	let { children } = $props();
 </script>
 
 <div class="mx-auto flex min-h-full flex-col">
-	<header class="mx-auto p-4">
+	<header class="mx-auto flex flex-col gap-4 p-4">
 		<p class="flex items-center gap-2 text-lg font-medium">
 			<a href="/" class="group flex items-center gap-3">
 				<img
@@ -23,6 +24,7 @@
 			</a>
 		</p>
 	</header>
+	<NavMenu />
 
 	{@render children()}
 
