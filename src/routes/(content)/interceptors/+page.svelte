@@ -116,12 +116,22 @@
 					}}
 				/>
 
-				<circle
-					cx={MAP_SIZE.x * (interceptor.position.x / 100)}
-					cy={MAP_SIZE.y * (interceptor.position.y / 100)}
-					r="2"
-					fill={key === selectedInterceptor ? 'yellow' : 'red'}
-				/>
+				{#if key === selectedInterceptor}
+					<image
+						xlink:href="/icons/interceptor.png"
+						x={MAP_SIZE.x * (interceptor.position.x / 100) - 10}
+						y={MAP_SIZE.y * (interceptor.position.y / 100) - 10}
+						width="20"
+						height="20"
+					/>
+				{:else}
+					<circle
+						cx={MAP_SIZE.x * (interceptor.position.x / 100)}
+						cy={MAP_SIZE.y * (interceptor.position.y / 100)}
+						r="2"
+						fill="red"
+					/>
+				{/if}
 			{/each}
 		</svg>
 		<div class="absolute bottom-2 left-2 rounded bg-black/50 px-2 py-1 text-sm text-white">
