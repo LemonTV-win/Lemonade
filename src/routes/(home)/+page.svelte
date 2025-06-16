@@ -50,8 +50,9 @@
 			</a>
 			<a
 				href="/interceptors"
-				class="rounded-lg border border-amber-700/50 bg-amber-600/20 px-6 py-3 text-amber-300 backdrop-blur-sm transition-all hover:scale-105 hover:bg-amber-500/30"
+				class="flex items-center gap-2 rounded-lg border border-amber-700/50 bg-amber-600/20 px-6 py-3 text-amber-300 backdrop-blur-sm transition-all hover:scale-105 hover:bg-amber-500/30"
 			>
+				<img src="/icons/interceptor.png" alt="Interceptor" class="h-5 w-5" />
 				Interceptors
 			</a>
 		</nav>
