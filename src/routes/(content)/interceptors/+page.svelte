@@ -285,12 +285,18 @@
 					cy={MAP_SIZE.y * (interceptor.position.y / 100)}
 					r="10"
 					fill="transparent"
-					cursor="pointer"
+					cursor={editingInterceptor ? 'default' : 'pointer'}
 					role="button"
 					tabindex="0"
-					onclick={() => (selectedInterceptor = key)}
+					onclick={() => {
+						if (!editingInterceptor) {
+							selectedInterceptor = key;
+						}
+					}}
 					onkeydown={(e) => {
-						if (e.key === 'Enter') selectedInterceptor = key;
+						if (e.key === 'Enter' && !editingInterceptor) {
+							selectedInterceptor = key;
+						}
 					}}
 				/>
 
@@ -323,7 +329,14 @@
 				<div class="flex items-center justify-between">
 					<select
 						bind:value={selectedInterceptor}
-						class="text-md min-w-64 rounded bg-black/50 px-2 py-1 text-white focus:ring-0 focus:outline-none"
+						disabled={!!editingInterceptor}
+						class={[
+							'text-md min-w-64 rounded px-2 py-1 text-white focus:ring-0 focus:outline-none',
+							{
+								'bg-black/50': !editingInterceptor,
+								'cursor-not-allowed bg-gray-600/30 text-gray-400': editingInterceptor
+							}
+						]}
 					>
 						{#each [...interceptors.entries()] as [key, interceptorItem]}
 							<option value={key} class="bg-black">{interceptorItem.name}</option>
