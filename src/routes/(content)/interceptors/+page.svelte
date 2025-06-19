@@ -9,16 +9,20 @@
 
 	// Merge server data with legacy data, preferring server data
 	const serverInterceptors = data.interceptors || {};
-	const mergedInterceptors: Record<string, Interceptor> = {
+	let mergedInterceptors: Record<string, Interceptor> = $state({
 		...INTERCEPTORS,
 		...serverInterceptors
-	};
+	});
 
 	let selectedInterceptor: string | null = $state(Object.keys(mergedInterceptors)[0] || null);
 	let selectedMap: GameMap = $state(
 		browser ? (localStorage.getItem('selectedMap') as GameMap) || 'ocarnus' : 'ocarnus'
 	);
 	let mousePosition: Point = $state({ x: 0, y: 0 });
+	let isEditMode = $state(false);
+	let editingInterceptor: string | null = $state(null);
+	let isSaving = $state(false);
+	let saveError = $state<string | null>(null);
 
 	const mapInterceptorCounts = $derived(
 		Object.fromEntries(
@@ -52,6 +56,148 @@
 		mousePosition = { x, y };
 	}
 
+	function handleMapClick(event: MouseEvent) {
+		if (!isEditMode) return;
+
+		const svg = event.currentTarget as SVGElement;
+		const mapImage = svg.querySelector('image') as SVGImageElement;
+		const rect = mapImage.getBoundingClientRect();
+		const x = ((event.clientX - rect.left) / rect.width) * 100;
+		const y = ((event.clientY - rect.top) / rect.height) * 100;
+
+		// Create new interceptor
+		const newId = `NEW_${Date.now()}`;
+		const newInterceptor: Interceptor = {
+			map: selectedMap,
+			name: `New Interceptor ${Object.keys(mergedInterceptors).length + 1}`,
+			side: 'defender',
+			roundStart: true,
+			position: { x, y },
+			deploy_position: { x, y },
+			images: {
+				deploy: '',
+				overview: '',
+				end: ''
+			},
+			video: '',
+			jump: 'none'
+		};
+
+		// Add to merged interceptors
+		mergedInterceptors[newId] = newInterceptor;
+		selectedInterceptor = newId;
+		editingInterceptor = newId;
+		isEditMode = false;
+	}
+
+	function toggleEditMode() {
+		isEditMode = !isEditMode;
+		if (!isEditMode) {
+			editingInterceptor = null;
+		}
+	}
+
+	async function saveInterceptor() {
+		if (!editingInterceptor) return;
+
+		isSaving = true;
+		saveError = null;
+
+		try {
+			const interceptor = mergedInterceptors[editingInterceptor];
+			const isNew = editingInterceptor.startsWith('NEW_');
+
+			let response: Response;
+
+			if (isNew) {
+				// Create new interceptor
+				response = await fetch('/api/interceptors', {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json'
+					},
+					body: JSON.stringify(interceptor)
+				});
+			} else {
+				// Update existing interceptor
+				response = await fetch(`/api/interceptors/${editingInterceptor}`, {
+					method: 'PUT',
+					headers: {
+						'Content-Type': 'application/json'
+					},
+					body: JSON.stringify(interceptor)
+				});
+			}
+
+			const result = await response.json();
+
+			if (!response.ok) {
+				throw new Error(result.message || 'Failed to save interceptor');
+			}
+
+			// If it was a new interceptor, update the ID
+			if (isNew && result.data?.id) {
+				const oldId = editingInterceptor;
+				mergedInterceptors[result.data.id] = mergedInterceptors[oldId];
+				delete mergedInterceptors[oldId];
+				selectedInterceptor = result.data.id;
+				editingInterceptor = result.data.id;
+			}
+
+			editingInterceptor = null;
+		} catch (error) {
+			saveError = error instanceof Error ? error.message : 'Failed to save interceptor';
+			console.error('Error saving interceptor:', error);
+		} finally {
+			isSaving = false;
+		}
+	}
+
+	async function deleteInterceptor(id: string | null) {
+		if (!id || !confirm('Are you sure you want to delete this interceptor?')) return;
+
+		// Don't delete new interceptors that haven't been saved
+		if (id.startsWith('NEW_')) {
+			delete mergedInterceptors[id];
+			if (selectedInterceptor === id) {
+				selectedInterceptor = Object.keys(mergedInterceptors)[0] || null;
+			}
+			editingInterceptor = null;
+			return;
+		}
+
+		try {
+			const response = await fetch(`/api/interceptors/${id}`, {
+				method: 'DELETE'
+			});
+
+			const result = await response.json();
+
+			if (!response.ok) {
+				throw new Error(result.message || 'Failed to delete interceptor');
+			}
+
+			delete mergedInterceptors[id];
+			if (selectedInterceptor === id) {
+				selectedInterceptor = Object.keys(mergedInterceptors)[0] || null;
+			}
+			editingInterceptor = null;
+		} catch (error) {
+			console.error('Error deleting interceptor:', error);
+			alert('Failed to delete interceptor. Please try again.');
+		}
+	}
+
+	function updateInterceptorProperty(property: keyof Interceptor, value: any) {
+		if (!editingInterceptor || !mergedInterceptors[editingInterceptor]) return;
+
+		if (property === 'position' || property === 'deploy_position') {
+			mergedInterceptors[editingInterceptor][property] = value;
+		} else {
+			(mergedInterceptors[editingInterceptor] as any)[property] = value;
+		}
+	}
+
 	$effect(() => {
 		// Set selected interceptor to first available for current map
 		const availableInterceptors = [...interceptors.keys()];
@@ -74,6 +220,18 @@
 <main class="my-auto grid grid-cols-2 gap-4 p-4">
 	<div class="relative h-[500px]">
 		<div class="absolute top-2 right-2 z-10 flex gap-2">
+			<button
+				onclick={toggleEditMode}
+				class={[
+					'rounded border px-3 py-1 text-sm transition-all',
+					{
+						'border-amber-700/50 bg-amber-600/20 text-amber-300 hover:bg-amber-500/30': !isEditMode,
+						'border-green-700/50 bg-green-600/20 text-green-300 hover:bg-green-500/30': isEditMode
+					}
+				]}
+			>
+				{isEditMode ? 'Exit Edit Mode' : 'Edit Mode'}
+			</button>
 			<select
 				bind:value={selectedMap}
 				class="min-w-32 rounded bg-black/50 px-2 py-1 text-sm text-white"
@@ -89,7 +247,9 @@
 			class="h-full w-full"
 			viewBox={`0 0 ${MAP_SIZE.x} ${MAP_SIZE.y}`}
 			onmousemove={handleMouseMove}
+			onclick={handleMapClick}
 			role="presentation"
+			class:cursor-crosshair={isEditMode}
 		>
 			<image
 				xlink:href="/minimaps/{selectedMap}.png"
@@ -157,7 +317,7 @@
 		</div>
 	</div>
 	<div class="max-h-[500px] p-2">
-		{#if selectedInterceptor}
+		{#if selectedInterceptor && mergedInterceptors[selectedInterceptor]}
 			{@const interceptor = mergedInterceptors[selectedInterceptor]}
 			<div class="flex flex-col gap-4">
 				<div class="flex items-center justify-between">
@@ -165,10 +325,195 @@
 						bind:value={selectedInterceptor}
 						class="text-md min-w-64 rounded bg-black/50 px-2 py-1 text-white focus:ring-0 focus:outline-none"
 					>
-						{#each [...interceptors.entries()] as [key, interceptor]}
-							<option value={key} class="bg-black">{interceptor.name}</option>
+						{#each [...interceptors.entries()] as [key, interceptorItem]}
+							<option value={key} class="bg-black">{interceptorItem.name}</option>
 						{/each}
 					</select>
+					<div class="flex gap-2">
+						{#if editingInterceptor === selectedInterceptor}
+							<button
+								onclick={saveInterceptor}
+								disabled={isSaving}
+								class={[
+									'rounded border px-2 py-1 text-sm transition-all',
+									{
+										'border-green-700/50 bg-green-600/20 text-green-300 hover:bg-green-500/30':
+											!isSaving,
+										'cursor-not-allowed border-gray-700/50 bg-gray-600/20 text-gray-400': isSaving
+									}
+								]}
+							>
+								{isSaving ? 'Saving...' : 'Save'}
+							</button>
+							<button
+								onclick={() => (editingInterceptor = null)}
+								disabled={isSaving}
+								class={[
+									'rounded border px-2 py-1 text-sm transition-all',
+									{
+										'border-gray-700/50 bg-gray-600/20 text-gray-300 hover:bg-gray-500/30':
+											!isSaving,
+										'cursor-not-allowed border-gray-700/50 bg-gray-600/20 text-gray-400': isSaving
+									}
+								]}
+							>
+								Cancel
+							</button>
+						{:else}
+							<button
+								onclick={() => (editingInterceptor = selectedInterceptor)}
+								class="rounded border border-blue-700/50 bg-blue-600/20 px-2 py-1 text-sm text-blue-300 transition-all hover:bg-blue-500/30"
+							>
+								Edit
+							</button>
+							<button
+								onclick={() => deleteInterceptor(selectedInterceptor)}
+								class="rounded border border-red-700/50 bg-red-600/20 px-2 py-1 text-sm text-red-300 transition-all hover:bg-red-500/30"
+							>
+								Delete
+							</button>
+						{/if}
+					</div>
+				</div>
+
+				{#if saveError}
+					<div class="rounded border border-red-700/50 bg-red-600/20 p-3 text-red-300">
+						<strong>Error:</strong>
+						{saveError}
+					</div>
+				{/if}
+
+				{#if editingInterceptor === selectedInterceptor}
+					<!-- Edit Form -->
+					<div class="space-y-4 rounded bg-black/20 p-4">
+						<div>
+							<label for="interceptor-name" class="mb-1 block text-sm text-gray-300">Name</label>
+							<input
+								id="interceptor-name"
+								type="text"
+								bind:value={interceptor.name}
+								onchange={(e) =>
+									updateInterceptorProperty('name', (e.target as HTMLInputElement).value)}
+								class="w-full rounded border border-gray-600 bg-black/50 px-2 py-1 text-white focus:border-amber-500 focus:outline-none"
+							/>
+						</div>
+						<div>
+							<label for="interceptor-side" class="mb-1 block text-sm text-gray-300">Side</label>
+							<select
+								id="interceptor-side"
+								bind:value={interceptor.side}
+								onchange={(e) =>
+									updateInterceptorProperty('side', (e.target as HTMLSelectElement).value)}
+								class="w-full rounded border border-gray-600 bg-black/50 px-2 py-1 text-white focus:border-amber-500 focus:outline-none"
+							>
+								<option value="defender">Defender</option>
+								<option value="attacker">Attacker</option>
+							</select>
+						</div>
+						<div>
+							<label for="interceptor-jump" class="mb-1 block text-sm text-gray-300">Jump</label>
+							<select
+								id="interceptor-jump"
+								bind:value={interceptor.jump}
+								onchange={(e) =>
+									updateInterceptorProperty('jump', (e.target as HTMLSelectElement).value)}
+								class="w-full rounded border border-gray-600 bg-black/50 px-2 py-1 text-white focus:border-amber-500 focus:outline-none"
+							>
+								<option value="none">None</option>
+								<option value="once">Once</option>
+								<option value="twice">Twice</option>
+							</select>
+						</div>
+						<div class="flex items-center gap-2">
+							<input
+								id="interceptor-round-start"
+								type="checkbox"
+								bind:checked={interceptor.roundStart}
+								onchange={(e) =>
+									updateInterceptorProperty('roundStart', (e.target as HTMLInputElement).checked)}
+								class="rounded"
+							/>
+							<label for="interceptor-round-start" class="text-sm text-gray-300">Round Start</label>
+						</div>
+						<div>
+							<label for="interceptor-pos-x" class="mb-1 block text-sm text-gray-300"
+								>Position X: {interceptor.position.x.toFixed(1)}%</label
+							>
+							<input
+								id="interceptor-pos-x"
+								type="range"
+								min="0"
+								max="100"
+								step="0.1"
+								bind:value={interceptor.position.x}
+								onchange={(e) =>
+									updateInterceptorProperty('position', {
+										...interceptor.position,
+										x: parseFloat((e.target as HTMLInputElement).value)
+									})}
+								class="w-full"
+							/>
+						</div>
+						<div>
+							<label for="interceptor-pos-y" class="mb-1 block text-sm text-gray-300"
+								>Position Y: {interceptor.position.y.toFixed(1)}%</label
+							>
+							<input
+								id="interceptor-pos-y"
+								type="range"
+								min="0"
+								max="100"
+								step="0.1"
+								bind:value={interceptor.position.y}
+								onchange={(e) =>
+									updateInterceptorProperty('position', {
+										...interceptor.position,
+										y: parseFloat((e.target as HTMLInputElement).value)
+									})}
+								class="w-full"
+							/>
+						</div>
+						<div>
+							<label for="interceptor-deploy-x" class="mb-1 block text-sm text-gray-300"
+								>Deploy Position X: {interceptor.deploy_position.x.toFixed(1)}%</label
+							>
+							<input
+								id="interceptor-deploy-x"
+								type="range"
+								min="0"
+								max="100"
+								step="0.1"
+								bind:value={interceptor.deploy_position.x}
+								onchange={(e) =>
+									updateInterceptorProperty('deploy_position', {
+										...interceptor.deploy_position,
+										x: parseFloat((e.target as HTMLInputElement).value)
+									})}
+								class="w-full"
+							/>
+						</div>
+						<div>
+							<label for="interceptor-deploy-y" class="mb-1 block text-sm text-gray-300"
+								>Deploy Position Y: {interceptor.deploy_position.y.toFixed(1)}%</label
+							>
+							<input
+								id="interceptor-deploy-y"
+								type="range"
+								min="0"
+								max="100"
+								step="0.1"
+								bind:value={interceptor.deploy_position.y}
+								onchange={(e) =>
+									updateInterceptorProperty('deploy_position', {
+										...interceptor.deploy_position,
+										y: parseFloat((e.target as HTMLInputElement).value)
+									})}
+								class="w-full"
+							/>
+						</div>
+					</div>
+				{:else}
+					<!-- Display Mode -->
 					<div
 						class={[
 							'text-center text-gray-400',
@@ -187,59 +532,59 @@
 							Double Jump
 						{/if}
 					</div>
-				</div>
-				<div class="grid grid-cols-1 gap-4 md:grid-cols-2">
-					<div class="group relative">
-						<img
-							class="h-auto max-h-[300px] w-full rounded-sm object-contain shadow-[0_0_10px_rgba(255,255,255,0.2)] transition-transform duration-300 hover:scale-105"
-							src={interceptor.images.deploy}
-							alt={`${selectedInterceptor} deploy`}
-						/>
-						<div
-							class="absolute right-0 bottom-0 left-0 bg-black/50 p-2 opacity-0 transition-opacity group-hover:opacity-100"
-						>
-							Deploy Position
-						</div>
-					</div>
-
-					<div class="group relative">
-						<img
-							class="h-auto max-h-[300px] w-full rounded-sm object-contain shadow-[0_0_10px_rgba(255,255,255,0.2)] transition-transform duration-300 hover:scale-105"
-							src={interceptor.images.overview}
-							alt={`${selectedInterceptor} overview`}
-						/>
-						<div
-							class="absolute right-0 bottom-0 left-0 bg-black/50 p-2 opacity-0 transition-opacity group-hover:opacity-100"
-						>
-							Overview
-						</div>
-					</div>
-
-					{#if interceptor.images.end}
+					<div class="grid grid-cols-1 gap-4 md:grid-cols-2">
 						<div class="group relative">
 							<img
 								class="h-auto max-h-[300px] w-full rounded-sm object-contain shadow-[0_0_10px_rgba(255,255,255,0.2)] transition-transform duration-300 hover:scale-105"
-								src={interceptor.images.end}
-								alt={`${selectedInterceptor} end`}
+								src={interceptor.images.deploy}
+								alt={`${selectedInterceptor} deploy`}
 							/>
 							<div
 								class="absolute right-0 bottom-0 left-0 bg-black/50 p-2 opacity-0 transition-opacity group-hover:opacity-100"
 							>
-								End Result
+								Deploy Position
 							</div>
 						</div>
-					{/if}
-					{#if interceptor.video}
+
 						<div class="group relative">
-							<!-- svelte-ignore a11y_media_has_caption -->
-							<video
+							<img
 								class="h-auto max-h-[300px] w-full rounded-sm object-contain shadow-[0_0_10px_rgba(255,255,255,0.2)] transition-transform duration-300 hover:scale-105"
-								src={interceptor.video}
-								controls
-							></video>
+								src={interceptor.images.overview}
+								alt={`${selectedInterceptor} overview`}
+							/>
+							<div
+								class="absolute right-0 bottom-0 left-0 bg-black/50 p-2 opacity-0 transition-opacity group-hover:opacity-100"
+							>
+								Overview
+							</div>
 						</div>
-					{/if}
-				</div>
+
+						{#if interceptor.images.end}
+							<div class="group relative">
+								<img
+									class="h-auto max-h-[300px] w-full rounded-sm object-contain shadow-[0_0_10px_rgba(255,255,255,0.2)] transition-transform duration-300 hover:scale-105"
+									src={interceptor.images.end}
+									alt={`${selectedInterceptor} end`}
+								/>
+								<div
+									class="absolute right-0 bottom-0 left-0 bg-black/50 p-2 opacity-0 transition-opacity group-hover:opacity-100"
+								>
+									End Result
+								</div>
+							</div>
+						{/if}
+						{#if interceptor.video}
+							<div class="group relative">
+								<!-- svelte-ignore a11y_media_has_caption -->
+								<video
+									class="h-auto max-h-[300px] w-full rounded-sm object-contain shadow-[0_0_10px_rgba(255,255,255,0.2)] transition-transform duration-300 hover:scale-105"
+									src={interceptor.video}
+									controls
+								></video>
+							</div>
+						{/if}
+					</div>
+				{/if}
 			</div>
 		{:else}
 			<p class="text-center text-gray-400">Select an interceptor</p>
