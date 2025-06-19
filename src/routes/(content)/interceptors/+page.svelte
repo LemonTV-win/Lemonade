@@ -222,11 +222,15 @@
 		<div class="absolute top-2 right-2 z-10 flex gap-2">
 			<button
 				onclick={toggleEditMode}
+				disabled={!!editingInterceptor}
 				class={[
 					'rounded border px-3 py-1 text-sm transition-all',
 					{
-						'border-blue-700/50 bg-blue-600/20 text-blue-300 hover:bg-blue-500/30': !isEditMode,
-						'border-green-700/50 bg-green-600/20 text-green-300 hover:bg-green-500/30': isEditMode
+						'border-blue-700/50 bg-blue-600/20 text-blue-300 hover:bg-blue-500/30':
+							!isEditMode && !editingInterceptor,
+						'border-green-700/50 bg-green-600/20 text-green-300 hover:bg-green-500/30':
+							isEditMode && !editingInterceptor,
+						'cursor-not-allowed border-gray-700/50 bg-gray-600/20 text-gray-400': editingInterceptor
 					}
 				]}
 			>
