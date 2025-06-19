@@ -1,12 +1,20 @@
 <script lang="ts">
 	import { MAPS, type GameMap, MAP_SIZE, MAP_SCALE_FACTOR, MAP_NAME } from '$lib/data/game';
 	import { browser } from '$app/environment';
-
 	import type { Point } from '$lib/data/geometry';
-
 	import { INTERCEPTORS, type Interceptor } from '$lib/data/interceptors';
+	import type { PageData } from './$types';
 
-	let selectedInterceptor: string | null = $state(Object.keys(INTERCEPTORS)[0]);
+	const { data } = $props<{ data: PageData }>();
+
+	// Merge server data with legacy data, preferring server data
+	const serverInterceptors = data.interceptors || {};
+	const mergedInterceptors: Record<string, Interceptor> = {
+		...INTERCEPTORS,
+		...serverInterceptors
+	};
+
+	let selectedInterceptor: string | null = $state(Object.keys(mergedInterceptors)[0] || null);
 	let selectedMap: GameMap = $state(
 		browser ? (localStorage.getItem('selectedMap') as GameMap) || 'ocarnus' : 'ocarnus'
 	);
@@ -16,7 +24,9 @@
 		Object.fromEntries(
 			MAPS.map((map) => [
 				map,
-				Object.values(INTERCEPTORS).filter((interceptor) => interceptor.map === map).length
+				Object.values(mergedInterceptors).filter(
+					(interceptor: Interceptor) => interceptor.map === map
+				).length
 			])
 		)
 	);
@@ -27,7 +37,9 @@
 
 	let interceptors: Map<string, Interceptor> = $derived(
 		new Map(
-			Object.entries(INTERCEPTORS).filter(([_, interceptor]) => interceptor.map === selectedMap)
+			Object.entries(mergedInterceptors).filter(
+				([_, interceptor]: [string, Interceptor]) => interceptor.map === selectedMap
+			)
 		)
 	);
 
@@ -41,7 +53,13 @@
 	}
 
 	$effect(() => {
-		selectedInterceptor = [...interceptors.keys()][0];
+		// Set selected interceptor to first available for current map
+		const availableInterceptors = [...interceptors.keys()];
+		if (availableInterceptors.length > 0) {
+			selectedInterceptor = availableInterceptors[0];
+		} else {
+			selectedInterceptor = null;
+		}
 	});
 
 	$effect(() => {
@@ -140,7 +158,7 @@
 	</div>
 	<div class="max-h-[500px] p-2">
 		{#if selectedInterceptor}
-			{@const interceptor = INTERCEPTORS[selectedInterceptor]}
+			{@const interceptor = mergedInterceptors[selectedInterceptor]}
 			<div class="flex flex-col gap-4">
 				<div class="flex items-center justify-between">
 					<select
