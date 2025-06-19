@@ -225,12 +225,12 @@
 				class={[
 					'rounded border px-3 py-1 text-sm transition-all',
 					{
-						'border-amber-700/50 bg-amber-600/20 text-amber-300 hover:bg-amber-500/30': !isEditMode,
+						'border-blue-700/50 bg-blue-600/20 text-blue-300 hover:bg-blue-500/30': !isEditMode,
 						'border-green-700/50 bg-green-600/20 text-green-300 hover:bg-green-500/30': isEditMode
 					}
 				]}
 			>
-				{isEditMode ? 'Exit Edit Mode' : 'Edit Mode'}
+				{isEditMode ? 'Exit Add Mode' : 'Add Interceptor'}
 			</button>
 			<select
 				bind:value={selectedMap}
