@@ -298,7 +298,7 @@
 					fill="transparent"
 					cursor={editingInterceptor ? 'default' : 'pointer'}
 					role="button"
-					tabindex="0"
+					tabindex={editingInterceptor ? -1 : 0}
 					onclick={() => {
 						if (!editingInterceptor) {
 							selectedInterceptor = key;
@@ -319,7 +319,7 @@
 						width="20"
 						height="20"
 					/>
-				{:else}
+				{:else if !editingInterceptor}
 					<circle
 						cx={MAP_SIZE.x * (interceptor.position.x / 100)}
 						cy={MAP_SIZE.y * (interceptor.position.y / 100)}
