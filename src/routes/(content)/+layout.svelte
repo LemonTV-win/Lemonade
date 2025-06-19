@@ -1,9 +1,20 @@
 <script lang="ts">
 	import '../../app.css';
 	import NavMenu from '$lib/components/NavMenu.svelte';
+	import { page } from '$app/state';
 
 	let { children } = $props();
 </script>
+
+<svelte:head>
+	<title>{page.data.metadata?.title ? `${page.data.metadata?.title} | Lemonade` : 'Lemonade'}</title
+	>
+	<meta
+		name="description"
+		content={page.data.metadata?.description ??
+			'Strinova utility lineups, callouts, strats, techniques sharing platform.'}
+	/>
+</svelte:head>
 
 <div class="mx-auto flex min-h-full flex-col">
 	<header class="mx-auto flex flex-col gap-4 p-4">

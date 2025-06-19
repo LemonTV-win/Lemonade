@@ -8,6 +8,14 @@
 	});
 </script>
 
+<svelte:head>
+	<title>Lemonade – Strinova Utility Lineup Platform</title>
+	<meta
+		name="description"
+		content="Strinova utility lineups, callouts, strats, techniques sharing platform."
+	/>
+</svelte:head>
+
 <div class="background-pattern"></div>
 
 <main
