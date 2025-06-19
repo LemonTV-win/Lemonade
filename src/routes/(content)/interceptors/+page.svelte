@@ -328,6 +328,27 @@
 					/>
 				{/if}
 			{/each}
+
+			<!-- Phantom cursor for new interceptor placement -->
+			{#if isEditMode}
+				<circle
+					cx={MAP_SIZE.x * (mousePosition.x / 100)}
+					cy={MAP_SIZE.y * (mousePosition.y / 100)}
+					r={INTERCEPTOR_RADIUS * MAP_SCALE_FACTOR[selectedMap]}
+					fill="transparent"
+					stroke="rgba(255, 255, 0, 0.5)"
+					stroke-width="1"
+					stroke-dasharray="10,5"
+				/>
+				<image
+					xlink:href="/icons/interceptor.png"
+					x={MAP_SIZE.x * (mousePosition.x / 100) - 10}
+					y={MAP_SIZE.y * (mousePosition.y / 100) - 10}
+					width="20"
+					height="20"
+					opacity="0.6"
+				/>
+			{/if}
 		</svg>
 		<div class="absolute bottom-2 left-2 rounded bg-black/50 px-2 py-1 text-sm text-white">
 			X: {mousePosition.x.toFixed(2)}%, Y: {mousePosition.y.toFixed(2)}%
