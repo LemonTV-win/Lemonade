@@ -199,11 +199,11 @@
 	}
 
 	$effect(() => {
-		// Set selected interceptor to first available for current map
+		// Set selected interceptor to first available for current map only if none is selected
 		const availableInterceptors = [...interceptors.keys()];
-		if (availableInterceptors.length > 0) {
+		if (availableInterceptors.length > 0 && !selectedInterceptor) {
 			selectedInterceptor = availableInterceptors[0];
-		} else {
+		} else if (availableInterceptors.length === 0) {
 			selectedInterceptor = null;
 		}
 	});
