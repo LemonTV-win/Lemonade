@@ -370,7 +370,17 @@
 								{isSaving ? 'Saving...' : 'Save'}
 							</button>
 							<button
-								onclick={() => (editingInterceptor = null)}
+								onclick={() => {
+									if (editingInterceptor?.startsWith('NEW_')) {
+										// Remove the new interceptor if cancelled
+										delete mergedInterceptors[editingInterceptor];
+										// Select the next available interceptor
+										const availableInterceptors = Object.keys(mergedInterceptors);
+										selectedInterceptor =
+											availableInterceptors.length > 0 ? availableInterceptors[0] : null;
+									}
+									editingInterceptor = null;
+								}}
 								disabled={isSaving}
 								class={[
 									'rounded border px-2 py-1 text-sm transition-all',
