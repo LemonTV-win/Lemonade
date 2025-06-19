@@ -234,7 +234,14 @@
 			</button>
 			<select
 				bind:value={selectedMap}
-				class="min-w-32 rounded bg-black/50 px-2 py-1 text-sm text-white"
+				disabled={!!editingInterceptor}
+				class={[
+					'min-w-32 rounded px-2 py-1 text-sm',
+					{
+						'bg-black/50 text-white': !editingInterceptor,
+						'cursor-not-allowed bg-gray-600/30 text-gray-400': editingInterceptor
+					}
+				]}
 			>
 				{#each sortedMaps as map}
 					<option value={map}>
