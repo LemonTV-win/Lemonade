@@ -72,6 +72,12 @@
 		}}
 	/>
 
+	<p class="mb-4 text-center text-sm text-amber-300">
+		<span class="font-semibold">{filteredVods.length}</span>
+		<span class="text-amber-300/70">/</span>
+		<span class="text-amber-300/70">{data.vods.length}</span>
+		<span class="ml-1 text-amber-300/70">VODs</span>
+	</p>
 	<div class="grid grid-cols-4 gap-4">
 		{#each filteredVods as vod}
 			<div
