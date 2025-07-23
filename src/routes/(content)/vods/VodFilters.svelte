@@ -1,5 +1,6 @@
 <script lang="ts">
 	import {
+		CHARACTER_NAMES,
 		MAP_NAMES,
 		PUS_CHARACTERS,
 		SCISORS_CHARACTERS,
@@ -175,7 +176,7 @@
 						(selectedCharacters = toggleFilter(selectedCharacters, character as string))}
 				>
 					<CharacterIcon class="h-5 w-5" {character} />
-					{character}</button
+					{CHARACTER_NAMES[character as Character]()}</button
 				>
 			{/snippet}
 
