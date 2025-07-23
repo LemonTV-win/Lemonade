@@ -42,7 +42,12 @@
 
 {#if character}
 	<img
-		class={['h-9 w-9 rounded-full', className]}
+		class={[
+			className.includes('h-') ? undefined : 'h-9',
+			className.includes('w-') ? undefined : 'w-9',
+			className.includes('rounded-full') ? undefined : 'rounded-full',
+			className
+		]}
 		src={CHARACTER_2_IMAGE[character]}
 		alt={character}
 		title={character}

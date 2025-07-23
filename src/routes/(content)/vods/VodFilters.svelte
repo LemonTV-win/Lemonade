@@ -1,7 +1,14 @@
 <script lang="ts">
-	import { MAP_NAMES, type GameMap } from '$lib/data/game';
-	import { VOD_PLATFORMS_LABELS, type VodPlatform } from '$lib/data/vod';
+	import {
+		MAP_NAMES,
+		PUS_CHARACTERS,
+		SCISORS_CHARACTERS,
+		URBINO_CHARACTERS,
+		type Character,
+		type GameMap
+	} from '$lib/data/game';
 	import { RANKS } from '$lib/data/game';
+	import CharacterIcon from '$lib/components/CharacterIcon.svelte';
 
 	let {
 		platforms = $bindable([]),
@@ -140,14 +147,40 @@
 				class={`rounded border px-3 py-1 text-sm font-medium transition-colors focus:ring-2 focus:ring-amber-400 focus:outline-none ${selectedCharacters.length === 0 ? 'border-amber-500 bg-gradient-to-r from-yellow-300 to-amber-500 text-black shadow' : 'border-gray-700 bg-zinc-900 text-amber-200 hover:border-amber-400 hover:bg-amber-400/10'}`}
 				onclick={() => (selectedCharacters = [])}>All</button
 			>
-			{#each characters.filter(isString).filter(Boolean) as character}
+			{#snippet characterOption(character: Character, faction: 'PUS' | 'Scissors' | 'Urbino')}
 				<button
 					type="button"
-					class={`rounded border px-3 py-1 text-sm font-medium transition-colors focus:ring-2 focus:ring-amber-400 focus:outline-none ${selectedCharacters.includes(character as string) ? 'border-amber-500 bg-gradient-to-r from-yellow-300 to-amber-500 text-black shadow' : 'border-gray-700 bg-zinc-900 text-amber-200 hover:border-amber-400 hover:bg-amber-400/10'}`}
+					class={[
+						'rounded border py-1 pr-3 pl-2.5 text-sm font-medium transition-colors focus:ring-2 focus:ring-amber-400 focus:outline-none',
+						'flex items-center gap-1',
+						selectedCharacters.includes(character as string)
+							? 'border-amber-500 bg-gradient-to-r from-yellow-300 to-amber-500 text-black shadow'
+							: [
+									'border-gray-700 text-amber-200  hover:border-amber-400 ',
+									faction === 'PUS' && 'bg-gradient-to-r from-blue-300/20 to-cyan-500/20',
+									faction === 'Urbino' && 'bg-gradient-to-r from-yellow-300/20 to-amber-500/20',
+									faction === 'Scissors' && 'bg-gradient-to-r from-red-300/20 to-rose-500/20',
+									false && ' bg-zinc-900 hover:bg-amber-400/10'
+								]
+					]}
 					onclick={() =>
 						(selectedCharacters = toggleFilter(selectedCharacters, character as string))}
-					>{character}</button
 				>
+					<CharacterIcon class="h-5 w-5" {character} />
+					{character}</button
+				>
+			{/snippet}
+
+			{#each PUS_CHARACTERS.filter((c) => characters.includes(c)) as character}
+				{@render characterOption(character, 'PUS')}
+			{/each}
+
+			{#each SCISORS_CHARACTERS.filter((c) => characters.includes(c)) as character}
+				{@render characterOption(character, 'Scissors')}
+			{/each}
+
+			{#each URBINO_CHARACTERS.filter((c) => characters.includes(c)) as character}
+				{@render characterOption(character, 'Urbino')}
 			{/each}
 		</div>
 	</div>
