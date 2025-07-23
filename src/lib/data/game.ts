@@ -105,4 +105,48 @@ export const MAP_NAMES: Record<GameMap, () => string> = {
 	ocarnus: m.ocarnus
 };
 // #endregion
+
+// #region Ranks
+
+export const RANKS = [
+	'Unranked',
+	'Substance III',
+	'Substance II',
+	'Substance I',
+	'Molecule III',
+	'Molecule II',
+	'Molecule I',
+	'Atom IV',
+	'Atom III',
+	'Atom II',
+	'Atom I',
+	'Proton IV',
+	'Proton III',
+	'Proton II',
+	'Proton I',
+	'Neutron IV',
+	'Neutron III',
+	'Neutron II',
+	'Neutron I',
+	'Electron V',
+	'Electron IV',
+	'Electron III',
+	'Electron II',
+	'Electron I',
+	'Quark V',
+	'Quark IV',
+	'Quark III',
+	'Quark II',
+	'Quark I',
+	'Superstring',
+	'Singularity'
+] as const;
+
+export type Rank = (typeof RANKS)[number];
+
+// #endregion
+
+// #region Servers
+export const SERVERS = ['CN', 'APAC', 'NA', 'EU'] as const;
+export type Server = (typeof SERVERS)[number];
 // #endregion
