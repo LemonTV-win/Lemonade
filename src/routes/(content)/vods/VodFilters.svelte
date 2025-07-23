@@ -261,8 +261,7 @@
 						'flex items-center gap-1',
 						selectedRanks.includes(group as string)
 							? 'border-amber-500 bg-gradient-to-r from-yellow-300 to-amber-500 text-black shadow'
-							: 'border-gray-700 text-amber-200  hover:border-amber-400 ',
-						false && ' bg-zinc-900 hover:bg-amber-400/10'
+							: 'border-gray-700 bg-zinc-900 text-amber-200 hover:border-amber-400 hover:bg-amber-400/10'
 					]}
 					onclick={() => (selectedRanks = toggleFilter(selectedRanks, group as string))}
 				>
