@@ -15,6 +15,7 @@
 	} from '$lib/data/vod';
 	import { RANKS } from '$lib/data/game';
 	import CharacterIcon from '$lib/components/CharacterIcon.svelte';
+	import * as m from '$lib/paraglide/messages';
 
 	let {
 		platforms = $bindable([]),
@@ -94,12 +95,12 @@
 	class="mb-6 flex flex-wrap gap-6 overflow-x-auto rounded-xl bg-black/70 p-4 shadow-lg ring-1 ring-amber-300/10"
 >
 	<div class="min-w-[160px]">
-		<label class="mb-2 block text-sm font-semibold text-amber-200">Platform</label>
+		<label class="mb-2 block text-sm font-semibold text-amber-200">{m.platform()}</label>
 		<div class="flex flex-wrap gap-2">
 			<button
 				type="button"
 				class={`rounded border px-3 py-1 text-sm font-medium transition-colors focus:ring-2 focus:ring-amber-400 focus:outline-none ${selectedPlatforms.length === 0 ? 'border-amber-500 bg-gradient-to-r from-yellow-300 to-amber-500 text-black shadow' : 'border-gray-700 bg-zinc-900 text-amber-200 hover:border-amber-400 hover:bg-amber-400/10'}`}
-				onclick={() => (selectedPlatforms = [])}>All</button
+				onclick={() => (selectedPlatforms = [])}>{m.all()}</button
 			>
 			{#each platforms.filter(isString) as platform}
 				<button
@@ -112,12 +113,12 @@
 		</div>
 	</div>
 	<div class="min-w-[160px]">
-		<label class="mb-2 block text-sm font-semibold text-amber-200">Map</label>
+		<label class="mb-2 block text-sm font-semibold text-amber-200">{m.map()}</label>
 		<div class="flex flex-wrap gap-2">
 			<button
 				type="button"
 				class={`rounded border px-3 py-1 text-sm font-medium transition-colors focus:ring-2 focus:ring-amber-400 focus:outline-none ${selectedMaps.length === 0 ? 'border-amber-500 bg-gradient-to-r from-yellow-300 to-amber-500 text-black shadow' : 'border-gray-700 bg-zinc-900 text-amber-200 hover:border-amber-400 hover:bg-amber-400/10'}`}
-				onclick={() => (selectedMaps = [])}>All</button
+				onclick={() => (selectedMaps = [])}>{m.all()}</button
 			>
 			{#each maps.filter(isString) as map}
 				<button
@@ -130,12 +131,12 @@
 		</div>
 	</div>
 	<div class="min-w-[160px]">
-		<label class="mb-2 block text-sm font-semibold text-amber-200">Server</label>
+		<label class="mb-2 block text-sm font-semibold text-amber-200">{m.server()}</label>
 		<div class="flex flex-wrap gap-2">
 			<button
 				type="button"
 				class={`rounded border px-3 py-1 text-sm font-medium transition-colors focus:ring-2 focus:ring-amber-400 focus:outline-none ${selectedServers.length === 0 ? 'border-amber-500 bg-gradient-to-r from-yellow-300 to-amber-500 text-black shadow' : 'border-gray-700 bg-zinc-900 text-amber-200 hover:border-amber-400 hover:bg-amber-400/10'}`}
-				onclick={() => (selectedServers = [])}>All</button
+				onclick={() => (selectedServers = [])}>{m.all()}</button
 			>
 			{#each servers.filter(isString) as server}
 				<button
@@ -147,12 +148,12 @@
 		</div>
 	</div>
 	<div class="min-w-[160px]">
-		<label class="mb-2 block text-sm font-semibold text-amber-200">Character</label>
+		<label class="mb-2 block text-sm font-semibold text-amber-200">{m.character()}</label>
 		<div class="flex flex-wrap gap-2">
 			<button
 				type="button"
 				class={`rounded border px-3 py-1 text-sm font-medium transition-colors focus:ring-2 focus:ring-amber-400 focus:outline-none ${selectedCharacters.length === 0 ? 'border-amber-500 bg-gradient-to-r from-yellow-300 to-amber-500 text-black shadow' : 'border-gray-700 bg-zinc-900 text-amber-200 hover:border-amber-400 hover:bg-amber-400/10'}`}
-				onclick={() => (selectedCharacters = [])}>All</button
+				onclick={() => (selectedCharacters = [])}>{m.all()}</button
 			>
 			{#snippet characterOption(character: Character, faction: 'PUS' | 'Scissors' | 'Urbino')}
 				<button
@@ -192,12 +193,12 @@
 		</div>
 	</div>
 	<div class="min-w-[160px]">
-		<label class="mb-2 block text-sm font-semibold text-amber-200">Season</label>
+		<label class="mb-2 block text-sm font-semibold text-amber-200">{m.season()}</label>
 		<div class="flex flex-wrap gap-2">
 			<button
 				type="button"
 				class={`rounded border px-3 py-1 text-sm font-medium transition-colors focus:ring-2 focus:ring-amber-400 focus:outline-none ${selectedSeasons.length === 0 ? 'border-amber-500 bg-gradient-to-r from-yellow-300 to-amber-500 text-black shadow' : 'border-gray-700 bg-zinc-900 text-amber-200 hover:border-amber-400 hover:bg-amber-400/10'}`}
-				onclick={() => (selectedSeasons = [])}>All</button
+				onclick={() => (selectedSeasons = [])}>{m.all()}</button
 			>
 			{#each seasons.filter(isString) as season}
 				<button
@@ -209,12 +210,12 @@
 		</div>
 	</div>
 	<div class="min-w-[160px]">
-		<label class="mb-2 block text-sm font-semibold text-amber-200">Player</label>
+		<label class="mb-2 block text-sm font-semibold text-amber-200">{m.player()}</label>
 		<div class="flex flex-wrap gap-2">
 			<button
 				type="button"
 				class={`rounded border px-3 py-1 text-sm font-medium transition-colors focus:ring-2 focus:ring-amber-400 focus:outline-none ${selectedPlayers.length === 0 ? 'border-amber-500 bg-gradient-to-r from-yellow-300 to-amber-500 text-black shadow' : 'border-gray-700 bg-zinc-900 text-amber-200 hover:border-amber-400 hover:bg-amber-400/10'}`}
-				onclick={() => (selectedPlayers = [])}>All</button
+				onclick={() => (selectedPlayers = [])}>{m.all()}</button
 			>
 			{#each players.filter(isString) as player}
 				<button
@@ -226,12 +227,12 @@
 		</div>
 	</div>
 	<div class="min-w-[160px]">
-		<label class="mb-2 block text-sm font-semibold text-amber-200">Rank</label>
+		<label class="mb-2 block text-sm font-semibold text-amber-200">{m.rank()}</label>
 		<div class="flex flex-wrap gap-2">
 			<button
 				type="button"
 				class={`rounded border px-3 py-1 text-sm font-medium transition-colors focus:ring-2 focus:ring-amber-400 focus:outline-none ${selectedRanks.length === 0 ? 'border-amber-500 bg-gradient-to-r from-yellow-300 to-amber-500 text-black shadow' : 'border-gray-700 bg-zinc-900 text-amber-200 hover:border-amber-400 hover:bg-amber-400/10'}`}
-				onclick={() => (selectedRanks = [])}>All</button
+				onclick={() => (selectedRanks = [])}>{m.all()}</button
 			>
 			{#each rankGroups as group}
 				<button
@@ -244,12 +245,12 @@
 		</div>
 	</div>
 	<div class="min-w-[160px]">
-		<label class="mb-2 block text-sm font-semibold text-amber-200">Type</label>
+		<label class="mb-2 block text-sm font-semibold text-amber-200">{m.type()}</label>
 		<div class="flex flex-wrap gap-2">
 			<button
 				type="button"
 				class={`rounded border px-3 py-1 text-sm font-medium transition-colors focus:ring-2 focus:ring-amber-400 focus:outline-none ${selectedTypes.length === 0 ? 'border-amber-500 bg-gradient-to-r from-yellow-300 to-amber-500 text-black shadow' : 'border-gray-700 bg-zinc-900 text-amber-200 hover:border-amber-400 hover:bg-amber-400/10'}`}
-				onclick={() => (selectedTypes = [])}>All</button
+				onclick={() => (selectedTypes = [])}>{m.all()}</button
 			>
 			{#each VOD_TYPES as type}
 				<button

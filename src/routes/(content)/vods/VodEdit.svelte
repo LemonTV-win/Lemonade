@@ -14,6 +14,7 @@
 	} from '$lib/data/game';
 	import { enhance } from '$app/forms';
 	import { VOD_TYPES, VOD_TYPES_LABELS } from '$lib/data/vod';
+	import * as m from '$lib/paraglide/messages';
 
 	let {
 		vodToEdit,
@@ -206,7 +207,7 @@
 			<input type="hidden" name="id" value={editingVod.id} />
 		{/if}
 		<label class="mb-2 block text-amber-300">
-			URL
+			{m.url()}
 			<input
 				type="text"
 				name="url"
@@ -216,7 +217,7 @@
 			/>
 		</label>
 		<label class="mb-2 block text-amber-300">
-			Title
+			{m.title()}
 			<input
 				type="text"
 				name="title"
@@ -226,7 +227,7 @@
 			/>
 		</label>
 		<label class="mb-2 block text-amber-300">
-			Thumbnail URL
+			{m.thumbnail_url()}
 			<input
 				type="text"
 				name="thumbnail"
@@ -236,7 +237,7 @@
 			/>
 		</label>
 		<label class="mb-2 block text-amber-300">
-			Platform
+			{m.platform()}
 			<select
 				name="platform"
 				bind:value={editingVod.platform}
@@ -248,7 +249,7 @@
 			</select>
 		</label>
 		<label class="mb-2 block text-amber-300">
-			Player
+			{m.player()}
 			<input
 				type="text"
 				name="player"
@@ -258,7 +259,7 @@
 			/>
 		</label>
 		<label class="mb-2 block text-amber-300">
-			Server
+			{m.server()}
 			<select
 				name="server"
 				bind:value={editingVod.server}
@@ -272,7 +273,7 @@
 			</select>
 		</label>
 		<label class="mb-2 block text-amber-300">
-			Map
+			{m.map()}
 			<select
 				name="map"
 				bind:value={editingVod.map}
@@ -303,7 +304,7 @@
 			</optgroup>
 		{/snippet}
 		<label class="mb-2 block text-amber-300">
-			First Character
+			{m.first_character()}
 			<select
 				name="character_first"
 				bind:value={editingVod.character_first}
@@ -313,7 +314,7 @@
 			</select>
 		</label>
 		<label class="mb-2 block text-amber-300">
-			Second Character (optional)
+			{m.second_character_optional()}
 			<!-- <input
 				type="text"
 				name="character_second"
@@ -330,7 +331,7 @@
 			</select>
 		</label>
 		<label class="mb-2 block text-amber-300">
-			Season (optional)
+			{m.season_optional()}
 			<!-- <input
 				type="text"
 				name="season"
@@ -348,7 +349,7 @@
 			</select>
 		</label>
 		<label class="mb-2 block text-amber-300">
-			Published At (optional)
+			{m.published_at_optional()}
 			<div class="flex gap-2">
 				<input
 					type="date"
@@ -368,7 +369,7 @@
 			</div>
 		</label>
 		<label class="mb-2 block text-amber-300">
-			Rank (optional)
+			{m.rank_optional()}
 			<select
 				name="rank"
 				bind:value={editingVod.rank}
@@ -381,7 +382,7 @@
 			</select>
 		</label>
 		<label class="mb-2 block text-amber-300">
-			Type
+			{m.type()}
 			<select
 				name="type"
 				bind:value={editingVod.type}
@@ -396,13 +397,13 @@
 			<button
 				type="submit"
 				class="rounded bg-gradient-to-r from-yellow-300 to-amber-500 px-6 py-2 font-semibold text-black shadow hover:from-yellow-200 hover:to-amber-400"
-				>{editingVod.id ? 'Update VOD' : 'Add VOD'}</button
+				>{editingVod.id ? m.update_vod() : m.add_vod()}</button
 			>
 			<button
 				type="button"
 				onclick={handleClose}
 				class="rounded border border-amber-300/30 bg-black px-6 py-2 font-semibold text-amber-300 hover:bg-amber-300 hover:text-black"
-				>Close</button
+				>{m.close()}</button
 			>
 		</div>
 	</form>
