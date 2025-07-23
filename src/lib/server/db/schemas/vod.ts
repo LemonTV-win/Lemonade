@@ -1,6 +1,6 @@
 import { sqliteTable, text, integer } from 'drizzle-orm/sqlite-core';
 import type { Character, GameMap, Rank, Server } from '$lib/data/game';
-import type { VodPlatform } from '$lib/data/vod';
+import type { VodPlatform, VodType } from '$lib/data/vod';
 export const vod = sqliteTable('vod', {
 	id: text('id').primaryKey(),
 	url: text('url').notNull().unique(),
@@ -15,6 +15,7 @@ export const vod = sqliteTable('vod', {
 	character_second: text('character_second').$type<Character>(),
 	season: text('season'), // C1, C2 .. C11; G1, G2, ... G4
 	rank: text('rank').$type<Rank>(),
+	type: text('type').$type<VodType>().notNull().default('ranked'),
 	publishedAt: integer('published_at', { mode: 'timestamp' }),
 	createdAt: integer('created_at', { mode: 'timestamp' })
 		.notNull()

@@ -5,6 +5,7 @@ import { randomUUID } from 'crypto';
 import type { Character } from '$lib/data/game';
 import type { GameMap } from '$lib/data/game';
 import type { Rank } from '$lib/data/game';
+import type { VodType } from '$lib/data/vod';
 
 export const load: PageServerLoad = async () => {
 	const vods = await getVODs();
@@ -29,7 +30,6 @@ export const load: PageServerLoad = async () => {
 	);
 	const seasons = Array.from(new Set(vods.map((vod) => vod.season).filter(Boolean)));
 	const ranks = Array.from(new Set(vods.map((vod) => vod.rank).filter(Boolean)));
-
 	console.log(vods);
 
 	return {
@@ -58,6 +58,7 @@ export const actions: Actions = {
 		const character_second = formData.get('character_second');
 		const season = formData.get('season');
 		const rank = formData.get('rank');
+		const type = formData.get('type');
 		const publishedAt = formData.get('publishedAt');
 
 		// Validate required fields
@@ -88,6 +89,7 @@ export const actions: Actions = {
 			character_second: characterSecondValue,
 			season: season ? String(season) : undefined,
 			rank: rank && rank !== '' ? (rank as Rank) : undefined,
+			type: type ? (type as VodType) : 'ranked',
 			publishedAt: publishedAt ? new Date(publishedAt as string) : undefined
 		});
 
@@ -107,6 +109,7 @@ export const actions: Actions = {
 		const character_second = formData.get('character_second');
 		const season = formData.get('season');
 		const rank = formData.get('rank');
+		const type = formData.get('type');
 		const publishedAt = formData.get('publishedAt');
 
 		// Validate required fields
@@ -146,6 +149,7 @@ export const actions: Actions = {
 			character_second: characterSecondValue,
 			season: season ? String(season) : undefined,
 			rank: rank && rank !== '' ? (rank as Rank) : undefined,
+			type: type ? (type as VodType) : 'ranked',
 			publishedAt: publishedAt ? new Date(publishedAt as string) : undefined
 		});
 

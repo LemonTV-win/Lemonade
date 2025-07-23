@@ -13,6 +13,7 @@
 		type Season
 	} from '$lib/data/game';
 	import { enhance } from '$app/forms';
+	import { VOD_TYPES, VOD_TYPES_LABELS } from '$lib/data/vod';
 
 	let {
 		vodToEdit,
@@ -374,6 +375,18 @@
 				<option value="">No Rank</option>
 				{#each RANKS as rank}
 					<option value={rank}>{rank}</option>
+				{/each}
+			</select>
+		</label>
+		<label class="mb-2 block text-amber-300">
+			Type
+			<select
+				name="type"
+				bind:value={editingVod.type}
+				class="mt-1 mb-4 w-full rounded border border-amber-300/30 bg-zinc-900 px-3 py-2 text-white focus:border-amber-400 focus:outline-none"
+			>
+				{#each VOD_TYPES as type}
+					<option value={type}>{VOD_TYPES_LABELS[type]()}</option>
 				{/each}
 			</select>
 		</label>

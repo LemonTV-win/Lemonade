@@ -5,7 +5,7 @@
 	import VodDialog from './VodEdit.svelte';
 	import VodFilters from './VodFilters.svelte';
 	import { invalidateAll } from '$app/navigation';
-
+	import type { VodType } from '$lib/data/vod';
 	let { data }: PageProps = $props();
 
 	let selectedPlatforms: string[] = $state([]);
@@ -15,7 +15,7 @@
 	let selectedSeasons: string[] = $state([]);
 	let selectedPlayers: string[] = $state([]);
 	let selectedRanks: string[] = $state([]);
-
+	let selectedTypes: VodType[] = $state([]);
 	let filteredVods = $derived(
 		data.vods.filter(
 			(vod: NewVod) =>
@@ -30,7 +30,8 @@
 				(selectedPlayers.length ? selectedPlayers.includes(String(vod.player)) : true) &&
 				(selectedRanks.length
 					? selectedRanks.some((group) => vod.rank && String(vod.rank).startsWith(group))
-					: true)
+					: true) &&
+				(selectedTypes.length ? vod.type && selectedTypes.includes(vod.type) : true)
 		)
 	);
 
@@ -69,6 +70,7 @@
 			selectedSeasons = detail.selectedSeasons;
 			selectedPlayers = detail.selectedPlayers;
 			selectedRanks = detail.selectedRanks;
+			selectedTypes = detail.selectedTypes;
 		}}
 	/>
 
