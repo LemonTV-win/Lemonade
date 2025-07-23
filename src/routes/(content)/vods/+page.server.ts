@@ -16,7 +16,17 @@ export const load: PageServerLoad = async () => {
 	const characters = Array.from(
 		new Set(vods.flatMap((vod) => [vod.character_first, vod.character_second]))
 	);
-	const players = Array.from(new Set(vods.map((vod) => vod.player)));
+	const players = Array.from(
+		new Set(
+			vods
+				.map((vod) => vod.player)
+				.sort((a, b) => {
+					const countA = vods.filter((vod) => vod.player === a).length;
+					const countB = vods.filter((vod) => vod.player === b).length;
+					return countB - countA;
+				})
+		)
+	);
 	const seasons = Array.from(new Set(vods.map((vod) => vod.season).filter(Boolean)));
 	const ranks = Array.from(new Set(vods.map((vod) => vod.rank).filter(Boolean)));
 
