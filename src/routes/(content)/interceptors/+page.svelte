@@ -21,6 +21,7 @@
 	let mousePosition: Point = $state({ x: 0, y: 0 });
 	let isEditMode = $state(false);
 	let editingInterceptor: string | null = $state(null);
+	let editingStage: 'position' | 'deploy' = $state('position');
 	let isSaving = $state(false);
 	let saveError = $state<string | null>(null);
 
@@ -72,8 +73,8 @@
 			name: `New Interceptor ${Object.keys(mergedInterceptors).length + 1}`,
 			side: 'defender',
 			roundStart: true,
-			position: { x, y },
-			deploy_position: { x, y },
+			position: { x, y }, // Set position from the click
+			deploy_position: { x: 0, y: 0 }, // Will be set by second click
 			images: {
 				deploy: '',
 				overview: '',
@@ -87,6 +88,7 @@
 		mergedInterceptors[newId] = newInterceptor;
 		selectedInterceptor = newId;
 		editingInterceptor = newId;
+		editingStage = 'deploy'; // Start with deploy stage since position is already set
 		isEditMode = false;
 	}
 
@@ -94,6 +96,7 @@
 		isEditMode = !isEditMode;
 		if (!isEditMode) {
 			editingInterceptor = null;
+			editingStage = 'position';
 		}
 	}
 
@@ -145,6 +148,7 @@
 			}
 
 			editingInterceptor = null;
+			editingStage = 'position';
 		} catch (error) {
 			saveError = error instanceof Error ? error.message : 'Failed to save interceptor';
 			console.error('Error saving interceptor:', error);
@@ -195,6 +199,27 @@
 			mergedInterceptors[editingInterceptor][property] = value;
 		} else {
 			(mergedInterceptors[editingInterceptor] as any)[property] = value;
+		}
+	}
+
+	function switchEditingStage() {
+		editingStage = editingStage === 'position' ? 'deploy' : 'position';
+	}
+
+	function handleStageClick(event: MouseEvent) {
+		if (!editingInterceptor) return;
+
+		const svg = event.currentTarget as SVGElement;
+		const mapImage = svg.querySelector('image') as SVGImageElement;
+		const rect = mapImage.getBoundingClientRect();
+		const x = ((event.clientX - rect.left) / rect.width) * 100;
+		const y = ((event.clientY - rect.top) / rect.height) * 100;
+
+		if (editingStage === 'deploy') {
+			updateInterceptorProperty('deploy_position', { x, y });
+			// Complete editing after setting deploy position
+			editingInterceptor = null;
+			editingStage = 'position';
 		}
 	}
 
@@ -258,9 +283,9 @@
 			class="h-full w-full"
 			viewBox={`0 0 ${MAP_SIZE.x} ${MAP_SIZE.y}`}
 			onmousemove={handleMouseMove}
-			onclick={handleMapClick}
+			onclick={editingInterceptor ? handleStageClick : handleMapClick}
 			role="presentation"
-			class:cursor-crosshair={isEditMode}
+			class:cursor-crosshair={isEditMode || editingInterceptor}
 		>
 			<image
 				xlink:href="/minimaps/{selectedMap}.png"
@@ -271,15 +296,17 @@
 			/>
 			{#each [...interceptors.entries()].sort((a, b) => a[1].position.x - b[1].position.x) as [key, interceptor]}
 				{#if key === selectedInterceptor}
-					<image
-						xlink:href={interceptor.side === 'attacker'
-							? '/characters/celestia_atk.png'
-							: '/characters/celestia_dfn.png'}
-						x={MAP_SIZE.x * (interceptor.deploy_position.x / 100) - 7.5}
-						y={MAP_SIZE.y * (interceptor.deploy_position.y / 100) - 7.5}
-						width="15"
-						height="15"
-					/>
+					{#if interceptor.deploy_position.x !== 0 || interceptor.deploy_position.y !== 0}
+						<image
+							xlink:href={interceptor.side === 'attacker'
+								? '/characters/celestia_atk.png'
+								: '/characters/celestia_dfn.png'}
+							x={MAP_SIZE.x * (interceptor.deploy_position.x / 100) - 7.5}
+							y={MAP_SIZE.y * (interceptor.deploy_position.y / 100) - 7.5}
+							width="15"
+							height="15"
+						/>
+					{/if}
 
 					<circle
 						cx={MAP_SIZE.x * (interceptor.position.x / 100)}
@@ -348,6 +375,16 @@
 					height="20"
 					opacity="0.6"
 				/>
+			{:else if editingInterceptor && editingStage === 'deploy'}
+				<!-- Phantom deploy position character -->
+				<image
+					xlink:href="/characters/celestia_dfn.png"
+					x={MAP_SIZE.x * (mousePosition.x / 100) - 7.5}
+					y={MAP_SIZE.y * (mousePosition.y / 100) - 7.5}
+					width="15"
+					height="15"
+					opacity="0.6"
+				/>
 			{/if}
 		</svg>
 		<div class="absolute bottom-2 left-2 rounded bg-black/50 px-2 py-1 text-sm text-white">
@@ -401,6 +438,7 @@
 											availableInterceptors.length > 0 ? availableInterceptors[0] : null;
 									}
 									editingInterceptor = null;
+									editingStage = 'position';
 								}}
 								disabled={isSaving}
 								class={[
@@ -441,6 +479,40 @@
 				{#if editingInterceptor === selectedInterceptor}
 					<!-- Edit Form -->
 					<div class="space-y-4 rounded bg-black/20 p-4">
+						<!-- Stage Navigation -->
+						<div class="mb-4 flex items-center justify-between">
+							<div class="flex items-center gap-2">
+								<div
+									class={[
+										'rounded border px-3 py-1 text-sm transition-all',
+										{
+											'border-green-700/50 bg-green-600/20 text-green-300':
+												editingStage === 'deploy',
+											'border-blue-700/50 bg-blue-600/20 text-blue-300': editingStage === 'position'
+										}
+									]}
+								>
+									{editingStage === 'position' ? '1. Position' : '✓ Position'}
+								</div>
+								<div class="text-gray-400">→</div>
+								<div
+									class={[
+										'rounded border px-3 py-1 text-sm transition-all',
+										{
+											'border-blue-700/50 bg-blue-600/20 text-blue-300': editingStage === 'deploy',
+											'border-gray-700/50 bg-gray-600/20 text-gray-400': editingStage === 'position'
+										}
+									]}
+								>
+									{editingStage === 'deploy' ? '2. Deploy Position' : 'Deploy Position'}
+								</div>
+							</div>
+							<div class="text-sm text-gray-300">
+								{editingStage === 'position'
+									? 'Click on map to set position'
+									: 'Click on map to set deploy position'}
+							</div>
+						</div>
 						<div>
 							<label for="interceptor-name" class="mb-1 block text-sm text-gray-300">Name</label>
 							<input
@@ -490,82 +562,86 @@
 							/>
 							<label for="interceptor-round-start" class="text-sm text-gray-300">Round Start</label>
 						</div>
-						<div>
-							<label for="interceptor-pos-x" class="mb-1 block text-sm text-gray-300"
-								>Position X: {interceptor.position.x.toFixed(1)}%</label
-							>
-							<input
-								id="interceptor-pos-x"
-								type="range"
-								min="0"
-								max="100"
-								step="0.1"
-								bind:value={interceptor.position.x}
-								onchange={(e) =>
-									updateInterceptorProperty('position', {
-										...interceptor.position,
-										x: parseFloat((e.target as HTMLInputElement).value)
-									})}
-								class="w-full"
-							/>
-						</div>
-						<div>
-							<label for="interceptor-pos-y" class="mb-1 block text-sm text-gray-300"
-								>Position Y: {interceptor.position.y.toFixed(1)}%</label
-							>
-							<input
-								id="interceptor-pos-y"
-								type="range"
-								min="0"
-								max="100"
-								step="0.1"
-								bind:value={interceptor.position.y}
-								onchange={(e) =>
-									updateInterceptorProperty('position', {
-										...interceptor.position,
-										y: parseFloat((e.target as HTMLInputElement).value)
-									})}
-								class="w-full"
-							/>
-						</div>
-						<div>
-							<label for="interceptor-deploy-x" class="mb-1 block text-sm text-gray-300"
-								>Deploy Position X: {interceptor.deploy_position.x.toFixed(1)}%</label
-							>
-							<input
-								id="interceptor-deploy-x"
-								type="range"
-								min="0"
-								max="100"
-								step="0.1"
-								bind:value={interceptor.deploy_position.x}
-								onchange={(e) =>
-									updateInterceptorProperty('deploy_position', {
-										...interceptor.deploy_position,
-										x: parseFloat((e.target as HTMLInputElement).value)
-									})}
-								class="w-full"
-							/>
-						</div>
-						<div>
-							<label for="interceptor-deploy-y" class="mb-1 block text-sm text-gray-300"
-								>Deploy Position Y: {interceptor.deploy_position.y.toFixed(1)}%</label
-							>
-							<input
-								id="interceptor-deploy-y"
-								type="range"
-								min="0"
-								max="100"
-								step="0.1"
-								bind:value={interceptor.deploy_position.y}
-								onchange={(e) =>
-									updateInterceptorProperty('deploy_position', {
-										...interceptor.deploy_position,
-										y: parseFloat((e.target as HTMLInputElement).value)
-									})}
-								class="w-full"
-							/>
-						</div>
+
+						{#if editingStage === 'position'}
+							<div>
+								<label for="interceptor-pos-x" class="mb-1 block text-sm text-gray-300"
+									>Position X: {interceptor.position.x.toFixed(1)}%</label
+								>
+								<input
+									id="interceptor-pos-x"
+									type="range"
+									min="0"
+									max="100"
+									step="0.1"
+									bind:value={interceptor.position.x}
+									onchange={(e) =>
+										updateInterceptorProperty('position', {
+											...interceptor.position,
+											x: parseFloat((e.target as HTMLInputElement).value)
+										})}
+									class="w-full"
+								/>
+							</div>
+							<div>
+								<label for="interceptor-pos-y" class="mb-1 block text-sm text-gray-300"
+									>Position Y: {interceptor.position.y.toFixed(1)}%</label
+								>
+								<input
+									id="interceptor-pos-y"
+									type="range"
+									min="0"
+									max="100"
+									step="0.1"
+									bind:value={interceptor.position.y}
+									onchange={(e) =>
+										updateInterceptorProperty('position', {
+											...interceptor.position,
+											y: parseFloat((e.target as HTMLInputElement).value)
+										})}
+									class="w-full"
+								/>
+							</div>
+						{:else}
+							<div>
+								<label for="interceptor-deploy-x" class="mb-1 block text-sm text-gray-300"
+									>Deploy Position X: {interceptor.deploy_position.x.toFixed(1)}%</label
+								>
+								<input
+									id="interceptor-deploy-x"
+									type="range"
+									min="0"
+									max="100"
+									step="0.1"
+									bind:value={interceptor.deploy_position.x}
+									onchange={(e) =>
+										updateInterceptorProperty('deploy_position', {
+											...interceptor.deploy_position,
+											x: parseFloat((e.target as HTMLInputElement).value)
+										})}
+									class="w-full"
+								/>
+							</div>
+							<div>
+								<label for="interceptor-deploy-y" class="mb-1 block text-sm text-gray-300"
+									>Deploy Position Y: {interceptor.deploy_position.y.toFixed(1)}%</label
+								>
+								<input
+									id="interceptor-deploy-y"
+									type="range"
+									min="0"
+									max="100"
+									step="0.1"
+									bind:value={interceptor.deploy_position.y}
+									onchange={(e) =>
+										updateInterceptorProperty('deploy_position', {
+											...interceptor.deploy_position,
+											y: parseFloat((e.target as HTMLInputElement).value)
+										})}
+									class="w-full"
+								/>
+							</div>
+						{/if}
 					</div>
 				{:else}
 					<!-- Display Mode -->
