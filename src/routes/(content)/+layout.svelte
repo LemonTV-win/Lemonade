@@ -2,6 +2,7 @@
 	import '../../app.css';
 	import NavMenu from '$lib/components/NavMenu.svelte';
 	import { page } from '$app/state';
+	import { locales, setLocale, type Locale } from '$lib/paraglide/runtime';
 
 	let { children } = $props();
 </script>
@@ -17,7 +18,7 @@
 </svelte:head>
 
 <div class="mx-auto flex min-h-full flex-col">
-	<header class="mx-auto flex flex-col gap-4 p-4">
+	<header class="mx-auto flex gap-4 p-4">
 		<p class="flex items-center gap-2 text-lg font-medium">
 			<a href="/" class="group flex items-center gap-3">
 				<img
@@ -34,6 +35,18 @@
 				</span>
 			</a>
 		</p>
+		<select
+			class="w-32 rounded-md border border-amber-300/30 bg-zinc-900 px-3 py-2 text-sm text-white focus:border-amber-400 focus:outline-none"
+			onchange={({ currentTarget }) => {
+				setLocale(currentTarget.value as Locale);
+			}}
+		>
+			{#each locales as locale}
+				<option value={locale}
+					>{new Intl.DisplayNames(locale, { type: 'language' }).of(locale)}</option
+				>
+			{/each}
+		</select>
 	</header>
 	<NavMenu />
 
