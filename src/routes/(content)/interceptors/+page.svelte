@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { MAPS, type GameMap, MAP_SIZE, MAP_SCALE_FACTOR, MAP_NAME } from '$lib/data/game';
+	import { MAPS, type GameMap, MAP_SIZE, MAP_SCALE_FACTOR, MAP_NAMES } from '$lib/data/game';
 	import { browser } from '$app/environment';
 	import type { Point } from '$lib/data/geometry';
 	import { INTERCEPTORS, type Interceptor } from '$lib/data/interceptors';
@@ -274,7 +274,7 @@
 			>
 				{#each sortedMaps as map}
 					<option value={map}>
-						{MAP_NAME[map]} ({mapInterceptorCounts[map]})
+						{MAP_NAMES[map]()} ({mapInterceptorCounts[map]})
 					</option>
 				{/each}
 			</select>
