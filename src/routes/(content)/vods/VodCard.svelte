@@ -34,11 +34,13 @@
 	class="flex flex-col gap-1 overflow-hidden rounded-md border border-amber-200/20 bg-black/80 shadow-md transition-transform duration-200 hover:scale-105 hover:border-amber-300"
 >
 	<a href={vod.url} target="_blank" class="contents">
-		<img
-			src={`/api/thumbnail-proxy?url=${encodeURIComponent(vod.thumbnail)}`}
-			alt="Thumbnail"
-			class="w-full"
-		/>
+		<div class="aspect-[16/9] w-full overflow-hidden bg-black">
+			<img
+				src={`/api/thumbnail-proxy?url=${encodeURIComponent(vod.thumbnail)}`}
+				alt="Thumbnail"
+				class="h-full w-full object-cover"
+			/>
+		</div>
 	</a>
 	<div class="px-2 pt-1 pb-0">
 		<div class="truncate text-xs font-medium text-amber-100/90" title={vod.title}>
