@@ -1,3 +1,4 @@
+import { GOOGLE_API_KEY } from '$env/static/private';
 import { json } from '@sveltejs/kit';
 
 export async function GET({ url }) {
@@ -34,10 +35,12 @@ export async function GET({ url }) {
 		let publishedAt;
 		try {
 			const apiRes = await fetch(
-				`https://www.googleapis.com/youtube/v3/videos?part=snippet&id=${videoId}&key=YOUR_API_KEY`
+				`https://www.googleapis.com/youtube/v3/videos?part=snippet&id=${videoId}&key=${GOOGLE_API_KEY}`
 			);
+			console.log('apiRes', apiRes);
 			if (apiRes.ok) {
 				const apiData = await apiRes.json();
+				console.log('apiData', apiData);
 				publishedAt = apiData.items?.[0]?.snippet?.publishedAt;
 			}
 		} catch {}
