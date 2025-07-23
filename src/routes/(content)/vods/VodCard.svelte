@@ -38,6 +38,7 @@
 			<img
 				src={`/api/thumbnail-proxy?url=${encodeURIComponent(vod.thumbnail)}`}
 				alt="Thumbnail"
+				loading="lazy"
 				class="h-full w-full object-cover"
 			/>
 		</div>
