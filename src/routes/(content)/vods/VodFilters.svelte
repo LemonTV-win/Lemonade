@@ -6,7 +6,8 @@
 		SCISORS_CHARACTERS,
 		URBINO_CHARACTERS,
 		type Character,
-		type GameMap
+		type GameMap,
+		type Rank
 	} from '$lib/data/game';
 	import {
 		VOD_PLATFORMS_LABELS,
@@ -17,6 +18,7 @@
 	import { RANKS } from '$lib/data/game';
 	import CharacterIcon from '$lib/components/CharacterIcon.svelte';
 	import * as m from '$lib/paraglide/messages';
+	import RankIcon from '$lib/components/RankIcon.svelte';
 
 	let {
 		platforms = $bindable([]),
@@ -254,9 +256,17 @@
 			{#each rankGroups as group}
 				<button
 					type="button"
-					class={`rounded border px-3 py-1 text-sm font-medium transition-colors focus:ring-2 focus:ring-amber-400 focus:outline-none ${selectedRanks.includes(group as string) ? 'border-amber-500 bg-gradient-to-r from-yellow-300 to-amber-500 text-black shadow' : 'border-gray-700 bg-zinc-900 text-amber-200 hover:border-amber-400 hover:bg-amber-400/10'}`}
+					class={[
+						'rounded border px-3 py-1 text-sm font-medium transition-colors focus:ring-2 focus:ring-amber-400 focus:outline-none',
+						'flex items-center gap-1',
+						selectedRanks.includes(group as string)
+							? 'border-amber-500 bg-gradient-to-r from-yellow-300 to-amber-500 text-black shadow'
+							: 'border-gray-700 text-amber-200  hover:border-amber-400 ',
+						false && ' bg-zinc-900 hover:bg-amber-400/10'
+					]}
 					onclick={() => (selectedRanks = toggleFilter(selectedRanks, group as string))}
 				>
+					<RankIcon rank={group as Rank} />
 					{RANK_GROUP_NAMES[group as string]()}
 				</button>
 			{/each}
