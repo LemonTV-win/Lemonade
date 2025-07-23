@@ -2,7 +2,7 @@
 	import '../../app.css';
 	import NavMenu from '$lib/components/NavMenu.svelte';
 	import { page } from '$app/state';
-	import { locales, setLocale, type Locale } from '$lib/paraglide/runtime';
+	import { getLocale, locales, setLocale, type Locale } from '$lib/paraglide/runtime';
 
 	let { children } = $props();
 </script>
@@ -37,6 +37,7 @@
 		</p>
 		<select
 			class="w-32 rounded-md border border-amber-300/30 bg-zinc-900 px-3 py-2 text-sm text-white focus:border-amber-400 focus:outline-none"
+			value={getLocale()}
 			onchange={({ currentTarget }) => {
 				setLocale(currentTarget.value as Locale);
 			}}
