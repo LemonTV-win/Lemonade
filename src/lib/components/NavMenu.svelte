@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/state';
+	import * as m from '$lib/paraglide/messages';
 
 	let { class: className = '', ...restProps }: { class?: string } = $props();
 
@@ -15,7 +16,7 @@
 			: 'border-amber-700/50 bg-amber-600/20 hover:bg-amber-500/30'}"
 	>
 		<img src="/icons/reiichi_skill_1.webp" alt="Reiichi" class="h-5 w-5 object-contain" />
-		Reiichi Walls
+		{m.reiichi_walls()}
 	</a>
 	<a
 		href="/interceptors"
@@ -25,7 +26,7 @@
 			: 'border-amber-700/50 bg-amber-600/20 hover:bg-amber-500/30'}"
 	>
 		<img src="/icons/interceptor.png" alt="Interceptor" class="h-5 w-5" />
-		Interceptors
+		{m.interceptors()}
 	</a>
 	<a
 		href="/vods"
@@ -34,6 +35,6 @@
 			? 'border-amber-500 bg-amber-500/30'
 			: 'border-amber-700/50 bg-amber-600/20 hover:bg-amber-500/30'}"
 	>
-		🎦 VODs
+		🎦 {m.vods()}
 	</a>
 </nav>

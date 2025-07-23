@@ -52,5 +52,8 @@
 	"rank_optional": "段位（可選）",
 	"add_vod": "新增VOD",
 	"update_vod": "更新VOD",
-	"close": "關閉"
+	"close": "關閉",
+	"interceptors": "攔截器",
+	"reiichi_walls": "令牆",
+	"vods": "影片"
 }
