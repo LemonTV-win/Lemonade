@@ -52,5 +52,14 @@
 	"rank_optional": "Rank (optional)",
 	"add_vod": "Add VOD",
 	"update_vod": "Update VOD",
-	"close": "Close"
+	"close": "Close",
+	"Substance": "Substance",
+	"Molecule": "Molecule",
+	"Atom": "Atom",
+	"Proton": "Proton",
+	"Neutron": "Neutron",
+	"Electron": "Electron",
+	"Quark": "Quark",
+	"Superstring": "Superstring",
+	"Singularity": "Singularity"
 }

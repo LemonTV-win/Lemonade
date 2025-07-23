@@ -60,13 +60,29 @@
 
 	// Group similar ranks for filtering (e.g., Quark I, II, III -> Quark)
 	function getRankGroup(rank: string): string {
-		if (rank.startsWith('Quark')) return 'Quark';
-		if (rank.startsWith('Electron')) return 'Electron';
+		if (rank.startsWith('Substance')) return 'Substance';
+		if (rank.startsWith('Molecule')) return 'Molecule';
+		if (rank.startsWith('Atom')) return 'Atom';
 		if (rank.startsWith('Proton')) return 'Proton';
 		if (rank.startsWith('Neutron')) return 'Neutron';
-		if (rank.startsWith('Photon')) return 'Photon';
+		if (rank.startsWith('Electron')) return 'Electron';
+		if (rank.startsWith('Quark')) return 'Quark';
+		if (rank.startsWith('Superstring')) return 'Superstring';
+		if (rank.startsWith('Singularity')) return 'Singularity';
 		return rank;
 	}
+
+	const RANK_GROUP_NAMES: Record<string, () => string> = {
+		Substance: m.Substance,
+		Molecule: m.Molecule,
+		Atom: m.Atom,
+		Proton: m.Proton,
+		Neutron: m.Neutron,
+		Electron: m.Electron,
+		Quark: m.Quark,
+		Superstring: m.Superstring,
+		Singularity: m.Singularity
+	};
 
 	// Get unique rank groups from the provided ranks, sorted by first occurrence in RANKS
 	const rankGroupsSet = new Set(ranks.filter(isString).map(getRankGroup));
@@ -240,8 +256,9 @@
 					type="button"
 					class={`rounded border px-3 py-1 text-sm font-medium transition-colors focus:ring-2 focus:ring-amber-400 focus:outline-none ${selectedRanks.includes(group as string) ? 'border-amber-500 bg-gradient-to-r from-yellow-300 to-amber-500 text-black shadow' : 'border-gray-700 bg-zinc-900 text-amber-200 hover:border-amber-400 hover:bg-amber-400/10'}`}
 					onclick={() => (selectedRanks = toggleFilter(selectedRanks, group as string))}
-					>{group as string}</button
 				>
+					{RANK_GROUP_NAMES[group as string]()}
+				</button>
 			{/each}
 		</div>
 	</div>

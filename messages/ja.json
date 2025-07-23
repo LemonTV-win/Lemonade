@@ -52,5 +52,14 @@
 	"rank_optional": "ランク（任意）",
 	"add_vod": "VODを追加",
 	"update_vod": "VODを更新",
-	"close": "閉じる"
+	"close": "閉じる",
+	"Substance": "サブスタンス",
+	"Molecule": "モレキュール",
+	"Atom": "アトム",
+	"Proton": "プロトン",
+	"Neutron": "ニュートロン",
+	"Electron": "エレクトロン",
+	"Quark": "クォーク",
+	"Superstring": "スーパーストリング",
+	"Singularity": "シンギュラリティ"
 }
