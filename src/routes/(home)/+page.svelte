@@ -37,13 +37,13 @@
 		>
 			Welcome to Lemonade
 		</h1>
-		<p
+		<h2
 			class="mb-8 text-xl text-gray-300 transition-all delay-100 duration-700 {visible
 				? 'translate-y-0 opacity-100'
 				: '-translate-y-4 opacity-0'}"
 		>
 			Strinova Utility Lineup
-		</p>
+		</h2>
 
 		<nav
 			class="mt-8 flex flex-col justify-center gap-4 transition-all delay-200 duration-700 sm:flex-row {visible
@@ -63,6 +63,30 @@
 			>
 				<img src="/icons/interceptor.png" alt="Interceptor" class="h-5 w-5" />
 				Interceptors
+			</a>
+		</nav>
+
+		<h2 class="text-xl text-gray-300">Strinova Databases</h2>
+
+		<nav
+			class="mt-8 flex justify-center gap-4 transition-all delay-200 duration-700 sm:flex-row {visible
+				? 'translate-y-0 opacity-100'
+				: '-translate-y-4 opacity-0'}"
+		>
+			<!-- Callouts -->
+			<a
+				href="/callouts"
+				class="flex items-center gap-2 rounded-lg border border-amber-700/50 bg-amber-600/20 px-6 py-3 text-amber-300 backdrop-blur-sm transition-all hover:scale-105 hover:bg-amber-500/30"
+			>
+				🎯 Callouts
+			</a>
+
+			<!-- VODs -->
+			<a
+				href="/vods"
+				class="flex items-center gap-2 rounded-lg border border-amber-700/50 bg-amber-600/20 px-6 py-3 text-amber-300 backdrop-blur-sm transition-all hover:scale-105 hover:bg-amber-500/30"
+			>
+				🎦 VODs
 			</a>
 		</nav>
 	</div>
