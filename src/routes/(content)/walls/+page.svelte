@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { MAPS, type GameMap, MAP_SIZE, MAP_SCALE_FACTOR, MAP_NAME } from '$lib/data/game';
+	import { MAPS, type GameMap, MAP_SIZE, MAP_SCALE_FACTOR, MAP_NAMES } from '$lib/data/game';
 	import { browser } from '$app/environment';
 	import FilterPanel from '$lib/components/FilterPanel.svelte';
 
@@ -121,7 +121,7 @@
 			>
 				{#each sortedMaps as map}
 					<option value={map}>
-						{MAP_NAME[map]} ({hasActiveFilters
+						{MAP_NAMES[map]()} ({hasActiveFilters
 							? `${filteredWallCounts[map]}/${mapWallCounts[map]}`
 							: mapWallCounts[map]})
 					</option>
