@@ -40,6 +40,8 @@
 			character_first: undefined,
 			character_second: undefined,
 			season: '',
+			rank: undefined,
+			type: 'ranked',
 			publishedAt: undefined
 		};
 	}
