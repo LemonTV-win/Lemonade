@@ -2,12 +2,15 @@
 	import type { NewVod } from '$lib/server/db/schemas/vod';
 	import {
 		CHARACTER_NAMES,
+		getSeasonName,
 		MAP_NAMES,
 		MAPS,
 		PUS_CHARACTERS,
 		RANKS,
 		SCISORS_CHARACTERS,
-		URBINO_CHARACTERS
+		SEASONS,
+		URBINO_CHARACTERS,
+		type Season
 	} from '$lib/data/game';
 	import { enhance } from '$app/forms';
 
@@ -179,49 +182,6 @@
 			editingVod.platform = undefined;
 		}
 	});
-
-	const SEASONS = [
-		'C1',
-		'C2',
-		'C3',
-		'C4',
-		'C5',
-		'C6',
-		'C7',
-		'C8',
-		'C9',
-		'C10',
-		'C11',
-		// 'C12',
-		// 'C13',
-		// 'C14',
-		// 'C15',
-		// 'C16',
-		// 'C17',
-		// 'C18',
-		// 'C19',
-		// 'C20',
-		'G1',
-		'G2',
-		'G3',
-		'G4'
-		// 'G5',
-		// 'G6',
-		// 'G7',
-		// 'G8',
-		// 'G9',
-		// 'G10',
-		// 'G11',
-		// 'G12',
-		// 'G13',
-		// 'G14',
-		// 'G15',
-		// 'G16',
-		// 'G17',
-		// 'G18',
-		// 'G19',
-		// 'G20',
-	];
 </script>
 
 <dialog
@@ -380,7 +340,7 @@
 				class="mt-1 mb-4 w-full rounded border border-amber-300/30 bg-zinc-900 px-3 py-2 text-white focus:border-amber-400 focus:outline-none"
 			>
 				{#each SEASONS as season}
-					<option value={season}>{season}</option>
+					<option value={season}>{getSeasonName(season as Season)}</option>
 				{/each}
 			</select>
 		</label>

@@ -4,14 +4,10 @@
 	import MapIcon from '$lib/components/MapIcon.svelte';
 	import RankIcon from '$lib/components/RankIcon.svelte';
 
-	import { CHARACTER_NAMES, MAP_NAMES } from '$lib/data/game';
+	import { CHARACTER_NAMES, getSeasonName, MAP_NAMES, type Season } from '$lib/data/game';
 	import { getLocale } from '$lib/paraglide/runtime';
 
 	let { vod, onEdit }: { vod: NewVod; onEdit: (vod: NewVod) => void } = $props();
-
-	function getSeasonName(season: string): string {
-		return season.replace('C', 'CalabiYau S').replace('G', 'Strinova S');
-	}
 
 	function formatPublishedAt(date: string | number | Date | undefined): string {
 		if (!date) return '';
@@ -79,7 +75,7 @@
 			{vod.player}
 		</span>
 		{#if vod.season}
-			<span class="text-xs text-amber-300">{getSeasonName(vod.season)}</span>
+			<span class="text-xs text-amber-300">{getSeasonName(vod.season as Season)}</span>
 		{/if}
 		{#if vod.rank}
 			<RankIcon rank={vod.rank} />

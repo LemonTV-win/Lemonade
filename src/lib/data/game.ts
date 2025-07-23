@@ -150,3 +150,47 @@ export type Rank = (typeof RANKS)[number];
 export const SERVERS = ['CN', 'APAC', 'NA', 'EU'] as const;
 export type Server = (typeof SERVERS)[number];
 // #endregion
+
+// #region Seasons
+export const CN_SEASONS = [
+	'C1',
+	'C2',
+	'C3',
+	'C4',
+	'C5',
+	'C6',
+	'C7',
+	'C8',
+	'C9',
+	'C10',
+	'C11'
+	// 'C12',
+	// 'C13',
+	// 'C14',
+	// 'C15',
+	// 'C16',
+	// 'C17',
+	// 'C18',
+	// 'C19',
+	// 'C20',
+] as const;
+export const GLOBAL_SEASONS = [
+	'G1',
+	'G2',
+	'G3',
+	'G4'
+	// 'G5',
+	// 'G6',
+	// 'G7',
+	// 'G8',
+	// 'G9',
+	// 'G10',
+	// 'G11'
+] as const;
+export const SEASONS = [...CN_SEASONS, ...GLOBAL_SEASONS] as const;
+export type Season = (typeof SEASONS)[number];
+export function getSeasonName(season: Season): string {
+	return season.replace('C', 'CalabiYau S').replace('G', 'Strinova S');
+}
+
+// #endregion
