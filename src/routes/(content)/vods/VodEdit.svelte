@@ -186,7 +186,7 @@
 
 <dialog
 	bind:this={dialogEl}
-	class="rounded-lg border border-amber-300/30 bg-black/95 p-8 text-amber-200 shadow-2xl"
+	class="rounded-lg border border-amber-300/30 bg-black/95 p-8 text-amber-200 shadow-2xl backdrop-blur-sm"
 >
 	<form
 		method="post"
