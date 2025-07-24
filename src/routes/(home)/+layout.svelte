@@ -52,6 +52,9 @@
 			</p>
 
 			<div class="flex items-center gap-6">
+				<a href="/about" class="text-sm text-gray-400 transition-colors hover:text-amber-300">
+					About
+				</a>
 				<a
 					href="https://github.com/mkpoli/LemonJuice"
 					class="text-sm text-gray-400 transition-colors hover:text-amber-300"

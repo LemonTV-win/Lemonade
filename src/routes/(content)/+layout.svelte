@@ -61,6 +61,8 @@
 				></span
 			>
 
+			<a href="/about" class="transition-colors hover:text-gray-100">About</a>
+
 			<a href="https://github.com/mkpoli/LemonJuice" class="transition-colors hover:text-gray-100"
 				>GitHub</a
 			>
