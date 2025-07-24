@@ -9,11 +9,12 @@ export const VOD_PLATFORMS_LABELS: Record<VodPlatform, string> = {
 	twitch: 'Twitch'
 };
 
-export const VOD_TYPES = ['ranked', 'scrim', 'tournament'] as const;
+export const VOD_TYPES = ['ranked', 'scrim', 'tournament', 'demolition'] as const;
 export type VodType = (typeof VOD_TYPES)[number];
 
 export const VOD_TYPES_LABELS: Record<VodType, () => string> = {
 	ranked: m.ranked,
 	scrim: m.scrim,
-	tournament: m.tournament
+	tournament: m.tournament,
+	demolition: m.demolition
 };
