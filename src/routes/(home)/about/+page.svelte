@@ -113,7 +113,7 @@
 		</div>
 
 		<div
-			class="animate-fade-in-up mb-12 rounded-2xl border border-amber-700/50 bg-amber-600/20 p-8 opacity-0 backdrop-blur-sm md:p-10"
+			class="animate-fade-in-up mb-12 flex flex-col gap-8 rounded-2xl border border-amber-700/50 bg-amber-600/20 p-8 opacity-0 backdrop-blur-sm md:p-10"
 			style="animation-delay: 1.6s; animation-fill-mode: forwards;"
 		>
 			<h2 class="mb-8 text-center text-4xl font-semibold text-amber-300">Created with ❤️</h2>
@@ -131,6 +131,35 @@
 						This project was born from a love for Strinova and a desire to give back to the
 						community.
 					</p>
+				</div>
+			</div>
+			<div class="flex flex-col items-center gap-8 md:flex-row">
+				<div
+					class="flex h-24 w-24 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-r from-yellow-300 to-amber-500 text-4xl md:h-28 md:w-28 md:text-5xl"
+				>
+					📖
+				</div>
+				<div class="text-center md:text-left">
+					<h3 class="mb-2 text-2xl font-semibold text-amber-300">Eaterrius</h3>
+					<p class="mb-2 text-gray-300">Russian/Ukrainian Translator</p>
+					<div class="flex justify-center gap-4">
+						<a
+							href="https://linktr.ee/eaterrius"
+							target="_blank"
+							rel="noopener noreferrer"
+							class="text-blue-400 hover:underline"
+						>
+							Linktree
+						</a>
+						<a
+							href="https://x.com/eaterrius"
+							target="_blank"
+							rel="noopener noreferrer"
+							class="text-blue-400 hover:underline"
+						>
+							X
+						</a>
+					</div>
 				</div>
 			</div>
 		</div>
