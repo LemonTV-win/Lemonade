@@ -73,5 +73,13 @@
 	"interceptors": "拦截器",
 	"reiichi_walls": "令墙",
 	"vods": "视频",
-	"demolition": "一般爆破"
+	"demolition": "一般爆破",
+	"home_title": "Lemonade – Strinova Utility Lineup Platform",
+	"home_description": "Strinova utility lineups, callouts, strats, techniques sharing platform.",
+	"welcome_to_lemonade": "Welcome to Lemonade",
+	"strinova_utility_lineup": "Strinova Utility Lineup",
+	"strinova_databases": "Strinova Databases",
+	"callouts": "Callouts",
+	"strinova_tutorials": "Strinova Tutorials",
+	"kankeri_tutorials": "Kankeri Tutorials"
 }

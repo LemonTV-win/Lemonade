@@ -73,5 +73,13 @@
 	"interceptors": "攔截器",
 	"reiichi_walls": "令牆",
 	"vods": "影片",
-	"demolition": "一般爆破"
+	"demolition": "一般爆破",
+	"home_title": "Lemonade – Strinova 實用工具陣容平台",
+	"home_description": "Strinova 實用工具陣容、呼叫點、策略、技巧分享平台。",
+	"welcome_to_lemonade": "歡迎來到 Lemonade",
+	"strinova_utility_lineup": "Strinova 實用工具陣容",
+	"strinova_databases": "Strinova 資料庫",
+	"callouts": "呼叫點",
+	"strinova_tutorials": "Strinova 教學",
+	"kankeri_tutorials": "Kankeri 教學"
 }

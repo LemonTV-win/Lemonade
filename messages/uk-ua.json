@@ -69,5 +69,17 @@
 	"rank_optional": "Ранг (опціонально)",
 	"add_vod": "Додати VOD",
 	"update_vod": "Оновити VOD",
-	"close": "Закрити"
+	"close": "Закрити",
+	"interceptors": "Interceptors",
+	"reiichi_walls": "Reiichi Walls",
+	"vods": "VODs",
+	"demolition": "Демолішн",
+	"home_title": "Lemonade – Платформа Лінапів Утиліт Strinova",
+	"home_description": "Платформа для обміну лінапами утиліт Strinova, колаутами, стратегіями та техніками.",
+	"welcome_to_lemonade": "Ласкаво просимо до Lemonade",
+	"strinova_utility_lineup": "Лінап Утиліт Strinova",
+	"strinova_databases": "Бази Даних Strinova",
+	"callouts": "Колаути",
+	"strinova_tutorials": "Туторіали Strinova",
+	"kankeri_tutorials": "Туторіали Kankeri"
 }

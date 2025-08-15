@@ -73,5 +73,13 @@
 	"interceptors": "Интерцепторы",
 	"reiichi_walls": "Рейчи-Стены",
 	"vods": "ВОДы",
-	"demolition": "Демолиция"
+	"demolition": "Демолиция",
+	"home_title": "Lemonade – Платформа Линапов Утилит Strinova",
+	"home_description": "Платформа для обмена линапами утилит Strinova, колаутами, стратегиями и техниками.",
+	"welcome_to_lemonade": "Добро пожаловать в Lemonade",
+	"strinova_utility_lineup": "Линап Утилит Strinova",
+	"strinova_databases": "Базы Данных Strinova",
+	"callouts": "Колауты",
+	"strinova_tutorials": "Туториалы Strinova",
+	"kankeri_tutorials": "Туториалы Kankeri"
 }

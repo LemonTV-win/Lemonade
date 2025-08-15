@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { m } from '$lib/paraglide/messages';
 	import '../../app.css';
 
 	let { children } = $props();
@@ -25,10 +26,12 @@
 			</a>
 
 			<nav class="hidden items-center gap-6 sm:flex">
-				<a href="/walls" class="text-gray-300 transition-colors hover:text-amber-300">Walls</a>
-				<a href="/interceptors" class="text-gray-300 transition-colors hover:text-amber-300"
-					>Interceptors</a
-				>
+				<a href="/walls" class="text-gray-300 transition-colors hover:text-amber-300">
+					{m.reiichi_walls()}
+				</a>
+				<a href="/interceptors" class="text-gray-300 transition-colors hover:text-amber-300">
+					{m.interceptors()}
+				</a>
 			</nav>
 		</div>
 	</header>

@@ -73,5 +73,13 @@
 	"interceptors": "インターセプター",
 	"reiichi_walls": "令一カーテン",
 	"vods": "動画",
-	"demolition": "デモリション"
+	"demolition": "デモリション",
+	"home_title": "Lemonade – Strinova ユーティリティラインナッププラットフォーム",
+	"home_description": "Strinovaユーティリティラインナップ、コールアウト、戦略、テクニック共有プラットフォーム。",
+	"welcome_to_lemonade": "Lemonadeへようこそ",
+	"strinova_utility_lineup": "Strinovaユーティリティラインナップ",
+	"strinova_databases": "Strinovaデータベース",
+	"callouts": "コールアウト",
+	"strinova_tutorials": "Strinovaチュートリアル",
+	"kankeri_tutorials": "Kankeriチュートリアル"
 }
