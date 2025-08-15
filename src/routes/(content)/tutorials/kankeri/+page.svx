@@ -14,6 +14,8 @@ authorBio: 日本屈指のStrinova配信者。途切れないトークと自由�
 
 <script>
   import Callout from '$lib/mdsvex/components/Callout.svelte';
+  import Image from '$lib/mdsvex/components/Image.svelte';
+  import Video from '$lib/mdsvex/components/Video.svelte';
 </script>
 
 # かんけり流 Strinova（爆破ゲーム）の常識
@@ -64,7 +66,7 @@ authorBio: 日本屈指のStrinova配信者。途切れないトークと自由�
 - 「2号倉庫」マップで **AIの難易度：超能型 × 3体** を追加。  
 - 的が完全ランダムに動くため、自分の動きもランダムになり、フィジカル強化に最適です。
 
-<video src="/kankeri/20250802-11.mp4" controls caption="AI超能型×3 のエイム練習デモ"></video>
+<Video src="/kankeri/20250802-11.mp4" caption="AI超能型×3 のエイム練習デモ" />
 
 ---
 
@@ -85,7 +87,7 @@ authorBio: 日本屈指のStrinova配信者。途切れないトークと自由�
    逆に②の段階でQスキルを使ってしまうと、④の決戦時に敵を倒すスキルが残らないという問題が発生します。
 
 
-<img src="/kankeri/meta-01.png" alt="防衛側メタ" />
+<Image src="/kankeri/meta-01.png" alt="防衛側メタ" title="防衛側メタ（基本形）" />
 ---
 
 ### 具体例（コーシーCサイトの場合）
@@ -93,20 +95,20 @@ authorBio: 日本屈指のStrinova配信者。途切れないトークと自由�
 1. **ミシェル**
    - 前目で一回確認して削り（倒されない範囲）。
    - 即座に後退。
-<img src="/kankeri/meta-02.png" alt="防衛側メタ" />
+<Image src="/kankeri/meta-02.png" alt="防衛側メタ" title="前目確認と後退の例" />
 
 1. **信長**
    - 軽く削りを入れて後退。  
    - この信長を下がらせるためには、  
      明・マーラ・メレの **Qスキル** 使用が必要になる場合があります。
 
-<img src="/kankeri/meta-03.png" alt="防衛側メタ" />
+<Image src="/kankeri/meta-03.png" alt="防衛側メタ" title="5人揃った即リテイク" />
 1. **③ 5人揃ったタイミングでリテイク開始**
    - この段階で攻撃側が犯す**致命的なミス**は、ボムを設置してしまうことです。  
      → 4v5の状況が完成し、それだけで負けがほぼ確定します。
    - 防衛側はこの形をほぼ確実に取ってくるため、攻撃側はそれを前提に動く必要があります。
 
-<img src="/kankeri/meta-04.png" alt="防衛側メタ" />
+<Image src="/kankeri/meta-04.png" alt="防衛側メタ" title="緑範囲の活用と投げ物" />
 
 1. **④ 緑の範囲内に攻撃有利スキル・投げ物を使用**
    - ラビーネは必ずこのタイミングで緑範囲内にスキルを使用してください。  
