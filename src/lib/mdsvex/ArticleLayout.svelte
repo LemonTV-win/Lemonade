@@ -154,7 +154,7 @@
 
 	<article>
 		<div
-			class="rounded-2xl border border-amber-400/10 bg-gradient-to-b from-zinc-950 to-zinc-900 p-6 shadow-xl shadow-black/30"
+			class="rounded-2xl border border-amber-400/10 bg-gradient-to-b from-zinc-900/45 to-zinc-950/45 p-6 shadow-xl shadow-black/30 backdrop-blur-lg"
 		>
 			<div class="article-content">
 				<slot />

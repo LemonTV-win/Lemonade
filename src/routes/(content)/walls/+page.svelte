@@ -282,7 +282,8 @@
 
 <style>
 	:global(body) {
-		background-image: url('/maps/ocarnus.png');
+		background-image:
+			radial-gradient(circle at center, #1a1a1ad5, #000000d5), url('/maps/ocarnus.png');
 		background-size: cover;
 		background-position: center;
 		background-repeat: no-repeat;
