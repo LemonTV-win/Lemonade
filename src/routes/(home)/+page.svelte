@@ -90,6 +90,8 @@
 			</a>
 		</nav>
 
+		<h2 class="text-xl text-gray-300">Strinova Tutorials</h2>
+
 		<nav
 			class="mt-8 flex justify-center gap-4 transition-all delay-200 duration-700 sm:flex-row {visible
 				? 'translate-y-0 opacity-100'
