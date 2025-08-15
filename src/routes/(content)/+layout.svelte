@@ -48,6 +48,13 @@
 				>
 			{/each}
 		</select>
+
+		<a
+			href="/tutorials/kankeri"
+			class="rounded-lg border border-amber-300/30 bg-amber-600/10 px-3 py-2 text-sm text-amber-300 transition-colors hover:bg-amber-600/20"
+		>
+			kankeri
+		</a>
 	</header>
 	<NavMenu />
 

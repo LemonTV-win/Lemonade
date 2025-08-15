@@ -89,6 +89,19 @@
 				🎦 VODs
 			</a>
 		</nav>
+
+		<nav
+			class="mt-8 flex justify-center gap-4 transition-all delay-200 duration-700 sm:flex-row {visible
+				? 'translate-y-0 opacity-100'
+				: '-translate-y-4 opacity-0'}"
+		>
+			<a
+				href="/tutorials/kankeri"
+				class="flex items-center gap-2 rounded-lg border border-amber-700/50 bg-amber-600/20 px-6 py-3 text-amber-300 backdrop-blur-sm transition-all hover:scale-105 hover:bg-amber-500/30"
+			>
+				📘 Kankeri Tutorials
+			</a>
+		</nav>
 	</div>
 </main>
 
