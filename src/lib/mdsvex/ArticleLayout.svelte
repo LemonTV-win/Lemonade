@@ -1,3 +1,10 @@
+<script context="module">
+	import ImgComp from '$lib/mdsvex/components/Image.svelte';
+	import VideoComp from '$lib/mdsvex/components/Video.svelte';
+	// Replace default elements with styled components
+	export { ImgComp as img, VideoComp as video };
+</script>
+
 <script lang="ts">
 	export let title: string = '';
 	export let description: string = '';
