@@ -75,15 +75,15 @@
 	}
 
 	const RANK_GROUP_NAMES: Record<string, () => string> = {
-		Substance: m.Substance,
-		Molecule: m.Molecule,
-		Atom: m.Atom,
-		Proton: m.Proton,
-		Neutron: m.Neutron,
-		Electron: m.Electron,
-		Quark: m.Quark,
-		Superstring: m.Superstring,
-		Singularity: m.Singularity
+		Substance: m['game.rank.Substance'],
+		Molecule: m['game.rank.Molecule'],
+		Atom: m['game.rank.Atom'],
+		Proton: m['game.rank.Proton'],
+		Neutron: m['game.rank.Neutron'],
+		Electron: m['game.rank.Electron'],
+		Quark: m['game.rank.Quark'],
+		Superstring: m['game.rank.Superstring'],
+		Singularity: m['game.rank.Singularity']
 	};
 
 	// Get unique rank groups from the provided ranks, sorted by first occurrence in RANKS
