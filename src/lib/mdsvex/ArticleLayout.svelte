@@ -14,7 +14,11 @@
 		const d = new Date(value);
 		if (isNaN(d.getTime())) return value;
 		try {
-			return new Intl.DateTimeFormat(undefined, { year: 'numeric', month: 'short', day: '2-digit' }).format(d);
+			return new Intl.DateTimeFormat(undefined, {
+				year: 'numeric',
+				month: 'short',
+				day: '2-digit'
+			}).format(d);
 		} catch {
 			return value;
 		}
@@ -37,7 +41,9 @@
 </svelte:head>
 
 <div class="relative mx-auto w-full max-w-4xl px-4 py-8">
-	<div class="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_top,rgba(245,158,11,0.08),transparent_60%),radial-gradient(ellipse_at_bottom,rgba(251,191,36,0.06),transparent_60%)]"></div>
+	<div
+		class="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_top,rgba(245,158,11,0.08),transparent_60%),radial-gradient(ellipse_at_bottom,rgba(251,191,36,0.06),transparent_60%)]"
+	></div>
 	{#if hasMeta}
 		<header class="mb-8">
 			{#if cover}
@@ -58,7 +64,9 @@
 				<p class="mt-3 text-base text-gray-300">{description}</p>
 			{/if}
 			{#if author || authorUrl || authorAvatar || authorDisplay}
-				<div class="mt-5 flex items-center justify-between gap-3 rounded-xl border border-amber-400/20 bg-zinc-900/60 p-3">
+				<div
+					class="mt-5 flex items-center justify-between gap-3 rounded-xl border border-amber-400/20 bg-zinc-900/60 p-3"
+				>
 					<a
 						href={authorUrl || '#'}
 						target={authorUrl ? '_blank' : undefined}
@@ -88,11 +96,13 @@
 							href={authorUrl}
 							target="_blank"
 							rel="noopener"
-							class="group inline-flex items-center gap-2 rounded-lg border border-violet-400/30 bg-violet-600/20 px-3 py-2 text-sm font-medium text-violet-200 ring-1 ring-inset ring-violet-300/10 transition-colors hover:bg-violet-600/30 hover:text-white"
+							class="group inline-flex items-center gap-2 rounded-lg border border-violet-400/30 bg-violet-600/20 px-3 py-2 text-sm font-medium text-violet-200 ring-1 ring-violet-300/10 transition-colors ring-inset hover:bg-violet-600/30 hover:text-white"
 							aria-label="Watch live on Twitch"
 						>
 							<span class="relative inline-flex h-2.5 w-2.5 items-center justify-center">
-								<span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-500/60"></span>
+								<span
+									class="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-500/60"
+								></span>
 								<span class="relative inline-flex h-2.5 w-2.5 rounded-full bg-red-500"></span>
 							</span>
 							<span>Live</span>
@@ -108,8 +118,20 @@
 						>
 					{/if}
 					{#if formattedDate}
-						<span class="inline-flex items-center gap-2 rounded-full border border-amber-400/20 bg-zinc-900 px-3 py-1">
-							<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-4 w-4 text-amber-300"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm.75-12.75a.75.75 0 00-1.5 0v4.19l-2.22 2.22a.75.75 0 001.06 1.06l2.66-2.66a.75.75 0 00.22-.53V5.25z" clip-rule="evenodd"/></svg>
+						<span
+							class="inline-flex items-center gap-2 rounded-full border border-amber-400/20 bg-zinc-900 px-3 py-1"
+						>
+							<svg
+								xmlns="http://www.w3.org/2000/svg"
+								viewBox="0 0 20 20"
+								fill="currentColor"
+								class="h-4 w-4 text-amber-300"
+								><path
+									fill-rule="evenodd"
+									d="M10 18a8 8 0 100-16 8 8 0 000 16zm.75-12.75a.75.75 0 00-1.5 0v4.19l-2.22 2.22a.75.75 0 001.06 1.06l2.66-2.66a.75.75 0 00.22-.53V5.25z"
+									clip-rule="evenodd"
+								/></svg
+							>
 							<time datetime={date}>{formattedDate}</time>
 						</span>
 					{/if}
@@ -134,7 +156,7 @@
 </div>
 
 <style>
-	:global(.article-content) h1 {
+	:global(.article-content h1) {
 		margin-top: 1.5rem;
 		font-size: 1.875rem;
 		line-height: 2.25rem;
@@ -142,7 +164,7 @@
 		color: #fff;
 	}
 
-	:global(.article-content) h2 {
+	:global(.article-content h2) {
 		margin-top: 2.5rem;
 		font-size: 1.5rem;
 		line-height: 2rem;
@@ -151,7 +173,7 @@
 		position: relative;
 	}
 
-	:global(.article-content) h2::after {
+	:global(.article-content h2)::after {
 		content: '';
 		display: block;
 		margin-top: 0.5rem;
@@ -164,7 +186,7 @@
 		);
 	}
 
-	:global(.article-content) h3 {
+	:global(.article-content h3) {
 		margin-top: 2rem;
 		font-size: 1.25rem;
 		line-height: 1.75rem;
@@ -172,32 +194,32 @@
 		color: rgb(254 240 138);
 	}
 
-	:global(.article-content) p {
+	:global(.article-content p) {
 		margin-top: 1rem;
 		color: rgb(229 231 235);
 		line-height: 1.75;
 	}
 
-	:global(.article-content) a {
+	:global(.article-content a) {
 		color: rgb(252 211 77);
 		text-decoration: underline;
 		text-decoration-color: rgba(245, 158, 11, 0.4);
 		text-underline-offset: 4px;
 	}
 
-	:global(.article-content) ul,
-	:global(.article-content) ol {
+	:global(.article-content ul),
+	:global(.article-content ol) {
 		margin-top: 1rem;
 		padding-left: 1.5rem;
 	}
 
-	:global(.article-content) ul > li,
-	:global(.article-content) ol > li {
+	:global(.article-content ul > li),
+	:global(.article-content ol > li) {
 		margin-top: 0.5rem;
 		color: rgb(229 231 235);
 	}
 
-	:global(.article-content) blockquote {
+	:global(.article-content blockquote) {
 		margin-top: 1.5rem;
 		border-left: 4px solid rgba(245, 158, 11, 0.4);
 		background: rgba(24, 24, 27, 0.6);
@@ -206,14 +228,14 @@
 		border-radius: 0.5rem;
 	}
 
-	:global(.article-content) code {
+	:global(.article-content code) {
 		background: rgba(24, 24, 27, 0.8);
 		border-radius: 0.375rem;
 		padding: 0.125rem 0.375rem;
 		color: rgb(253 230 138);
 	}
 
-	:global(.article-content) pre {
+	:global(.article-content pre) {
 		margin-top: 1rem;
 		background: rgb(9 9 11);
 		border: 1px solid rgba(245, 158, 11, 0.1);
@@ -224,14 +246,14 @@
 		overflow-x: auto;
 	}
 
-	:global(.article-content) hr {
+	:global(.article-content hr) {
 		margin: 2rem 0;
 		height: 1px;
 		border: 0;
 		background: linear-gradient(90deg, transparent, rgba(245, 158, 11, 0.3), transparent);
 	}
 
-	:global(.article-content) img {
+	:global(.article-content img) {
 		display: block;
 		margin: 1.5rem 0;
 		width: 100%;
@@ -241,7 +263,7 @@
 		object-fit: contain;
 	}
 
-	:global(.article-content) table {
+	:global(.article-content table) {
 		margin-top: 1.5rem;
 		width: 100%;
 		border-collapse: collapse;
@@ -250,17 +272,17 @@
 		border: 1px solid rgba(245, 158, 11, 0.1);
 	}
 
-	:global(.article-content) thead {
+	:global(.article-content thead) {
 		background: rgba(24, 24, 27, 0.7);
 		color: rgb(254 240 138);
 	}
 
-	:global(.article-content) tbody tr:hover {
+	:global(.article-content tbody tr:hover) {
 		background: rgba(24, 24, 27, 0.4);
 	}
 
-	:global(.article-content) th,
-	:global(.article-content) td {
+	:global(.article-content th),
+	:global(.article-content td) {
 		padding: 0.75rem 1rem;
 		text-align: left;
 		color: rgb(229 231 235);
