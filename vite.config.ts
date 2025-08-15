@@ -12,5 +12,8 @@ export default defineConfig({
 			outdir: './src/lib/paraglide',
 			strategy: ['cookie', 'preferredLanguage', 'baseLocale']
 		})
-	]
+	],
+	server: {
+		port: 23335
+	}
 });
