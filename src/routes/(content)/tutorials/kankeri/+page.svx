@@ -9,6 +9,7 @@ cover: /kankeri/kankeri.png
 authorUrl: https://www.twitch.tv/kankeri115
 authorAvatar: /kankeri/kankeri.png
 authorDisplay: kankeri115
+authorBio: 日本屈指のStrinova配信者。途切れないトークと自由奔放なコミュニティで知られ、男女問わず愛される存在だが、最近はスナイプに悩まされているようだ。
 ---
 
 <script>

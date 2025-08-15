@@ -15,6 +15,7 @@
 	export let authorUrl: string = '';
 	export let authorAvatar: string = '';
 	export let authorDisplay: string = '';
+	export let authorBio: string = '';
 
 	const getFormattedDate = (value: string): string => {
 		if (!value) return '';
@@ -72,13 +73,13 @@
 			{/if}
 			{#if author || authorUrl || authorAvatar || authorDisplay}
 				<div
-					class="mt-5 flex items-center justify-between gap-3 rounded-xl border border-amber-400/20 bg-zinc-900/60 p-3"
+					class="mt-5 flex flex-col gap-3 rounded-xl border border-amber-400/20 bg-zinc-900/60 p-3 md:flex-row md:items-center md:justify-between md:gap-4"
 				>
 					<a
 						href={authorUrl || '#'}
 						target={authorUrl ? '_blank' : undefined}
 						rel={authorUrl ? 'noopener' : undefined}
-						class="flex min-w-0 items-center gap-3"
+						class="flex min-w-0 shrink-0 items-center gap-3"
 					>
 						{#if authorAvatar}
 							<img
@@ -91,19 +92,24 @@
 						{/if}
 						<div class="flex min-w-0 flex-col">
 							{#if authorDisplay}
-								<span class="truncate text-amber-200">{authorDisplay}</span>
+								<span class="truncate whitespace-nowrap text-amber-200">{authorDisplay}</span>
 							{/if}
 							{#if author}
-								<span class="truncate text-sm text-gray-400">{author}</span>
+								<span class="truncate text-sm whitespace-nowrap text-gray-400">{author}</span>
 							{/if}
 						</div>
 					</a>
+					{#if authorBio}
+						<p class="min-w-0 text-sm leading-6 text-gray-300 md:max-w-[70ch] md:flex-1">
+							{authorBio}
+						</p>
+					{/if}
 					{#if authorUrl}
 						<a
 							href={authorUrl}
 							target="_blank"
 							rel="noopener"
-							class="group inline-flex items-center gap-2 rounded-lg border border-violet-400/30 bg-violet-600/20 px-3 py-2 text-sm font-medium text-violet-200 ring-1 ring-violet-300/10 transition-colors ring-inset hover:bg-violet-600/30 hover:text-white"
+							class="group inline-flex shrink-0 items-center gap-2 rounded-lg border border-violet-400/30 bg-violet-600/20 px-3 py-2 text-sm font-medium text-violet-200 ring-1 ring-violet-300/10 transition-colors ring-inset hover:bg-violet-600/30 hover:text-white"
 							aria-label="Watch live on Twitch"
 						>
 							<span class="relative inline-flex h-2.5 w-2.5 items-center justify-center">
@@ -117,13 +123,8 @@
 					{/if}
 				</div>
 			{/if}
-			{#if author || date || (tags && tags.length)}
+			{#if date || (tags && tags.length)}
 				<div class="mt-4 flex flex-wrap items-center gap-3 text-sm text-gray-400">
-					{#if author}
-						<span class="rounded-full border border-amber-400/20 bg-zinc-900 px-3 py-1"
-							>{author}</span
-						>
-					{/if}
 					{#if formattedDate}
 						<span
 							class="inline-flex items-center gap-2 rounded-full border border-amber-400/20 bg-zinc-900 px-3 py-1"
