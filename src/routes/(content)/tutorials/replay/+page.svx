@@ -1,0 +1,88 @@
+---
+layout: article
+title: How to save and watch Strinova replay files
+description: This article explains how to save and watch Strinova (and Calabiyau) replay demo (`*.replay`) files, that is critical of documentation.
+author: mkpoli
+date: 2025-08-24
+tags: [Strinova, Calabiyau, Replay]
+cover: /replay/replay-ja.png
+authorUrl: https://www.twitch.tv/mkpoli
+authorAvatar: /avatars/mkpoli.jpg
+authorDisplay: まくぽり
+authorBio: Owner of LemonTV
+---
+
+<script>
+  import Callout from '$lib/mdsvex/components/Callout.svelte';
+  import Image from '$lib/mdsvex/components/Image.svelte';
+  import Video from '$lib/mdsvex/components/Video.svelte';
+</script>
+
+# How to save and watch Strinova replay files
+
+Strinova (in constrast of some other games) has the feature since the launch that allows you to save and watch match's replay. However the replay will likely be expired after a few days or when an update is released. This is inconvenient for players who want to watch their own matches or share them with others, or making highlight videos.
+
+This article explains how to save and re-watch Strinova replay demo (`*.replay`) files, that is critical of documentation.
+
+---
+
+## What is a replay file?
+
+A replay file is a file that contains the information of a match, including the player's actions, the game's state, and the game's result. It's extension is `.replay`, usually named as something like `1234567_1.2.34.56_1234567890123456789012_11735689600_abc0123x.replay`, which consists of the following parts:
+
+- `1234567`: User ID (your in-game numeral ID that can be found in your profile page) who saved the replay
+- `1.2.34.56`: Version of the game
+- `1234567890123456789012`: Match ID (that you can find in play history page)
+- `11735689600`: Match end timestamp (in seconds since 1970-01-01 00:00:00 UTC)
+- `abc0123x`: Hash (?)
+
+Those files are stored once you choose to download them in-game, in `%localAppData%\Strinova\Saved\Demos` (`C:\Users\<your-username>\AppData\Local\Strinova\Saved\Demos`) for Strinova or `%localAppData%\Calabiyau\Saved\Demos` for Calabiyau, no matter the type of launchers (every launcher, if it is Steam or Individual for Strinova, WeGame, Legacy, iDreamSky's for Calabiyau, etc. will store in the same place).
+
+### How is the file structured? What info does it contain?
+
+This is still under research, but I've found that the file is a compressed file that contains a lot of information, including metadata of the match, the player's actions, the game's state, and the game's result.
+
+---
+
+## How to save the replay file?
+
+You can follow the steps below to save the replay file:
+
+1. Play a match and click the "Download" button in the bottom left corner of the screen or in the match history page. Copy the match numeral ID (the one in the top-right corner of the screen).
+2. Go to the folder where the replay file is stored, `%localAppData%\Strinova\Saved\Demos` (`C:\Users\<your-username>\AppData\Local\Strinova\Saved\Demos`), replace `Strinova` with `Calabiyau` if you are playing Calabiyau.
+3. Search for the file with the match numeral ID, it should be named as `1234567_1.2.34.56_<your-match-numeral-id>_11735689600_abc0123x.replay`.
+4. Copy the file to your desired location, and rename it to whatever you want.
+
+<Image src="/replay/replay-ja.png" alt="Steps to save the replay file" />
+
+---
+
+## How to watch the replay file?
+
+If a replay is downloaded but expired, so not watchable, or you want to rewatch a saved replay by the method above, you can follow the steps below:
+
+0. Prepare your saved replay file.
+1. Download a random game, no matter the mode (as long as it is downloadable, even a custom deathmatch or something), download it and copy the match numeral ID (the one in the top-right corner of the screen).
+2. Go to the folder where the replay file is stored, `%localAppData%\Strinova\Saved\Demos` (`C:\Users\<your-username>\AppData\Local\Strinova\Saved\Demos`), replace `Strinova` with `Calabiyau` if you are playing Calabiyau.
+3. Search for the file with the match numeral ID, it should be named as `1234567_1.2.34.56_<your-match-numeral-id>_11735689600_abc0123x.replay`, copy the whole file name.
+4. Rename your original saved replay file as the pasted file name, and overwrite that random game's replay file.
+5. Play the game and watch the random game, to watch your original saved replay, you can just go to the match history page and click the "Watch" button.
+
+<Image src="/replay/replay-ja.png" alt="Steps to watch the replay file" />
+
+--- 
+
+## Conclusion
+
+This is a simple way to save and watch Strinova replay files, and it is not a perfect solution, but it is currently the only way to watch your own matches or share them with others, or making highlight videos, or even doing coach sessions without the need and risk of letting the coach impersonate you by logging in to your account.
+
+Actually, I am in research with other developers to make a tool that can help you to analyze and watch your own matches and more in the future.
+
+If you have any questions or suggestions, please feel free to contact us on [Discord](https://discord.gg/mY8DMatXM4).
+
+---
+
+## References
+
+- [LemonSlice](https://github.com/LemonTV-win/LemonSlice)
+- 

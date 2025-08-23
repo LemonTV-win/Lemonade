@@ -101,6 +101,13 @@
 			>
 				📘 {m.kankeri_tutorials()}
 			</a>
+
+			<a
+				href="/tutorials/replay"
+				class="flex items-center gap-2 rounded-lg border border-amber-700/50 bg-amber-600/20 px-6 py-3 text-amber-300 backdrop-blur-sm transition-all hover:scale-105 hover:bg-amber-500/30"
+			>
+				📘 How to save and watch Strinova replay files
+			</a>
 		</nav>
 	</div>
 </main>
