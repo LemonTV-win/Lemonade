@@ -1,0 +1,97 @@
+---
+layout: article
+title: Strinovaのリプレイファイルを保存・視聴する方法
+description: 本記事では、Strinova（およびCalabiyau）のリプレイデモファイル（`*.replay`）を保存・視聴する方法を解説します。重要なドキュメントです。
+author: mkpoli
+date: 2025-08-24
+tags: [Strinova, Calabiyau, Replay]
+cover: /replay/replay-ja.png
+authorUrl: https://www.twitch.tv/mkpoli
+authorAvatar: /avatars/mkpoli.jpg
+authorDisplay: まくぽり
+authorBio: LemonTV運営者
+---
+
+<script>
+  import Callout from '$lib/mdsvex/components/Callout.svelte';
+  import Image from '$lib/mdsvex/components/Image.svelte';
+  import Video from '$lib/mdsvex/components/Video.svelte';
+</script>
+
+# Strinovaのリプレイファイルを保存・視聴する方法
+
+Strinovaには、リリース当初から「試合のリプレイを保存・視聴できる」機能があります。ただし、リプレイは数日後やアップデート後に失効する可能性があります。自分の試合を見返したい、他人と共有したい、またはハイライト動画を作成したいプレイヤーにとっては不便です。
+
+本記事では、Strinovaのリプレイデモ（`*.replay`）ファイルを保存・再視聴する方法を解説します。重要なドキュメントです。
+
+---
+
+## リプレイファイルとは？
+
+リプレイファイルとは、プレイヤーの操作、ゲームの状態、試合結果などの情報を含むファイルです。拡張子は`.replay`で、通常は以下のような形式で保存されます：
+
+`1234567_1.2.34.56_1234567890123456789012_11735689600_abc0123x.replay`
+
+各部分の意味は以下の通りです：
+
+- `1234567`: リプレイを保存したユーザーID（プロフィールページで確認できるゲーム内数値ID）
+- `1.2.34.56`: ゲームのバージョン
+- `1234567890123456789012`: 試合ID（試合履歴ページで確認可能）
+- `11735689600`: 試合終了時刻（UNIX時間・秒）
+- `abc0123x`: ハッシュ（？）
+
+これらのファイルは、ゲーム内でダウンロードを選択すると保存されます。保存先は以下の通りです：
+
+- Strinova: `%localAppData%\Strinova\Saved\Demos`  
+  （例: `C:\Users\<ユーザー名>\AppData\Local\Strinova\Saved\Demos`）  
+- Calabiyau: `%localAppData%\Calabiyau\Saved\Demos`  
+
+ランチャーの種類（Steam版、独立版、WeGame、Legacy版、iDreamSky版など）に関わらず、同じ場所に保存されます。
+
+### ファイルの構造と含まれる情報
+
+現在も調査中ですが、このファイルは圧縮形式で、多くの情報（試合のメタデータ、プレイヤーの操作、ゲーム状態、結果など）を含んでいます。
+
+---
+
+## リプレイファイルを保存する方法
+
+リプレイを保存するには以下の手順を行います：
+
+1. 試合後、画面左下または試合履歴ページにある「ダウンロード」ボタンを押す。右上に表示される試合数値IDを控える。
+2. 保存フォルダ（`%localAppData%\Strinova\Saved\Demos`）へ移動する。Calabiyauの場合は`Strinova`を`Calabiyau`に置き換える。
+3. 該当する試合数値IDを含むファイルを探す。名前は `1234567_1.2.34.56_<試合ID>_11735689600_abc0123x.replay` の形式。
+4. 好きな場所にコピーし、名前を変更して保存する。
+
+<Image src="/replay/replay-ja.png" alt="リプレイ保存手順" />
+
+---
+
+## リプレイファイルを視聴する方法
+
+保存したリプレイが失効して視聴できない場合、または上記手順で保存したリプレイを再視聴したい場合は以下の手順を行います：
+
+0. 保存済みのリプレイファイルを用意する。
+1. 適当な試合をダウンロードする（モードは問わない。カスタムデスマッチでも可）。その試合数値IDを控える。
+2. 保存フォルダ（`%localAppData%\Strinova\Saved\Demos`）へ移動する。Calabiyauの場合は`Strinova`を`Calabiyau`に置き換える。
+3. その試合IDを含むリプレイファイルを探し、ファイル名全体をコピーする。
+4. 元の保存リプレイファイルをその名前にリネームし、上書き保存する。
+5. ゲームを起動し、履歴ページの「観戦」ボタンを押すと、本来のリプレイを視聴できる。
+
+<Image src="/replay/replay-ja.png" alt="リプレイ視聴手順" />
+
+---
+
+## まとめ
+
+以上が、Strinovaのリプレイファイルを保存・視聴する簡単な方法です。完全な解決策ではありませんが、現状では自分の試合を見返したり、共有したり、ハイライト動画を作成したり、コーチングに利用する唯一の方法です。アカウントを共有せずに安全に試合を見せられるメリットもあります。
+
+実際には、他の開発者と共に「リプレイ解析や視聴を支援するツール」の開発を進めています。
+
+質問や提案があれば、ぜひ[Discord](https://discord.gg/mY8DMatXM4)でご連絡ください。
+
+---
+
+## 参考
+
+- [LemonSlice](https://github.com/LemonTV-win/LemonSlice)
