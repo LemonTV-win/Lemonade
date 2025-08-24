@@ -45,6 +45,11 @@
 	{/if}
 	{#if description}
 		<meta name="description" content={description} />
+		<meta property="og:title" content={title} />
+		<meta property="og:description" content={description} />
+		<meta property="og:image" content={cover} />
+		<meta property="og:type" content="article" />
+		<meta property="og:site_name" content="Lemonade" />
 	{/if}
 </svelte:head>
 
