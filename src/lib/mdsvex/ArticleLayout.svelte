@@ -227,6 +227,55 @@
 		color: rgb(229 231 235);
 	}
 
+	/* Enhanced unordered list bullets */
+	:global(.article-content ul) {
+		list-style: none;
+	}
+
+	:global(.article-content ul > li) {
+		position: relative;
+		padding-left: 0; /* keep indent from UL; bullet positions via ::before */
+	}
+
+	:global(.article-content ul > li)::before {
+		content: '';
+		position: absolute;
+		left: -1rem;
+		top: 0.8em;
+		width: 0.35rem;
+		height: 0.35rem;
+		border-radius: 9999px;
+		background: rgba(245, 158, 11, 0.85);
+		box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.25);
+	}
+
+	/* Enhanced ordered list numbering */
+	:global(.article-content ol) {
+		list-style: none;
+		counter-reset: list-counter;
+	}
+
+	:global(.article-content ol > li) {
+		position: relative;
+		padding-left: 0; /* keep indent from OL; number positions via ::before */
+	}
+
+	:global(.article-content ol > li)::before {
+		counter-increment: list-counter;
+		content: counter(list-counter) '.';
+		position: absolute;
+		left: -1.25rem;
+		top: 0;
+		font-weight: 600;
+		color: rgb(254 240 138);
+	}
+
+	/* Nested list spacing */
+	:global(.article-content li > ul),
+	:global(.article-content li > ol) {
+		margin-top: 0.5rem;
+	}
+
 	:global(.article-content blockquote) {
 		margin-top: 1.5rem;
 		border-left: 4px solid rgba(245, 158, 11, 0.4);
