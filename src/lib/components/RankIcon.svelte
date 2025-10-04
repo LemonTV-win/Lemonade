@@ -1,26 +1,27 @@
 <script lang="ts">
 	import type { Rank } from '$lib/data/game';
+	import Unranked from '$lib/assets/ranks/Unranked.png';
+	import Substance from '$lib/assets/ranks/Substance.png';
+	import Molecule from '$lib/assets/ranks/Molecule.png';
+	import Atom from '$lib/assets/ranks/Atom.png';
+	import Proton from '$lib/assets/ranks/Proton.png';
+	import Neutron from '$lib/assets/ranks/Neutron.png';
+	import Electron from '$lib/assets/ranks/Electron.png';
+	import Quark from '$lib/assets/ranks/Quark.png';
+	import Superstring from '$lib/assets/ranks/Superstring.png';
+	import Singularity from '$lib/assets/ranks/Singularity.png';
 
 	const RANK_IMAGES: Record<string, string> = {
-		Unranked:
-			'https://static.wikitide.net/strinovawiki/thumb/b/bb/Rank_Icon_0.png/150px-Rank_Icon_0.png',
-		Substance:
-			'https://static.wikitide.net/strinovawiki/thumb/5/59/Rank_Icon_1.png/150px-Rank_Icon_1.png',
-		Molecule:
-			'https://static.wikitide.net/strinovawiki/thumb/8/85/Rank_Icon_2.png/150px-Rank_Icon_2.png',
-		Atom: 'https://static.wikitide.net/strinovawiki/thumb/8/89/Rank_Icon_3.png/150px-Rank_Icon_3.png',
-		Proton:
-			'https://static.wikitide.net/strinovawiki/thumb/9/93/Rank_Icon_4.png/150px-Rank_Icon_4.png',
-		Neutron:
-			'https://static.wikitide.net/strinovawiki/thumb/d/de/Rank_Icon_5.png/150px-Rank_Icon_5.png',
-		Electron:
-			'https://static.wikitide.net/strinovawiki/thumb/1/1e/Rank_Icon_6.png/150px-Rank_Icon_6.png',
-		Quark:
-			'https://static.wikitide.net/strinovawiki/thumb/8/87/Rank_Icon_7.png/150px-Rank_Icon_7.png',
-		Superstring:
-			'https://static.wikitide.net/strinovawiki/thumb/6/65/Rank_Icon_8.png/150px-Rank_Icon_8.png',
-		Singularity:
-			'https://static.wikitide.net/strinovawiki/thumb/7/7d/Rank_Icon_9.png/150px-Rank_Icon_9.png'
+		Unranked: Unranked,
+		Substance: Substance,
+		Molecule: Molecule,
+		Atom: Atom,
+		Proton: Proton,
+		Neutron: Neutron,
+		Electron: Electron,
+		Quark: Quark,
+		Superstring: Superstring,
+		Singularity: Singularity
 	};
 
 	function getRankImage(rank: Rank): string {
