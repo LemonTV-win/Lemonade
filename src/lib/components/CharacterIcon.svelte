@@ -1,40 +1,53 @@
 <script lang="ts">
 	import type { Character } from '$lib/data/game';
 	import { m } from '$lib/paraglide/messages.js';
+
+	import MicheleProfile from '$lib/assets/characters/Michele_Profile.png';
+	import NobunagaProfile from '$lib/assets/characters/Nobunaga_Profile.png';
+	import KokonaProfile from '$lib/assets/characters/Kokona_Profile.png';
+	import YvetteProfile from '$lib/assets/characters/Yvette_Profile.png';
+	import FlaviaProfile from '$lib/assets/characters/Flavia_Profile.png';
+	import YugiriProfile from '$lib/assets/characters/Yugiri_Profile.png';
+	import LeonaProfile from '$lib/assets/characters/Leona_Profile.png';
+	import ReiichiProfile from '$lib/assets/characters/Reiichi_Profile.png';
+	import LawineProfile from '$lib/assets/characters/Lawine_Profile.png';
+	import MingProfile from '$lib/assets/characters/Ming_Profile.png';
+	import MeredithProfile from '$lib/assets/characters/Meredith_Profile.png';
+	import EikaProfile from '$lib/assets/characters/Eika_Profile.png';
+	import KanamiProfile from '$lib/assets/characters/Kanami_Profile.png';
+	import FragransProfile from '$lib/assets/characters/Fragrans_Profile.png';
+	import MaraProfile from '$lib/assets/characters/Mara_Profile.png';
+	import AudreyProfile from '$lib/assets/characters/Audrey_Profile.png';
+	import MaddelenaProfile from '$lib/assets/characters/Maddelena_Profile.png';
+	import BaiMoProfile from '$lib/assets/characters/Bai_Mo_Profile.png';
+	import FuchsiaProfile from '$lib/assets/characters/Fuchsia_Profile.png';
+	import GalateaProfile from '$lib/assets/characters/Galatea_Profile.png';
+	import ChiyoProfile from '$lib/assets/characters/Chiyo_Profile.png';
+	import CelestiaProfile from '$lib/assets/characters/Celestia_Profile.png';
+
 	const CHARACTER_2_IMAGE: Record<Character, string> = {
-		Michele:
-			'https://static.wikitide.net/strinovawiki/thumb/f/f9/Michele_Profile.png/150px-Michele_Profile.png',
-		Nobunaga:
-			'https://static.wikitide.net/strinovawiki/thumb/2/20/Nobunaga_Profile.png/150px-Nobunaga_Profile.png',
-		Kokona: 'https://static.wikitide.net/strinovawiki/1/16/Kokona_Profile.png',
-		Yvette:
-			'https://static.wikitide.net/strinovawiki/thumb/3/37/Yvette_Profile.png/150px-Yvette_Profile.png',
-		Flavia:
-			'https://static.wikitide.net/strinovawiki/thumb/f/f2/Flavia_Profile.png/150px-Flavia_Profile.png',
-		Yugiri: 'https://static.wikitide.net/strinovawiki/d/d5/Yugiri_Profile.png',
-		Leona:
-			'https://static.wikitide.net/strinovawiki/thumb/b/b4/Leona_Profile.png/150px-Leona_Profile.png',
-		Reiichi: 'https://static.wikitide.net/strinovawiki/1/14/Reiichi_Profile.png',
-		Lawine:
-			'https://static.wikitide.net/strinovawiki/thumb/a/aa/Lawine_Profile.png/150px-Lawine_Profile.png',
-		Ming: 'https://static.wikitide.net/strinovawiki/7/78/Ming_Profile.png',
-		Meredith: 'https://static.wikitide.net/strinovawiki/5/56/Meredith_Profile.png',
-		Eika: 'https://static.wikitide.net/strinovawiki/a/a8/Eika_Profile.png',
-		Kanami:
-			'https://static.wikitide.net/strinovawiki/thumb/c/c4/Kanami_Profile.png/150px-Kanami_Profile.png',
-		Fragrans:
-			'https://static.wikitide.net/strinovawiki/thumb/a/a8/Fragrans_Profile.png/150px-Fragrans_Profile.png',
-		Mara: 'https://static.wikitide.net/strinovawiki/thumb/5/51/Mara_Profile.png/150px-Mara_Profile.png',
-		Audrey:
-			'https://static.wikitide.net/strinovawiki/thumb/1/16/Audrey_Profile.png/150px-Audrey_Profile.png',
-		Celestia:
-			'https://static.wikitide.net/strinovawiki/thumb/b/bf/Celestia_Profile.png/150px-Celestia_Profile.png',
-		Maddelena:
-			'https://static.wikitide.net/strinovawiki/thumb/0/03/Maddelena_Profile.png/150px-Maddelena_Profile.png',
-		'Bai Mo': 'https://static.wikitide.net/strinovawiki/b/ba/Bai_Mo_Profile.png',
-		Fuchsia: 'https://static.wikitide.net/strinovawiki/a/ad/Fuchsia_Profile.png',
-		Galatea: 'https://static.wikitide.net/strinovawiki/f/ff/Galatea_Profile.png',
-		Chiyo: 'https://static.wikitide.net/strinovawiki/9/93/Chiyo_Profile.png'
+		Michele: MicheleProfile,
+		Nobunaga: NobunagaProfile,
+		Kokona: KokonaProfile,
+		Yvette: YvetteProfile,
+		Flavia: FlaviaProfile,
+		Yugiri: YugiriProfile,
+		Leona: LeonaProfile,
+		Reiichi: ReiichiProfile,
+		Lawine: LawineProfile,
+		Ming: MingProfile,
+		Meredith: MeredithProfile,
+		Eika: EikaProfile,
+		Kanami: KanamiProfile,
+		Fragrans: FragransProfile,
+		Mara: MaraProfile,
+		Audrey: AudreyProfile,
+		Celestia: CelestiaProfile,
+		Maddelena: MaddelenaProfile,
+		'Bai Mo': BaiMoProfile,
+		Fuchsia: FuchsiaProfile,
+		Galatea: GalateaProfile,
+		Chiyo: ChiyoProfile
 	};
 	let { character, class: className = '' }: { character: Character | null; class?: string } =
 		$props();
