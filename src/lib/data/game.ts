@@ -163,16 +163,12 @@ export const CN_SEASONS = [
 	'C8',
 	'C9',
 	'C10',
-	'C11'
-	// 'C12',
-	// 'C13',
-	// 'C14',
-	// 'C15',
-	// 'C16',
-	// 'C17',
-	// 'C18',
-	// 'C19',
-	// 'C20',
+	'C11',
+	'C12',
+	'C13',
+	'26SP1',
+	'26SP2',
+	'26SP3'
 ] as const;
 export const GLOBAL_SEASONS = [
 	'G1',
@@ -189,8 +185,17 @@ export const GLOBAL_SEASONS = [
 ] as const;
 export const SEASONS = [...CN_SEASONS, ...GLOBAL_SEASONS] as const;
 export type Season = (typeof SEASONS)[number];
+
+const SEASON_LABELS: Partial<Record<Season, string>> = {
+	C12: 'CalabiYau S12: 至日之翼',
+	C13: 'CalabiYau S13: 虚想龙歌',
+	'26SP1': 'CalabiYau 26SP1: 猎夜呢喃',
+	'26SP2': 'CalabiYau 26SP2: 长廊追迹',
+	'26SP3': 'CalabiYau 26SP3: 虚弦暗变'
+};
+
 export function getSeasonName(season: Season): string {
-	return season.replace('C', 'CalabiYau S').replace('G', 'Strinova S');
+	return SEASON_LABELS[season] ?? season.replace('C', 'CalabiYau S').replace('G', 'Strinova S');
 }
 
 // #endregion
