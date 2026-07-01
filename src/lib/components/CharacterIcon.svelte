@@ -24,6 +24,8 @@
 	import GalateaProfile from '$lib/assets/characters/Galatea_Profile.png';
 	import ChiyoProfile from '$lib/assets/characters/Chiyo_Profile.png';
 	import CelestiaProfile from '$lib/assets/characters/Celestia_Profile.png';
+	import CielleProfile from '$lib/assets/characters/Cielle_Profile.png';
+	import NoraProfile from '$lib/assets/characters/Nora_Profile.png';
 
 	const CHARACTER_2_IMAGE: Record<Character, string> = {
 		Michele: MicheleProfile,
@@ -47,7 +49,9 @@
 		'Bai Mo': BaiMoProfile,
 		Fuchsia: FuchsiaProfile,
 		Galatea: GalateaProfile,
-		Chiyo: ChiyoProfile
+		Chiyo: ChiyoProfile,
+		Cielle: CielleProfile,
+		Nora: NoraProfile
 	};
 	let { character, class: className = '' }: { character: Character | null; class?: string } =
 		$props();

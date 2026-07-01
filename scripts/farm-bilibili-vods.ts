@@ -31,12 +31,14 @@ type Character =
 	| 'Kanami'
 	| 'Fragrans'
 	| 'Mara'
+	| 'Nora'
 	| 'Audrey'
 	| 'Celestia'
 	| 'Maddelena'
 	| 'Bai Mo'
 	| 'Fuchsia'
-	| 'Galatea';
+	| 'Galatea'
+	| 'Cielle';
 
 type Rank =
 	| 'Unranked'
@@ -244,12 +246,14 @@ const CHARACTER_ALIASES: Record<Character, string[]> = {
 	Kanami: ['香奈美', '大狙', 'Kanami'],
 	Fragrans: ['珐格兰丝', '花', 'Fragrans'],
 	Mara: ['玛拉', 'Mara'],
+	Nora: ['诺诺', '諾諾', 'Nora'],
 	Audrey: ['奥黛丽', 'Audrey'],
 	Celestia: ['星绘', 'Celestia'],
 	Maddelena: ['玛德蕾娜', '泡泡', 'Maddelena'],
 	'Bai Mo': ['白墨', '沙猫', 'Bai Mo'],
 	Fuchsia: ['绯莎', 'Fuchsia'],
-	Galatea: ['加拉蒂亚', '卡牌', 'Galatea']
+	Galatea: ['加拉蒂亚', '卡牌', 'Galatea'],
+	Cielle: ['汐', 'Cielle']
 };
 
 const WEAK_CHARACTER_ALIASES = new Set(['信', '令', '明', '花']);

@@ -117,3 +117,8 @@ Low/no-confidence:
 - very short aliases (`信`, `令`, `明`, `花`) need usage context or they are ignored.
 
 `character_first` and `character_second` are filled only from title evidence. Any candidate with `characterConfidence` below `high`, missing map, or missing first character has `needsReview: true`.
+
+Current new-agent aliases included in title parsing:
+
+- `Cielle` / `汐` belongs to Urbino.
+- `Nora` / `诺诺` / `諾諾` belongs to The Scissors.

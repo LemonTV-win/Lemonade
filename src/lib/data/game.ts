@@ -20,7 +20,8 @@ export const SCISORS_CHARACTERS = [
 	'Eika',
 	'Kanami',
 	'Fragrans',
-	'Mara'
+	'Mara',
+	'Nora'
 ] as const;
 
 export const URBINO_CHARACTERS = [
@@ -29,7 +30,8 @@ export const URBINO_CHARACTERS = [
 	'Maddelena',
 	'Bai Mo',
 	'Fuchsia',
-	'Galatea'
+	'Galatea',
+	'Cielle'
 ] as const;
 
 export type PUSCharacter = (typeof PUS_CHARACTERS)[number];
@@ -55,12 +57,14 @@ export const CHARACTER_NAMES: Record<Character, () => string> = {
 	Kanami: m['game.character.Kanami'],
 	Fragrans: m['game.character.Fragrans'],
 	Mara: m['game.character.Mara'],
+	Nora: m['game.character.Nora'],
 	Audrey: m['game.character.Audrey'],
 	Maddelena: m['game.character.Maddelena'],
 	'Bai Mo': m['game.character.Bai Mo'],
 	Fuchsia: m['game.character.Fuchsia'],
 	Galatea: m['game.character.Galatea'],
-	Celestia: m['game.character.Celestia']
+	Celestia: m['game.character.Celestia'],
+	Cielle: m['game.character.Cielle']
 };
 
 // #endregion
