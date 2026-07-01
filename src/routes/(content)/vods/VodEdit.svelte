@@ -15,6 +15,23 @@
 	import { enhance } from '$app/forms';
 	import { VOD_TYPES, VOD_TYPES_LABELS } from '$lib/data/vod';
 	import * as m from '$lib/paraglide/messages';
+	import IconSelect, { type IconSelectItem } from '$lib/components/IconSelect.svelte';
+	import CharacterIcon from '$lib/components/CharacterIcon.svelte';
+	import MapIcon from '$lib/components/MapIcon.svelte';
+	import RankIcon from '$lib/components/RankIcon.svelte';
+	import type { Character, GameMap, Rank } from '$lib/data/game';
+
+	const mapItems: IconSelectItem[] = MAPS.map((map) => ({ value: map, label: MAP_NAMES[map]() }));
+	const characterItems: IconSelectItem[] = [
+		...PUS_CHARACTERS.map((c) => ({ value: c, label: CHARACTER_NAMES[c](), group: 'P.U.S' })),
+		...SCISORS_CHARACTERS.map((c) => ({
+			value: c,
+			label: CHARACTER_NAMES[c](),
+			group: 'The Scissors'
+		})),
+		...URBINO_CHARACTERS.map((c) => ({ value: c, label: CHARACTER_NAMES[c](), group: 'Urbino' }))
+	];
+	const rankItems: IconSelectItem[] = RANKS.map((rank) => ({ value: rank, label: rank }));
 
 	let {
 		vodToEdit,
@@ -274,61 +291,48 @@
 		</label>
 		<label class="mb-2 block text-amber-300">
 			{m.map()}
-			<select
+			<IconSelect
 				name="map"
-				bind:value={editingVod.map}
-				class="mt-1 mb-4 w-full rounded border border-amber-300/30 bg-zinc-900 px-3 py-2 text-white focus:border-amber-400 focus:outline-none"
+				value={editingVod.map ?? ''}
+				items={mapItems}
+				placeholder="Unset"
+				clearable
+				clearLabel="Unset"
+				onChange={(v) => (editingVod.map = (v || undefined) as GameMap | undefined)}
 			>
-				<option value="">Unset</option>
-				{#each MAPS as map}
-					<option value={map}>{MAP_NAMES[map]()}</option>
-				{/each}
-			</select>
+				{#snippet icon(value)}
+					<MapIcon map={value as GameMap} />
+				{/snippet}
+			</IconSelect>
 		</label>
-		{#snippet characterOptions()}
-			<optgroup label="P.U.S">
-				{#each PUS_CHARACTERS as character}
-					<option value={character}>{CHARACTER_NAMES[character]()}</option>
-				{/each}
-			</optgroup>
-			<optgroup label="The Scissors">
-				{#each SCISORS_CHARACTERS as character}
-					<option value={character}>{CHARACTER_NAMES[character]()}</option>
-				{/each}
-			</optgroup>
-			<optgroup label="Urbino">
-				{#each URBINO_CHARACTERS as character}
-					<option value={character}>{CHARACTER_NAMES[character]()}</option>
-				{/each}
-			</optgroup>
+		{#snippet characterIcon(value: string)}
+			<CharacterIcon character={value as Character} class="h-5 w-5" />
 		{/snippet}
 		<label class="mb-2 block text-amber-300">
 			{m.first_character()}
-			<select
+			<IconSelect
 				name="character_first"
-				bind:value={editingVod.character_first}
-				class="mt-1 mb-4 w-full rounded border border-amber-300/30 bg-zinc-900 px-3 py-2 text-white focus:border-amber-400 focus:outline-none"
-			>
-				<option value="">Unset</option>
-				{@render characterOptions()}
-			</select>
+				value={editingVod.character_first ?? ''}
+				items={characterItems}
+				placeholder="Unset"
+				clearable
+				clearLabel="Unset"
+				icon={characterIcon}
+				onChange={(v) => (editingVod.character_first = (v || undefined) as Character | undefined)}
+			/>
 		</label>
 		<label class="mb-2 block text-amber-300">
 			{m.second_character_optional()}
-			<!-- <input
-				type="text"
+			<IconSelect
 				name="character_second"
-				bind:value={editingVod.character_second}
-				class="mt-1 mb-4 w-full rounded border border-amber-300/30 bg-zinc-900 px-3 py-2 text-white focus:border-amber-400 focus:outline-none"
-			/> -->
-			<select
-				name="character_second"
-				bind:value={editingVod.character_second}
-				class="mt-1 mb-4 w-full rounded border border-amber-300/30 bg-zinc-900 px-3 py-2 text-white focus:border-amber-400 focus:outline-none"
-			>
-				<option value="">None</option>
-				{@render characterOptions()}
-			</select>
+				value={editingVod.character_second ?? ''}
+				items={characterItems}
+				placeholder="None"
+				clearable
+				clearLabel="None"
+				icon={characterIcon}
+				onChange={(v) => (editingVod.character_second = (v || undefined) as Character | undefined)}
+			/>
 		</label>
 		<label class="mb-2 block text-amber-300">
 			{m.season_optional()}
@@ -370,16 +374,19 @@
 		</label>
 		<label class="mb-2 block text-amber-300">
 			{m.rank_optional()}
-			<select
+			<IconSelect
 				name="rank"
-				bind:value={editingVod.rank}
-				class="mt-1 mb-4 w-full rounded border border-amber-300/30 bg-zinc-900 px-3 py-2 text-white focus:border-amber-400 focus:outline-none"
+				value={editingVod.rank ?? ''}
+				items={rankItems}
+				placeholder="No Rank"
+				clearable
+				clearLabel="No Rank"
+				onChange={(v) => (editingVod.rank = (v || undefined) as Rank | undefined)}
 			>
-				<option value="">No Rank</option>
-				{#each RANKS as rank}
-					<option value={rank}>{rank}</option>
-				{/each}
-			</select>
+				{#snippet icon(value)}
+					<RankIcon rank={value as Rank} />
+				{/snippet}
+			</IconSelect>
 		</label>
 		<label class="mb-2 block text-amber-300">
 			{m.type()}
