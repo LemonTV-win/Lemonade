@@ -122,3 +122,17 @@ Current new-agent aliases included in title parsing:
 
 - `Cielle` / `汐` belongs to Urbino.
 - `Nora` / `诺诺` / `諾諾` belongs to The Scissors.
+
+## Batch adding into the site (human-in-the-loop)
+
+Until AI character detection lands, the fastest path is:
+
+1. Run the farm script to produce candidate JSON.
+2. Extract just the URLs:
+   ```bash
+   bun -e 'const j=require("./tmp/bilibili-vod-candidates.json");console.log(j.candidates.map(c=>c.url).join("\n"))'
+   ```
+3. On the `/vods` page, click **Batch add URLs**, paste the list, pick a default server/type/season, and import.
+   - Title, thumbnail, uploader and publish date are auto-fetched server-side.
+   - `map` and `character_first` are intentionally left empty.
+4. Use the **Needs annotation** filter on `/vods` to find imported VODs and fill in map/characters via **Edit** later.

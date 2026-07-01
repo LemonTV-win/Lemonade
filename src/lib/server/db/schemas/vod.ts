@@ -10,8 +10,8 @@ export const vod = sqliteTable('vod', {
 	platform: text('platform').$type<VodPlatform>().notNull(),
 	player: text('player').notNull(),
 	server: text('server').$type<Server>().notNull(),
-	map: text('map').$type<GameMap>().notNull(),
-	character_first: text('character_first').$type<Character>().notNull(),
+	map: text('map').$type<GameMap>(),
+	character_first: text('character_first').$type<Character>(),
 	character_second: text('character_second').$type<Character>(),
 	season: text('season'), // C1, C2 .. C11; G1, G2, ... G4
 	rank: text('rank').$type<Rank>(),

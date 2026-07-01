@@ -1,21 +1,30 @@
 import type { Actions, PageServerLoad } from './$types';
-import { addVOD, getVODs, updateVOD } from '$lib/server/data/vods';
+import { addVOD, addVODs, getExistingVodUrls, getVODs, updateVOD } from '$lib/server/data/vods';
 import { fail } from '@sveltejs/kit';
 import { randomUUID } from 'crypto';
 import type { Character } from '$lib/data/game';
 import type { GameMap } from '$lib/data/game';
 import type { Rank } from '$lib/data/game';
+import type { Server } from '$lib/data/game';
 import type { VodType } from '$lib/data/vod';
+import type { NewVod } from '$lib/server/db/schemas/vod';
+import { fetchVideoInfo, normalizeVideoUrl } from '$lib/server/data/video-info';
 
 export const load: PageServerLoad = async () => {
 	const vods = await getVODs();
 
 	// Extract unique platforms and maps for filters
 	const platforms = Array.from(new Set(vods.map((vod) => vod.platform)));
-	const maps = Array.from(new Set(vods.map((vod) => vod.map)));
+	const maps = Array.from(
+		new Set(vods.map((vod) => vod.map).filter((m): m is GameMap => Boolean(m)))
+	);
 	const servers = Array.from(new Set(vods.map((vod) => vod.server)));
 	const characters = Array.from(
-		new Set(vods.flatMap((vod) => [vod.character_first, vod.character_second]))
+		new Set(
+			vods
+				.flatMap((vod) => [vod.character_first, vod.character_second])
+				.filter((c): c is Character => Boolean(c))
+		)
 	);
 	const players = Array.from(
 		new Set(
@@ -61,9 +70,11 @@ export const actions: Actions = {
 		const type = formData.get('type');
 		const publishedAt = formData.get('publishedAt');
 
-		// Validate required fields
-		if (!url || !title || !thumbnail || !platform || !player || !server || !character_first) {
-			return fail(400, { message: 'All required fields must be filled.' });
+		// Only core identity fields are required; map/character can be annotated later.
+		if (!url || !title || !thumbnail || !platform || !player || !server) {
+			return fail(400, {
+				message: 'URL, title, thumbnail, platform, player and server are required.'
+			});
 		}
 
 		const mapValue = map && map !== '' ? (map as GameMap) : undefined;
@@ -72,11 +83,7 @@ export const actions: Actions = {
 		const characterSecondValue =
 			character_second && character_second !== '' ? (character_second as Character) : undefined;
 
-		if (!mapValue || !characterFirstValue) {
-			return fail(400, { message: 'Map and first character are required.' });
-		}
-
-		const vod = await addVOD({
+		await addVOD({
 			id: randomUUID(),
 			url: String(url),
 			title: String(title),
@@ -95,6 +102,76 @@ export const actions: Actions = {
 
 		return { success: true };
 	},
+	addVodsBatch: async ({ request }) => {
+		const formData = await request.formData();
+		const rawUrls = String(formData.get('urls') ?? '');
+		const defaultServer = (String(formData.get('server') ?? 'CN') || 'CN') as Server;
+		const defaultType = (String(formData.get('type') ?? 'ranked') || 'ranked') as VodType;
+		const defaultSeason = formData.get('season') ? String(formData.get('season')) : undefined;
+		const playerOverride = formData.get('player') ? String(formData.get('player')).trim() : '';
+
+		const urls = Array.from(
+			new Set(
+				rawUrls
+					.split(/[\s,]+/)
+					.map((entry) => normalizeVideoUrl(entry))
+					.filter(Boolean)
+			)
+		);
+
+		if (urls.length === 0) {
+			return fail(400, { batch: { message: 'Paste at least one video URL.' } });
+		}
+
+		const existingUrls = await getExistingVodUrls();
+		const toInsert: NewVod[] = [];
+		const failed: { url: string; reason: string }[] = [];
+		let skippedExisting = 0;
+
+		for (const url of urls) {
+			if (existingUrls.has(url)) {
+				skippedExisting++;
+				continue;
+			}
+			const info = await fetchVideoInfo(url);
+			if (!info || !info.title || !info.thumbnail) {
+				failed.push({ url, reason: 'Could not fetch title/thumbnail' });
+				continue;
+			}
+			toInsert.push({
+				id: randomUUID(),
+				url,
+				title: info.title,
+				thumbnail: info.thumbnail,
+				platform: info.platform,
+				player: playerOverride || info.player || 'Unknown',
+				server: defaultServer,
+				map: undefined,
+				character_first: undefined,
+				character_second: undefined,
+				season: defaultSeason,
+				rank: undefined,
+				type: defaultType,
+				publishedAt: info.publishedAt ? new Date(info.publishedAt) : undefined
+			});
+			// Guard against duplicate URLs inside the same paste.
+			existingUrls.add(url);
+		}
+
+		if (toInsert.length > 0) {
+			await addVODs(toInsert);
+		}
+
+		return {
+			batch: {
+				success: true,
+				requested: urls.length,
+				inserted: toInsert.length,
+				skippedExisting,
+				failed
+			}
+		};
+	},
 	updateVod: async ({ request }) => {
 		const formData = await request.formData();
 		const id = formData.get('id');
@@ -112,18 +189,11 @@ export const actions: Actions = {
 		const type = formData.get('type');
 		const publishedAt = formData.get('publishedAt');
 
-		// Validate required fields
-		if (
-			!id ||
-			!url ||
-			!title ||
-			!thumbnail ||
-			!platform ||
-			!player ||
-			!server ||
-			!character_first
-		) {
-			return fail(400, { message: 'All required fields must be filled.' });
+		// Only core identity fields are required; map/character can be annotated later.
+		if (!id || !url || !title || !thumbnail || !platform || !player || !server) {
+			return fail(400, {
+				message: 'URL, title, thumbnail, platform, player and server are required.'
+			});
 		}
 
 		const mapValue = map && map !== '' ? (map as GameMap) : undefined;
@@ -132,11 +202,7 @@ export const actions: Actions = {
 		const characterSecondValue =
 			character_second && character_second !== '' ? (character_second as Character) : undefined;
 
-		if (!mapValue || !characterFirstValue) {
-			return fail(400, { message: 'Map and first character are required.' });
-		}
-
-		const vod = await updateVOD({
+		await updateVOD({
 			id: id as string,
 			url: url as string,
 			title: title as string,

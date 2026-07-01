@@ -2,6 +2,7 @@
 	import type { PageProps } from './$types';
 	import type { NewVod } from '$lib/server/db/schemas/vod';
 	import VodCard from './VodCard.svelte';
+	import VodBatchAdd from './VodBatchAdd.svelte';
 	import VodDialog from './VodEdit.svelte';
 	import VodFilters from './VodFilters.svelte';
 	import { invalidateAll } from '$app/navigation';
@@ -16,14 +17,16 @@
 	let selectedPlayers: string[] = $state([]);
 	let selectedRanks: string[] = $state([]);
 	let selectedTypes: VodType[] = $state([]);
+	let showNeedsAnnotationOnly = $state(false);
 	let filteredVods = $derived(
 		data.vods.filter(
 			(vod: NewVod) =>
+				(showNeedsAnnotationOnly ? !vod.map || !vod.character_first : true) &&
 				(selectedPlatforms.length ? selectedPlatforms.includes(String(vod.platform)) : true) &&
-				(selectedMaps.length ? selectedMaps.includes(String(vod.map)) : true) &&
+				(selectedMaps.length ? vod.map && selectedMaps.includes(String(vod.map)) : true) &&
 				(selectedServers.length ? selectedServers.includes(String(vod.server)) : true) &&
 				(selectedCharacters.length
-					? selectedCharacters.includes(String(vod.character_first)) ||
+					? (vod.character_first && selectedCharacters.includes(String(vod.character_first))) ||
 						selectedCharacters.includes(String(vod.character_second))
 					: true) &&
 				(selectedSeasons.length ? selectedSeasons.includes(String(vod.season)) : true) &&
@@ -40,6 +43,7 @@
 	}
 
 	let openVodDialog = $state(false);
+	let openBatchDialog = $state(false);
 	let vodToEdit: NewVod | undefined = $state(undefined);
 
 	function openAddVodDialog() {
@@ -80,6 +84,22 @@
 		<span class="text-amber-300/70">{data.vods.length}</span>
 		<span class="ml-1 text-amber-300/70">VODs</span>
 	</p>
+	<div class="mb-4 flex flex-wrap justify-center gap-3">
+		<button
+			type="button"
+			class={`rounded border px-3 py-1 text-sm font-medium transition-colors ${showNeedsAnnotationOnly ? 'border-amber-500 bg-gradient-to-r from-yellow-300 to-amber-500 text-black shadow' : 'border-gray-700 bg-zinc-900 text-amber-200 hover:border-amber-400 hover:bg-amber-400/10'}`}
+			onclick={() => (showNeedsAnnotationOnly = !showNeedsAnnotationOnly)}
+		>
+			Needs annotation
+		</button>
+		<button
+			type="button"
+			class="rounded border border-amber-500/50 bg-zinc-900 px-3 py-1 text-sm font-medium text-amber-200 transition-colors hover:border-amber-400 hover:bg-amber-400/10"
+			onclick={() => (openBatchDialog = true)}
+		>
+			Batch add URLs
+		</button>
+	</div>
 	<div class="grid grid-cols-4 gap-4">
 		{#each filteredVods as vod}
 			<div
@@ -118,4 +138,12 @@
 		await invalidateAll();
 	}}
 	onClose={() => (openVodDialog = false)}
+/>
+
+<VodBatchAdd
+	open={openBatchDialog}
+	onSubmit={async () => {
+		await invalidateAll();
+	}}
+	onClose={() => (openBatchDialog = false)}
 />

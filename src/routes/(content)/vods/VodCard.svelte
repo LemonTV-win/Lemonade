@@ -50,10 +50,17 @@
 		{/if}
 	</div>
 	<div class="grid grid-cols-[auto_auto_1fr] items-center gap-4 px-2 py-1">
-		<div class="flex items-center gap-2">
-			<CharacterIcon character={vod.character_first} class="h-6 w-6" />
-			<span class="text-xs text-amber-100">{CHARACTER_NAMES[vod.character_first]()}</span>
-		</div>
+		{#if vod.character_first}
+			<div class="flex items-center gap-2">
+				<CharacterIcon character={vod.character_first} class="h-6 w-6" />
+				<span class="text-xs text-amber-100">{CHARACTER_NAMES[vod.character_first]()}</span>
+			</div>
+		{:else}
+			<div class="flex items-center gap-2">
+				<CharacterIcon character={null} class="h-6 w-6" />
+				<span class="text-xs text-amber-400/60 italic">Unannotated</span>
+			</div>
+		{/if}
 		{#if vod.character_second}
 			<div class="flex items-center gap-2">
 				<CharacterIcon character={vod.character_second} class="h-6 w-6" />
@@ -62,10 +69,20 @@
 		{:else}
 			<div></div>
 		{/if}
-		<div class="flex items-center gap-2">
-			<span class="inline-block h-6 w-10 align-middle"><MapIcon map={vod.map} /></span>
-			<span class="text-xs text-amber-100">{MAP_NAMES[vod.map]()}</span>
-		</div>
+		{#if vod.map}
+			<div class="flex items-center gap-2">
+				<span class="inline-block h-6 w-10 align-middle"><MapIcon map={vod.map} /></span>
+				<span class="text-xs text-amber-100">{MAP_NAMES[vod.map]()}</span>
+			</div>
+		{:else}
+			<div class="flex items-center gap-2">
+				<span
+					class="inline-flex h-6 w-10 items-center justify-center rounded bg-gray-700 align-middle text-[10px] text-gray-400"
+					>?</span
+				>
+				<span class="text-xs text-amber-400/60 italic">No map</span>
+			</div>
+		{/if}
 	</div>
 	<div class="flex items-center gap-2 px-2 pb-2">
 		<span class="text-xs text-amber-100">

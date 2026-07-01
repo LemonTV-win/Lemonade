@@ -21,3 +21,15 @@ export async function updateVOD(vodData: NewVod) {
 	const vods = await db.update(vod).set(vodData).where(eq(vod.id, vodData.id));
 	return vods;
 }
+
+export async function getExistingVodUrls(): Promise<Set<string>> {
+	const rows = await db.query.vod.findMany({ columns: { url: true } });
+	return new Set(rows.map((row) => row.url));
+}
+
+export async function addVODs(vodsData: NewVod[]) {
+	if (vodsData.length === 0) return { inserted: 0 };
+	console.info(`[server/data/vods] addVODs count=${vodsData.length}`);
+	await db.insert(vod).values(vodsData);
+	return { inserted: vodsData.length };
+}

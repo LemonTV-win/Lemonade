@@ -277,10 +277,9 @@
 			<select
 				name="map"
 				bind:value={editingVod.map}
-				required
 				class="mt-1 mb-4 w-full rounded border border-amber-300/30 bg-zinc-900 px-3 py-2 text-white focus:border-amber-400 focus:outline-none"
 			>
-				<option value="">All</option>
+				<option value="">Unset</option>
 				{#each MAPS as map}
 					<option value={map}>{MAP_NAMES[map]()}</option>
 				{/each}
@@ -310,6 +309,7 @@
 				bind:value={editingVod.character_first}
 				class="mt-1 mb-4 w-full rounded border border-amber-300/30 bg-zinc-900 px-3 py-2 text-white focus:border-amber-400 focus:outline-none"
 			>
+				<option value="">Unset</option>
 				{@render characterOptions()}
 			</select>
 		</label>
