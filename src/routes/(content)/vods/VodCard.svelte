@@ -44,43 +44,12 @@
 				loading="lazy"
 				class="h-full w-full object-cover"
 			/>
-			<div class="absolute top-2 left-2 flex items-center gap-1.5">
-				<span class="rounded bg-black/75 p-1 text-white shadow-sm backdrop-blur-sm">
-					<PlatformIcon platform={vod.platform} class="h-4 w-4" />
-				</span>
-				{#if vod.gameVersion && vod.gameVersion !== 'pc'}
-					<span
-						class="rounded bg-sky-500/85 px-1.5 py-0.5 text-[10px] font-semibold text-white shadow-sm"
-					>
-						{versionLabel}
-					</span>
-				{/if}
-			</div>
-			<div class="absolute right-2 bottom-2 flex max-w-[80%] flex-wrap justify-end gap-1">
-				<span
-					class="rounded bg-black/75 px-1.5 py-0.5 text-[10px] font-medium text-amber-100 shadow-sm backdrop-blur-sm"
-					title={formatLabel}
-				>
-					{formatLabel}
-				</span>
-				{#if vod.season}
-					<span
-						class="rounded bg-black/75 px-1.5 py-0.5 text-[10px] font-medium text-amber-300 shadow-sm backdrop-blur-sm"
-						title={getSeasonName(vod.season as Season)}
-					>
-						{getSeasonName(vod.season as Season)}
-					</span>
-				{/if}
-				{#if vod.rank}
-					<span
-						class="inline-flex items-center gap-1 rounded bg-black/75 px-1.5 py-0.5 text-[10px] font-medium text-amber-100 shadow-sm backdrop-blur-sm"
-						title={vod.rank}
-					>
-						<RankIcon rank={vod.rank} />
-						<span>{vod.rank.split(' ')[0]}</span>
-					</span>
-				{/if}
-			</div>
+			<!-- Keep the thumbnail clear: only a small platform marker sits on it. -->
+			<span
+				class="absolute top-1.5 left-1.5 rounded bg-black/70 p-1 text-white shadow-sm backdrop-blur-sm"
+			>
+				<PlatformIcon platform={vod.platform} class="h-4 w-4" />
+			</span>
 		</div>
 	</a>
 	<div class="px-2 pt-1 pb-0">
@@ -128,10 +97,38 @@
 			</div>
 		{/if}
 	</div>
-	<div class="flex items-center gap-2 px-2 pb-2 text-xs text-amber-100/80">
-		<span class="truncate" title={vod.player}>
-			{vod.player}
+	<div class="flex flex-wrap items-center gap-1 px-2 pb-1">
+		<span
+			class="rounded bg-amber-300/10 px-1.5 py-0.5 text-[10px] font-medium text-amber-200/80"
+			title={formatLabel}
+		>
+			{formatLabel}
 		</span>
+		{#if vod.gameVersion && vod.gameVersion !== 'pc'}
+			<span class="rounded bg-sky-400/15 px-1.5 py-0.5 text-[10px] font-medium text-sky-200/90">
+				{versionLabel}
+			</span>
+		{/if}
+		{#if vod.season}
+			<span
+				class="rounded bg-amber-300/10 px-1.5 py-0.5 text-[10px] font-medium text-amber-300"
+				title={getSeasonName(vod.season as Season)}
+			>
+				{getSeasonName(vod.season as Season)}
+			</span>
+		{/if}
+		{#if vod.rank}
+			<span
+				class="inline-flex items-center gap-1 rounded bg-amber-300/10 px-1.5 py-0.5 text-[10px] font-medium text-amber-100"
+				title={vod.rank}
+			>
+				<RankIcon rank={vod.rank} />
+				<span>{vod.rank.split(' ')[0]}</span>
+			</span>
+		{/if}
+	</div>
+	<div class="flex items-center gap-2 px-2 pb-2 text-xs text-amber-100/70">
+		<span class="truncate" title={vod.player}>{vod.player}</span>
 	</div>
 	<button
 		onclick={() => onEdit(vod)}
