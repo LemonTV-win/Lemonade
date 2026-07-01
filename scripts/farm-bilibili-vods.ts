@@ -4,7 +4,13 @@ import { randomUUID } from 'node:crypto';
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 // Single source of truth for character/map aliases, shared with the app.
-import { CHARACTER_ALIASES, MAP_ALIASES } from '../src/lib/data/detection';
+import {
+	CHARACTER_ALIASES,
+	MAP_ALIASES,
+	detectGameVersionFromTitle,
+	detectVodFormatFromTitle,
+	shouldAutoDetectSeason
+} from '../src/lib/data/detection';
 
 type GameMap =
 	| 'base_404'
@@ -76,6 +82,16 @@ type Rank =
 	| 'Singularity';
 
 type VodType = 'ranked' | 'scrim' | 'tournament' | 'demolition';
+type VodFormat =
+	| 'player_pov'
+	| 'pov_review'
+	| 'team_review'
+	| 'broadcast'
+	| 'tournament_vod'
+	| 'guide'
+	| 'highlight'
+	| 'other';
+type GameVersion = 'pc' | 'mobile' | 'unknown';
 
 type ExistingVod = {
 	id: string;
@@ -107,12 +123,14 @@ type Candidate = {
 	aid: number;
 	bvid: string;
 	server: 'CN';
-	season: string;
+	season?: string;
 	map: GameMap | null;
 	character_first: Character | null;
 	character_second: Character | null;
 	rank: Rank | null;
 	type: VodType;
+	format: VodFormat;
+	gameVersion: GameVersion;
 	publishedAt: string;
 	publishedAtUnix: number;
 	durationSeconds: number | null;
@@ -628,9 +646,9 @@ async function insertCandidates(candidates: Candidate[]) {
 			await client.execute({
 				sql: `insert into vod (
 					id, url, title, thumbnail, platform, player, server, map,
-					character_first, character_second, season, rank, type, published_at,
+					character_first, character_second, season, rank, type, format, game_version, published_at,
 					created_at, updated_at
-				) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+				) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
 				args: [
 					randomUUID(),
 					candidate.url,
@@ -645,6 +663,8 @@ async function insertCandidates(candidates: Candidate[]) {
 					candidate.season,
 					candidate.rank,
 					candidate.type,
+					candidate.format,
+					candidate.gameVersion,
 					candidate.publishedAtUnix,
 					now,
 					now
@@ -823,10 +843,18 @@ function makeCandidate(
 	if (scored.excluded) return null;
 	if (scored.score < minScore) return null;
 	const type = inferType(archive.title);
+	const gameVersion = detectGameVersionFromTitle(archive.title);
+	const format = detectVodFormatFromTitle(archive.title);
+	const characterRelevant = format === 'player_pov' || format === 'pov_review';
+	const characterFirst = characterRelevant ? scored.characterFirst : null;
+	const characterSecond = characterRelevant ? scored.characterSecond : null;
+	const season = shouldAutoDetectSeason({ gameVersion, format })
+		? seasonForPubdate(archive.pubdate)
+		: undefined;
 	const needsReview =
 		!scored.map ||
-		!scored.characterFirst ||
-		scored.characterConfidence !== 'high' ||
+		(characterRelevant && !characterFirst) ||
+		(characterRelevant && scored.characterConfidence !== 'high') ||
 		scored.matchConfidence !== 'high' ||
 		scored.score < minScore + 2;
 	return {
@@ -840,12 +868,14 @@ function makeCandidate(
 		aid: archive.aid,
 		bvid: archive.bvid,
 		server: 'CN',
-		season: seasonForPubdate(archive.pubdate),
+		season,
 		map: scored.map,
-		character_first: scored.characterFirst,
-		character_second: scored.characterSecond,
+		character_first: characterFirst,
+		character_second: characterSecond,
 		rank: scored.rank,
 		type,
+		format,
+		gameVersion,
 		publishedAt: new Date(archive.pubdate * 1000).toISOString(),
 		publishedAtUnix: archive.pubdate,
 		durationSeconds: archive.duration ?? null,

@@ -6,13 +6,16 @@ import type { Character } from '$lib/data/game';
 import type { GameMap } from '$lib/data/game';
 import type { Rank } from '$lib/data/game';
 import type { Server } from '$lib/data/game';
-import type { VodType } from '$lib/data/vod';
+import type { GameVersion, VodFormat, VodType } from '$lib/data/vod';
 import type { NewVod } from '$lib/server/db/schemas/vod';
 import { fetchVideoInfo, normalizeVideoUrl } from '$lib/server/data/video-info';
 import {
 	detectCharactersFromTitle,
+	detectGameVersionFromTitle,
 	detectMapFromTitle,
-	detectSeasonForUnix
+	detectSeasonForUnix,
+	detectVodFormatFromTitle,
+	shouldAutoDetectSeason
 } from '$lib/data/detection';
 
 export const load: PageServerLoad = async () => {
@@ -44,6 +47,8 @@ export const load: PageServerLoad = async () => {
 	);
 	const seasons = Array.from(new Set(vods.map((vod) => vod.season).filter(Boolean)));
 	const ranks = Array.from(new Set(vods.map((vod) => vod.rank).filter(Boolean)));
+	const formats = Array.from(new Set(vods.map((vod) => vod.format)));
+	const gameVersions = Array.from(new Set(vods.map((vod) => vod.gameVersion)));
 	console.log(vods);
 
 	return {
@@ -54,7 +59,9 @@ export const load: PageServerLoad = async () => {
 		characters,
 		players,
 		seasons,
-		ranks
+		ranks,
+		formats,
+		gameVersions
 	};
 };
 
@@ -73,6 +80,8 @@ export const actions: Actions = {
 		const season = formData.get('season');
 		const rank = formData.get('rank');
 		const type = formData.get('type');
+		const format = formData.get('format');
+		const gameVersion = formData.get('gameVersion');
 		const publishedAt = formData.get('publishedAt');
 
 		// Only core identity fields are required; map/character can be annotated later.
@@ -102,6 +111,8 @@ export const actions: Actions = {
 			season: season ? String(season) : undefined,
 			rank: rank && rank !== '' ? (rank as Rank) : undefined,
 			type: type ? (type as VodType) : 'ranked',
+			format: format ? (format as VodFormat) : 'player_pov',
+			gameVersion: gameVersion ? (gameVersion as GameVersion) : 'pc',
 			publishedAt: publishedAt ? new Date(publishedAt as string) : undefined
 		});
 
@@ -113,6 +124,12 @@ export const actions: Actions = {
 		const defaultServer = (String(formData.get('server') ?? 'CN') || 'CN') as Server;
 		const defaultType = (String(formData.get('type') ?? 'ranked') || 'ranked') as VodType;
 		const defaultSeason = formData.get('season') ? String(formData.get('season')) : undefined;
+		const formatOverride = formData.get('format')
+			? (String(formData.get('format')) as VodFormat)
+			: undefined;
+		const gameVersionOverride = formData.get('gameVersion')
+			? (String(formData.get('gameVersion')) as GameVersion)
+			: undefined;
 		const playerOverride = formData.get('player') ? String(formData.get('player')).trim() : '';
 
 		const urls = Array.from(
@@ -148,10 +165,19 @@ export const actions: Actions = {
 				: null;
 			// Best-effort auto-detection from the title so obvious cases are pre-filled;
 			// anything undetected stays null for later human annotation.
+			const gameVersion = gameVersionOverride ?? detectGameVersionFromTitle(info.title);
+			const format = formatOverride ?? detectVodFormatFromTitle(info.title);
 			const detectedMap = detectMapFromTitle(info.title);
 			const detectedCharacters = detectCharactersFromTitle(info.title);
+			// Season is only auto-filled for PC POV-style videos; mobile/tournament/team
+			// videos are left unset unless the importer provides an explicit default.
 			const detectedSeason =
-				defaultSeason ?? (pubUnix != null ? detectSeasonForUnix(pubUnix) : undefined);
+				defaultSeason ??
+				(pubUnix != null && shouldAutoDetectSeason({ gameVersion, format })
+					? detectSeasonForUnix(pubUnix)
+					: undefined);
+			// Character(s) only make sense for single-player POV-style formats.
+			const characterRelevant = format === 'player_pov' || format === 'pov_review';
 			toInsert.push({
 				id: randomUUID(),
 				url,
@@ -161,11 +187,13 @@ export const actions: Actions = {
 				player: playerOverride || info.player || 'Unknown',
 				server: defaultServer,
 				map: detectedMap ?? undefined,
-				character_first: detectedCharacters.first ?? undefined,
-				character_second: detectedCharacters.second ?? undefined,
+				character_first: characterRelevant ? (detectedCharacters.first ?? undefined) : undefined,
+				character_second: characterRelevant ? (detectedCharacters.second ?? undefined) : undefined,
 				season: detectedSeason,
 				rank: undefined,
 				type: defaultType,
+				format,
+				gameVersion,
 				publishedAt: info.publishedAt ? new Date(info.publishedAt) : undefined
 			});
 			// Guard against duplicate URLs inside the same paste.
@@ -201,6 +229,8 @@ export const actions: Actions = {
 		const season = formData.get('season');
 		const rank = formData.get('rank');
 		const type = formData.get('type');
+		const format = formData.get('format');
+		const gameVersion = formData.get('gameVersion');
 		const publishedAt = formData.get('publishedAt');
 
 		// Only core identity fields are required; map/character can be annotated later.
@@ -230,6 +260,8 @@ export const actions: Actions = {
 			season: season ? String(season) : undefined,
 			rank: rank && rank !== '' ? (rank as Rank) : undefined,
 			type: type ? (type as VodType) : 'ranked',
+			format: format ? (format as VodFormat) : 'player_pov',
+			gameVersion: gameVersion ? (gameVersion as GameVersion) : 'pc',
 			publishedAt: publishedAt ? new Date(publishedAt as string) : undefined
 		});
 

@@ -2,9 +2,11 @@
 	import type { NewVod } from '$lib/server/db/schemas/vod';
 	import CharacterIcon from '$lib/components/CharacterIcon.svelte';
 	import MapIcon from '$lib/components/MapIcon.svelte';
+	import PlatformIcon from '$lib/components/PlatformIcon.svelte';
 	import RankIcon from '$lib/components/RankIcon.svelte';
 
 	import { CHARACTER_NAMES, getSeasonName, MAP_NAMES, type Season } from '$lib/data/game';
+	import { GAME_VERSIONS_LABELS, VOD_FORMATS_LABELS } from '$lib/data/vod';
 	import { getLocale } from '$lib/paraglide/runtime';
 
 	let { vod, onEdit }: { vod: NewVod; onEdit: (vod: NewVod) => void } = $props();
@@ -85,12 +87,18 @@
 		{/if}
 	</div>
 	<div class="flex items-center gap-2 px-2 pb-2">
-		<span class="text-xs text-amber-100">
-			{vod.platform === 'youtube' ? 'Youtube' : 'Bilibili'}
-		</span>
+		<PlatformIcon platform={vod.platform} />
 		<span>
 			{vod.player}
 		</span>
+		<span class="rounded bg-amber-300/10 px-1.5 py-0.5 text-[10px] text-amber-200/80">
+			{VOD_FORMATS_LABELS[vod.format ?? 'player_pov']}
+		</span>
+		{#if vod.gameVersion && vod.gameVersion !== 'pc'}
+			<span class="rounded bg-sky-300/10 px-1.5 py-0.5 text-[10px] text-sky-200/80">
+				{GAME_VERSIONS_LABELS[vod.gameVersion]}
+			</span>
+		{/if}
 		{#if vod.season}
 			<span class="text-xs text-amber-300">{getSeasonName(vod.season as Season)}</span>
 		{/if}

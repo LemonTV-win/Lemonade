@@ -1,7 +1,14 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import { SERVERS, SEASONS, getSeasonFullName, type Season } from '$lib/data/game';
-	import { VOD_TYPES, VOD_TYPES_LABELS } from '$lib/data/vod';
+	import {
+		VOD_TYPES,
+		VOD_TYPES_LABELS,
+		VOD_FORMATS,
+		VOD_FORMATS_LABELS,
+		GAME_VERSIONS,
+		GAME_VERSIONS_LABELS
+	} from '$lib/data/vod';
 
 	let {
 		open = $bindable(false),
@@ -18,6 +25,8 @@
 	let type = $state('ranked');
 	let season = $state('');
 	let player = $state('');
+	let formatOverride = $state('');
+	let gameVersionOverride = $state('');
 	let submitting = $state(false);
 
 	type BatchResult = {
@@ -135,6 +144,32 @@
 					placeholder="Leave empty to use uploader"
 					class="mt-1 w-full rounded border border-amber-300/30 bg-zinc-900 px-3 py-2 text-white focus:border-amber-400 focus:outline-none"
 				/>
+			</label>
+			<label class="block text-sm text-amber-300">
+				Format override
+				<select
+					name="format"
+					bind:value={formatOverride}
+					class="mt-1 w-full rounded border border-amber-300/30 bg-zinc-900 px-3 py-2 text-white focus:border-amber-400 focus:outline-none"
+				>
+					<option value="">Auto from title</option>
+					{#each VOD_FORMATS as f}
+						<option value={f}>{VOD_FORMATS_LABELS[f]}</option>
+					{/each}
+				</select>
+			</label>
+			<label class="block text-sm text-amber-300">
+				Version override
+				<select
+					name="gameVersion"
+					bind:value={gameVersionOverride}
+					class="mt-1 w-full rounded border border-amber-300/30 bg-zinc-900 px-3 py-2 text-white focus:border-amber-400 focus:outline-none"
+				>
+					<option value="">Auto from title</option>
+					{#each GAME_VERSIONS as version}
+						<option value={version}>{GAME_VERSIONS_LABELS[version]}</option>
+					{/each}
+				</select>
 			</label>
 		</div>
 

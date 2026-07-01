@@ -13,7 +13,15 @@
 		type Season
 	} from '$lib/data/game';
 	import { enhance } from '$app/forms';
-	import { VOD_TYPES, VOD_TYPES_LABELS } from '$lib/data/vod';
+	import {
+		VOD_TYPES,
+		VOD_TYPES_LABELS,
+		VOD_FORMATS,
+		VOD_FORMATS_LABELS,
+		GAME_VERSIONS,
+		GAME_VERSIONS_LABELS,
+		isCharacterRelevantFormat
+	} from '$lib/data/vod';
 	import * as m from '$lib/paraglide/messages';
 	import IconSelect, { type IconSelectItem } from '$lib/components/IconSelect.svelte';
 	import CharacterIcon from '$lib/components/CharacterIcon.svelte';
@@ -60,6 +68,8 @@
 			season: '',
 			rank: undefined,
 			type: 'ranked',
+			format: 'player_pov',
+			gameVersion: 'pc',
 			publishedAt: undefined
 		};
 	}
@@ -400,6 +410,37 @@
 				{/each}
 			</select>
 		</label>
+		<div class="grid grid-cols-2 gap-3">
+			<label class="mb-2 block text-amber-300">
+				Format
+				<select
+					name="format"
+					bind:value={editingVod.format}
+					class="mt-1 mb-4 w-full rounded border border-amber-300/30 bg-zinc-900 px-3 py-2 text-white focus:border-amber-400 focus:outline-none"
+				>
+					{#each VOD_FORMATS as format}
+						<option value={format}>{VOD_FORMATS_LABELS[format]}</option>
+					{/each}
+				</select>
+			</label>
+			<label class="mb-2 block text-amber-300">
+				Version
+				<select
+					name="gameVersion"
+					bind:value={editingVod.gameVersion}
+					class="mt-1 mb-4 w-full rounded border border-amber-300/30 bg-zinc-900 px-3 py-2 text-white focus:border-amber-400 focus:outline-none"
+				>
+					{#each GAME_VERSIONS as version}
+						<option value={version}>{GAME_VERSIONS_LABELS[version]}</option>
+					{/each}
+				</select>
+			</label>
+		</div>
+		{#if editingVod.format && !isCharacterRelevantFormat(editingVod.format)}
+			<p class="-mt-2 mb-4 text-xs text-amber-200/60">
+				This format is team/event-based; character fields are optional and can be left empty.
+			</p>
+		{/if}
 		<div class="mt-4 flex gap-4">
 			<button
 				type="submit"

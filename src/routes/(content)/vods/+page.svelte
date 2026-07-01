@@ -6,7 +6,12 @@
 	import VodDialog from './VodEdit.svelte';
 	import VodFilters from './VodFilters.svelte';
 	import { invalidateAll } from '$app/navigation';
-	import type { VodType } from '$lib/data/vod';
+	import {
+		isCharacterRelevantFormat,
+		type GameVersion,
+		type VodFormat,
+		type VodType
+	} from '$lib/data/vod';
 	let { data }: PageProps = $props();
 
 	let selectedPlatforms: string[] = $state([]);
@@ -17,11 +22,16 @@
 	let selectedPlayers: string[] = $state([]);
 	let selectedRanks: string[] = $state([]);
 	let selectedTypes: VodType[] = $state([]);
+	let selectedFormats: VodFormat[] = $state([]);
+	let selectedGameVersions: GameVersion[] = $state([]);
 	let showNeedsAnnotationOnly = $state(false);
 	let filteredVods = $derived(
 		data.vods.filter(
 			(vod: NewVod) =>
-				(showNeedsAnnotationOnly ? !vod.map || !vod.character_first : true) &&
+				(showNeedsAnnotationOnly
+					? !vod.map ||
+						(isCharacterRelevantFormat(vod.format ?? 'player_pov') && !vod.character_first)
+					: true) &&
 				(selectedPlatforms.length ? selectedPlatforms.includes(String(vod.platform)) : true) &&
 				(selectedMaps.length ? vod.map && selectedMaps.includes(String(vod.map)) : true) &&
 				(selectedServers.length ? selectedServers.includes(String(vod.server)) : true) &&
@@ -34,7 +44,11 @@
 				(selectedRanks.length
 					? selectedRanks.some((group) => vod.rank && String(vod.rank).startsWith(group))
 					: true) &&
-				(selectedTypes.length ? vod.type && selectedTypes.includes(vod.type) : true)
+				(selectedTypes.length ? vod.type && selectedTypes.includes(vod.type) : true) &&
+				(selectedFormats.length ? vod.format && selectedFormats.includes(vod.format) : true) &&
+				(selectedGameVersions.length
+					? vod.gameVersion && selectedGameVersions.includes(vod.gameVersion)
+					: true)
 		)
 	);
 
@@ -66,6 +80,8 @@
 		seasons={data.seasons}
 		players={data.players}
 		ranks={data.ranks}
+		formats={data.formats}
+		gameVersions={data.gameVersions}
 		onChange={({ detail }) => {
 			selectedPlatforms = detail.selectedPlatforms;
 			selectedMaps = detail.selectedMaps;
@@ -75,6 +91,8 @@
 			selectedPlayers = detail.selectedPlayers;
 			selectedRanks = detail.selectedRanks;
 			selectedTypes = detail.selectedTypes;
+			selectedFormats = detail.selectedFormats;
+			selectedGameVersions = detail.selectedGameVersions;
 		}}
 	/>
 

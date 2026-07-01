@@ -3,10 +3,13 @@ import type { NewVod } from '$lib/server/db/schemas/vod';
 import {
 	detectCharactersFromTitle,
 	detectMapFromTitle,
-	detectSeasonForUnix
+	detectSeasonForUnix,
+	detectGameVersionFromTitle,
+	detectVodFormatFromTitle,
+	shouldAutoDetectSeason
 } from '$lib/data/detection';
 import type { Server } from '$lib/data/game';
-import type { VodType } from '$lib/data/vod';
+import type { GameVersion, VodFormat, VodType } from '$lib/data/vod';
 import { randomUUID } from 'node:crypto';
 
 export type BilibiliVodSubscription = {
@@ -18,6 +21,8 @@ export type BilibiliVodSubscription = {
 	player: string;
 	server: Server;
 	type: VodType;
+	format?: VodFormat;
+	gameVersion?: GameVersion;
 	since?: string;
 	minDurationSeconds?: number;
 };
@@ -32,6 +37,8 @@ export const BILIBILI_VOD_SUBSCRIPTIONS: BilibiliVodSubscription[] = [
 		player: '逍遥Samaノ',
 		server: 'CN',
 		type: 'ranked',
+		format: 'player_pov',
+		gameVersion: 'pc',
 		since: '2025-08-26',
 		minDurationSeconds: 480
 	},
@@ -43,7 +50,9 @@ export const BILIBILI_VOD_SUBSCRIPTIONS: BilibiliVodSubscription[] = [
 		url: 'https://space.bilibili.com/485937243/lists/5167160?type=season',
 		player: '逍遥Samaノ',
 		server: 'CN',
-		type: 'tournament'
+		type: 'tournament',
+		format: 'player_pov',
+		gameVersion: 'pc'
 	}
 ];
 
@@ -159,9 +168,16 @@ export async function syncBilibiliVodSubscriptions(options: SyncOptions = {}) {
 					result.skippedShort++;
 					continue;
 				}
+				const gameVersion = subscription.gameVersion ?? detectGameVersionFromTitle(archive.title);
+				const format = subscription.format ?? detectVodFormatFromTitle(archive.title);
 				const map = detectMapFromTitle(archive.title);
-				const characters = detectCharactersFromTitle(archive.title);
-				const season = detectSeasonForUnix(archive.pubdate);
+				const characterRelevant = format === 'player_pov' || format === 'pov_review';
+				const characters = characterRelevant
+					? detectCharactersFromTitle(archive.title)
+					: { first: null, second: null };
+				const season = shouldAutoDetectSeason({ gameVersion, format })
+					? detectSeasonForUnix(archive.pubdate)
+					: undefined;
 				rows.push({
 					id: randomUUID(),
 					url,
@@ -176,6 +192,8 @@ export async function syncBilibiliVodSubscriptions(options: SyncOptions = {}) {
 					season,
 					rank: undefined,
 					type: subscription.type,
+					format,
+					gameVersion,
 					publishedAt: new Date(archive.pubdate * 1000)
 				});
 				existingUrls.add(url);

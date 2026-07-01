@@ -10,9 +10,15 @@
 		type Rank
 	} from '$lib/data/game';
 	import {
+		GAME_VERSIONS,
+		GAME_VERSIONS_LABELS,
 		VOD_PLATFORMS_LABELS,
+		VOD_FORMATS,
+		VOD_FORMATS_LABELS,
 		VOD_TYPES,
 		VOD_TYPES_LABELS,
+		type GameVersion,
+		type VodFormat,
 		type VodPlatform
 	} from '$lib/data/vod';
 	import { RANKS } from '$lib/data/game';
@@ -28,6 +34,8 @@
 		seasons = $bindable([]),
 		players = $bindable([]),
 		ranks = $bindable([]),
+		formats = $bindable([]),
+		gameVersions = $bindable([]),
 		onChange
 	} = $props<{
 		platforms: VodPlatform[];
@@ -37,6 +45,8 @@
 		seasons: (string | null)[];
 		players: (string | null)[];
 		ranks: (string | null)[];
+		formats: VodFormat[];
+		gameVersions: GameVersion[];
 		onChange?: (e: { detail: any }) => void;
 	}>();
 
@@ -52,6 +62,8 @@
 	let selectedPlayers: string[] = $state([]);
 	let selectedRanks: string[] = $state([]);
 	let selectedTypes: string[] = $state([]);
+	let selectedFormats: string[] = $state([]);
+	let selectedGameVersions: string[] = $state([]);
 	function toggleFilter(arr: string[], value: string) {
 		if (arr.includes(value)) {
 			return arr.filter((v) => v !== value);
@@ -104,7 +116,9 @@
 				selectedSeasons,
 				selectedPlayers,
 				selectedRanks,
-				selectedTypes
+				selectedTypes,
+				selectedFormats,
+				selectedGameVersions
 			}
 		});
 	});
@@ -285,6 +299,42 @@
 					class={`rounded border px-3 py-1 text-sm font-medium transition-colors focus:ring-2 focus:ring-amber-400 focus:outline-none ${selectedTypes.includes(type) ? 'border-amber-500 bg-gradient-to-r from-yellow-300 to-amber-500 text-black shadow' : 'border-gray-700 bg-zinc-900 text-amber-200 hover:border-amber-400 hover:bg-amber-400/10'}`}
 					onclick={() => (selectedTypes = toggleFilter(selectedTypes, type))}
 					>{VOD_TYPES_LABELS[type]()}</button
+				>
+			{/each}
+		</div>
+	</div>
+	<div class="min-w-[160px]">
+		<label class="mb-2 block text-sm font-semibold text-amber-200">Format</label>
+		<div class="flex flex-wrap gap-2">
+			<button
+				type="button"
+				class={`rounded border px-3 py-1 text-sm font-medium transition-colors focus:ring-2 focus:ring-amber-400 focus:outline-none ${selectedFormats.length === 0 ? 'border-amber-500 bg-gradient-to-r from-yellow-300 to-amber-500 text-black shadow' : 'border-gray-700 bg-zinc-900 text-amber-200 hover:border-amber-400 hover:bg-amber-400/10'}`}
+				onclick={() => (selectedFormats = [])}>{m.all()}</button
+			>
+			{#each VOD_FORMATS.filter((format) => formats.includes(format)) as format}
+				<button
+					type="button"
+					class={`rounded border px-3 py-1 text-sm font-medium transition-colors focus:ring-2 focus:ring-amber-400 focus:outline-none ${selectedFormats.includes(format) ? 'border-amber-500 bg-gradient-to-r from-yellow-300 to-amber-500 text-black shadow' : 'border-gray-700 bg-zinc-900 text-amber-200 hover:border-amber-400 hover:bg-amber-400/10'}`}
+					onclick={() => (selectedFormats = toggleFilter(selectedFormats, format))}
+					>{VOD_FORMATS_LABELS[format]}</button
+				>
+			{/each}
+		</div>
+	</div>
+	<div class="min-w-[160px]">
+		<label class="mb-2 block text-sm font-semibold text-amber-200">Version</label>
+		<div class="flex flex-wrap gap-2">
+			<button
+				type="button"
+				class={`rounded border px-3 py-1 text-sm font-medium transition-colors focus:ring-2 focus:ring-amber-400 focus:outline-none ${selectedGameVersions.length === 0 ? 'border-amber-500 bg-gradient-to-r from-yellow-300 to-amber-500 text-black shadow' : 'border-gray-700 bg-zinc-900 text-amber-200 hover:border-amber-400 hover:bg-amber-400/10'}`}
+				onclick={() => (selectedGameVersions = [])}>{m.all()}</button
+			>
+			{#each GAME_VERSIONS.filter((version) => gameVersions.includes(version)) as version}
+				<button
+					type="button"
+					class={`rounded border px-3 py-1 text-sm font-medium transition-colors focus:ring-2 focus:ring-amber-400 focus:outline-none ${selectedGameVersions.includes(version) ? 'border-amber-500 bg-gradient-to-r from-yellow-300 to-amber-500 text-black shadow' : 'border-gray-700 bg-zinc-900 text-amber-200 hover:border-amber-400 hover:bg-amber-400/10'}`}
+					onclick={() => (selectedGameVersions = toggleFilter(selectedGameVersions, version))}
+					>{GAME_VERSIONS_LABELS[version]}</button
 				>
 			{/each}
 		</div>

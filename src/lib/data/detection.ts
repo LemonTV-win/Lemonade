@@ -3,6 +3,7 @@
 // standalone scripts (relative import), because it only imports *types* from
 // ./game (which are erased at runtime).
 import type { Character, GameMap, Season } from './game';
+import type { GameVersion, VodFormat } from './vod';
 
 /**
  * Character alias database for title-based discovery.
@@ -67,6 +68,39 @@ export function detectMapFromTitle(title: string): GameMap | null {
 		if (aliases.some((alias) => title.includes(alias))) return map;
 	}
 	return null;
+}
+
+export function detectGameVersionFromTitle(title: string): GameVersion {
+	if (/(手游|移动端|移動端|手机|手機)/.test(title)) return 'mobile';
+	return 'pc';
+}
+
+export function detectVodFormatFromTitle(title: string): VodFormat {
+	if (/(高光|集锦|集錦|精彩时刻|精彩時刻|击杀秀|擊殺秀|五杀|ACE|ace|混剪|短片)/.test(title)) {
+		return 'highlight';
+	}
+	if (/(复盘|復盤|review|Review)/.test(title)) {
+		if (/(杯|赛|賽|决赛|決賽|半决|半決|总决|總決|BO[135]|vs|VS)/.test(title)) return 'team_review';
+		return 'pov_review';
+	}
+	if (/(直播回放|解说|解說|官方|全场|全場|完整|录像|錄像)/.test(title)) return 'broadcast';
+	if (
+		/(杯|赛|賽|决赛|決賽|半决|半決|总决|總決|BO[135]|vs|VS|图[一二三四五12345]|圖[一二三四五12345])/.test(
+			title
+		)
+	) {
+		return 'tournament_vod';
+	}
+	if (/(教学|教學|教程|指南|干货|技巧|思路|公式|打法)/.test(title)) return 'guide';
+	return 'player_pov';
+}
+
+export function shouldAutoDetectSeason(params: {
+	gameVersion: GameVersion;
+	format: VodFormat;
+}): boolean {
+	if (params.gameVersion !== 'pc') return false;
+	return params.format === 'player_pov' || params.format === 'pov_review';
 }
 
 type CharacterHit = { character: Character; index: number };
