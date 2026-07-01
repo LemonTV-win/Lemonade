@@ -9,6 +9,11 @@ import type { Server } from '$lib/data/game';
 import type { VodType } from '$lib/data/vod';
 import type { NewVod } from '$lib/server/db/schemas/vod';
 import { fetchVideoInfo, normalizeVideoUrl } from '$lib/server/data/video-info';
+import {
+	detectCharactersFromTitle,
+	detectMapFromTitle,
+	detectSeasonForUnix
+} from '$lib/data/detection';
 
 export const load: PageServerLoad = async () => {
 	const vods = await getVODs();
@@ -138,6 +143,15 @@ export const actions: Actions = {
 				failed.push({ url, reason: 'Could not fetch title/thumbnail' });
 				continue;
 			}
+			const pubUnix = info.publishedAt
+				? Math.floor(new Date(info.publishedAt).getTime() / 1000)
+				: null;
+			// Best-effort auto-detection from the title so obvious cases are pre-filled;
+			// anything undetected stays null for later human annotation.
+			const detectedMap = detectMapFromTitle(info.title);
+			const detectedCharacters = detectCharactersFromTitle(info.title);
+			const detectedSeason =
+				defaultSeason ?? (pubUnix != null ? detectSeasonForUnix(pubUnix) : undefined);
 			toInsert.push({
 				id: randomUUID(),
 				url,
@@ -146,10 +160,10 @@ export const actions: Actions = {
 				platform: info.platform,
 				player: playerOverride || info.player || 'Unknown',
 				server: defaultServer,
-				map: undefined,
-				character_first: undefined,
-				character_second: undefined,
-				season: defaultSeason,
+				map: detectedMap ?? undefined,
+				character_first: detectedCharacters.first ?? undefined,
+				character_second: detectedCharacters.second ?? undefined,
+				season: detectedSeason,
 				rank: undefined,
 				type: defaultType,
 				publishedAt: info.publishedAt ? new Date(info.publishedAt) : undefined

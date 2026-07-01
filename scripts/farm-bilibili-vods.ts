@@ -3,6 +3,8 @@ import { createClient } from '@libsql/client';
 import { randomUUID } from 'node:crypto';
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
+// Single source of truth for character/map aliases, shared with the app.
+import { CHARACTER_ALIASES, MAP_ALIASES } from '../src/lib/data/detection';
 
 type GameMap =
 	| 'base_404'
@@ -218,44 +220,6 @@ const HIGHLIGHT_OR_NON_MATCH_TERMS = [
 const LOW_SIGNAL_TERMS = ['直播回放', '切片', '集锦'];
 const NEGATIVE_TERMS = ['狼人杀', '捞女游戏', '无畏契约', '瓦罗兰特', '永劫无间', '抽卡', '杂谈'];
 
-const MAP_ALIASES: Record<GameMap, string[]> = {
-	base_404: ['404基地', '基地404', '404', 'Base 404', 'base404'],
-	area_88: ['88区', 'Area 88', 'area88'],
-	port_euler: ['欧拉港口', '欧拉港', '港口', 'Port Euler'],
-	windy_town: ['风曳镇', '风曳', 'Windy Town'],
-	space_lab: ['空间实验室', '空间站', '空间', 'Space Lab'],
-	cauchy_district: ['柯西街区', '柯西', 'Cauchy'],
-	cosmite: ['科斯迷特', '科斯', 'Cosmite'],
-	ocarnus: ['奥卡努斯', 'Ocarnus']
-};
-
-const CHARACTER_ALIASES: Record<Character, string[]> = {
-	Yvette: ['伊薇特', '雪怪', 'Yvette'],
-	Nobunaga: ['信', '信长', 'Nobunaga'],
-	Kokona: ['心夏', 'Kokona'],
-	Michele: ['米雪儿', '米雪', 'Michele'],
-	Flavia: ['芙拉薇娅', '蝴蝶', 'Flavia'],
-	Yugiri: ['忧雾', '悠莉', 'Yugiri'],
-	Leona: ['蕾欧娜', 'Leona'],
-	Chiyo: ['千代', '御天织', 'Chiyo'],
-	Reiichi: ['令', 'Reiichi'],
-	Lawine: ['拉薇', 'Lawine'],
-	Ming: ['明', 'Ming'],
-	Meredith: ['梅瑞狄斯', 'Meredith'],
-	Eika: ['艾卡', 'Eika'],
-	Kanami: ['香奈美', '大狙', 'Kanami'],
-	Fragrans: ['珐格兰丝', '花', 'Fragrans'],
-	Mara: ['玛拉', 'Mara'],
-	Nora: ['诺诺', '諾諾', 'Nora'],
-	Audrey: ['奥黛丽', 'Audrey'],
-	Celestia: ['星绘', 'Celestia'],
-	Maddelena: ['玛德蕾娜', '泡泡', 'Maddelena'],
-	'Bai Mo': ['白墨', '沙猫', 'Bai Mo'],
-	Fuchsia: ['绯莎', 'Fuchsia'],
-	Galatea: ['加拉蒂亚', '卡牌', 'Galatea'],
-	Cielle: ['汐', 'Cielle']
-};
-
 const WEAK_CHARACTER_ALIASES = new Set(['信', '令', '明', '花']);
 const CHARACTER_USE_CONTEXT =
 	/(玩|只玩|专精|秒锁|选择|反手选择|掏出|拿出|使用|用|新版|实战|思路|教学|觉醒|一觉|二觉|三觉|全场|半场|奇点局|超弦局|排位)/;
@@ -282,7 +246,8 @@ const DEFAULT_ARGS = {
 	limitSeeds: '0',
 	noSearch: 'false',
 	includeHighlights: 'false',
-	includeLowSignal: 'false'
+	includeLowSignal: 'false',
+	insert: 'false'
 };
 
 function parseArgs() {
@@ -348,6 +313,7 @@ Options:
   --limitSeeds N              Debug cap for seed count. 0 means unlimited.
   --includeHighlights true    Allow highlight/montage/PV/commentary-like videos. Default: false
   --includeLowSignal true     Include low-signal long replays/cuts more aggressively.
+  --insert true               Insert discovered candidates into DB after writing JSON. Default: false
 
 Notes:
   - Reads DATABASE_URL and DATABASE_AUTH_TOKEN from .env/process.env.
@@ -623,6 +589,60 @@ async function loadExistingVods() {
 		args: []
 	});
 	return res.rows as unknown as ExistingVod[];
+}
+
+async function insertCandidates(candidates: Candidate[]) {
+	if (!process.env.DATABASE_URL) throw new Error('DATABASE_URL is missing. Put it in .env.');
+	const client = createClient({
+		url: process.env.DATABASE_URL,
+		authToken: process.env.DATABASE_AUTH_TOKEN
+	});
+	let inserted = 0;
+	let skippedExisting = 0;
+	let failed = 0;
+	for (const candidate of candidates) {
+		const existing = await client.execute({
+			sql: 'select id from vod where url = ? limit 1',
+			args: [candidate.url]
+		});
+		if (existing.rows.length) {
+			skippedExisting++;
+			continue;
+		}
+		try {
+			const now = Math.floor(Date.now() / 1000);
+			await client.execute({
+				sql: `insert into vod (
+					id, url, title, thumbnail, platform, player, server, map,
+					character_first, character_second, season, rank, type, published_at,
+					created_at, updated_at
+				) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+				args: [
+					randomUUID(),
+					candidate.url,
+					candidate.title,
+					candidate.thumbnail,
+					candidate.platform,
+					candidate.player || 'Unknown',
+					candidate.server,
+					candidate.map,
+					candidate.character_first,
+					candidate.character_second,
+					candidate.season,
+					candidate.rank,
+					candidate.type,
+					candidate.publishedAtUnix,
+					now,
+					now
+				]
+			});
+			inserted++;
+		} catch (error) {
+			failed++;
+			console.warn(`[farm] insert failed ${candidate.url}:`, (error as Error).message);
+		}
+	}
+	return { inserted, skippedExisting, failed };
 }
 
 async function buildSeeds(
@@ -975,6 +995,10 @@ async function main() {
 	console.log('[farm] by season:', output.summary.bySeason);
 	console.log('[farm] top players:', Object.entries(output.summary.byPlayer).slice(0, 10));
 	if (errors.length) console.warn(`[farm] errors=${errors.length}; see output.errors`);
+	if (args.insert === 'true') {
+		const result = await insertCandidates(candidates);
+		console.log('[farm] insert result:', result);
+	}
 }
 
 function countBy<T>(items: T[], keyFn: (item: T) => string) {

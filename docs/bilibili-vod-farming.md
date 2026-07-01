@@ -136,3 +136,13 @@ Until AI character detection lands, the fastest path is:
    - Title, thumbnail, uploader and publish date are auto-fetched server-side.
    - `map` and `character_first` are intentionally left empty.
 4. Use the **Needs annotation** filter on `/vods` to find imported VODs and fill in map/characters via **Edit** later.
+
+The app and farm script now share `src/lib/data/detection.ts` as the alias database for title-based detection. Keep character/map aliases there instead of duplicating them in server actions or scripts.
+
+To discover from existing creator leads and insert directly:
+
+```bash
+bun run vod:farm:bilibili --since 2026-05-19 --insert true --out tmp/bilibili-vod-candidates.json
+```
+
+The script still skips URLs already present in the DB, and it pre-fills map/characters when aliases are confidently found in the title.

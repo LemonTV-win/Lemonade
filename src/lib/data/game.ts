@@ -190,16 +190,33 @@ export const GLOBAL_SEASONS = [
 export const SEASONS = [...CN_SEASONS, ...GLOBAL_SEASONS] as const;
 export type Season = (typeof SEASONS)[number];
 
-const SEASON_LABELS: Partial<Record<Season, string>> = {
-	C12: 'CalabiYau S12: 至日之翼',
-	C13: 'CalabiYau S13: 虚想龙歌',
-	'26SP1': 'CalabiYau 26SP1: 猎夜呢喃',
-	'26SP2': 'CalabiYau 26SP2: 长廊追迹',
-	'26SP3': 'CalabiYau 26SP3: 虚弦暗变'
+/** Official season codenames (kept separate from the ID-like name). */
+export const SEASON_CODENAMES: Partial<Record<Season, string>> = {
+	C12: '至日之翼',
+	C13: '虚想龙歌',
+	'26SP1': '猎夜呢喃',
+	'26SP2': '长廊追迹',
+	'26SP3': '虚弦暗变'
 };
 
+/**
+ * Short, ID-like season name used as the canonical identifier in the UI.
+ * e.g. `C12` -> `CalabiYau S12`, `G1` -> `Strinova S1`, `26SP3` -> `CalabiYau 26SP3`.
+ */
 export function getSeasonName(season: Season): string {
-	return SEASON_LABELS[season] ?? season.replace('C', 'CalabiYau S').replace('G', 'Strinova S');
+	if (/^C\d+$/.test(season)) return `CalabiYau S${season.slice(1)}`;
+	if (/^G\d+$/.test(season)) return `Strinova S${season.slice(1)}`;
+	return `CalabiYau ${season}`;
+}
+
+export function getSeasonCodename(season: Season): string | undefined {
+	return SEASON_CODENAMES[season];
+}
+
+/** Human-readable name that also includes the codename when available (for pickers). */
+export function getSeasonFullName(season: Season): string {
+	const codename = SEASON_CODENAMES[season];
+	return codename ? `${getSeasonName(season)} · ${codename}` : getSeasonName(season);
 }
 
 // #endregion

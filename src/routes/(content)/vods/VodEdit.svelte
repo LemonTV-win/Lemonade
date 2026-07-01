@@ -2,7 +2,7 @@
 	import type { NewVod } from '$lib/server/db/schemas/vod';
 	import {
 		CHARACTER_NAMES,
-		getSeasonName,
+		getSeasonFullName,
 		MAP_NAMES,
 		MAPS,
 		PUS_CHARACTERS,
@@ -344,7 +344,7 @@
 				class="mt-1 mb-4 w-full rounded border border-amber-300/30 bg-zinc-900 px-3 py-2 text-white focus:border-amber-400 focus:outline-none"
 			>
 				{#each SEASONS as season}
-					<option value={season}>{getSeasonName(season as Season)}</option>
+					<option value={season}>{getSeasonFullName(season as Season)}</option>
 				{/each}
 			</select>
 		</label>

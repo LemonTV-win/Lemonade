@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
-	import { SERVERS, SEASONS, getSeasonName, type Season } from '$lib/data/game';
+	import { SERVERS, SEASONS, getSeasonFullName, type Season } from '$lib/data/game';
 	import { VOD_TYPES, VOD_TYPES_LABELS } from '$lib/data/vod';
 
 	let {
@@ -122,7 +122,7 @@
 				>
 					<option value="">Unset</option>
 					{#each SEASONS as s}
-						<option value={s}>{getSeasonName(s as Season)}</option>
+						<option value={s}>{getSeasonFullName(s as Season)}</option>
 					{/each}
 				</select>
 			</label>
