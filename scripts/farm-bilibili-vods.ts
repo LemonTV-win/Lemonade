@@ -218,7 +218,19 @@ const HIGHLIGHT_OR_NON_MATCH_TERMS = [
 ];
 
 const LOW_SIGNAL_TERMS = ['直播回放', '切片', '集锦'];
-const NEGATIVE_TERMS = ['狼人杀', '捞女游戏', '无畏契约', '瓦罗兰特', '永劫无间', '抽卡', '杂谈'];
+const NEGATIVE_TERMS = [
+	'狼人杀',
+	'捞女游戏',
+	'无畏契约',
+	'瓦罗兰特',
+	'永劫无间',
+	'抽卡',
+	'手游',
+	'移动端',
+	'手机',
+	'手機',
+	'杂谈'
+];
 
 const WEAK_CHARACTER_ALIASES = new Set(['信', '令', '明', '花']);
 const CHARACTER_USE_CONTEXT =
@@ -467,13 +479,15 @@ function inferType(title: string): VodType {
 }
 
 async function requestJson(url: string, referer: string) {
+	const headers: Record<string, string> = {
+		'user-agent':
+			'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124 Safari/537.36',
+		referer,
+		accept: 'application/json,text/plain,*/*'
+	};
+	if (process.env.BILIBILI_COOKIE) headers.cookie = process.env.BILIBILI_COOKIE;
 	const res = await fetch(url, {
-		headers: {
-			'user-agent':
-				'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124 Safari/537.36',
-			referer,
-			accept: 'application/json,text/plain,*/*'
-		}
+		headers
 	});
 	const text = await res.text();
 	if (!res.ok) throw new Error(`${res.status} ${res.statusText}: ${text.slice(0, 160)}`);

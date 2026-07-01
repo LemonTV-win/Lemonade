@@ -13,7 +13,7 @@ import type { Character, GameMap, Season } from './game';
 export const CHARACTER_ALIASES: Record<Character, string[]> = {
 	Yvette: ['伊薇特', '小熊', '雪怪', 'Yvette'],
 	Nobunaga: ['信长', '信長', '信', 'Nobunaga'],
-	Kokona: ['心夏', 'Kokona'],
+	Kokona: ['心夏', 'Kokona', '大狙'],
 	Michele: ['米雪儿', '米雪', '哈基咪', 'Michele'],
 	Flavia: ['芙拉薇娅', '芙拉维亚', '蝴蝶', 'Flavia'],
 	Yugiri: ['忧雾', '憂霧', '蜗牛', '悠莉', 'Yugiri'],
@@ -22,7 +22,7 @@ export const CHARACTER_ALIASES: Record<Character, string[]> = {
 	Reiichi: ['令一', '令', 'Reiichi'],
 	Lawine: ['拉薇', 'Lawine'],
 	Ming: ['牢明', '明', 'Ming'],
-	Meredith: ['梅瑞狄斯', '梅瑞迪斯', 'Meredith'],
+	Meredith: ['梅瑞狄斯', '梅瑞迪斯', '沙猫', 'Meredith'],
 	Eika: ['艾卡', '炎帝', '最强女高中生', 'Eika'],
 	Kanami: ['香奈美', '大狙', '小美', 'Kanami'],
 	Fragrans: ['珐格兰丝', '珐格蘭絲', '调香师', '花', 'Fragrans'],
@@ -50,7 +50,7 @@ export const MAP_ALIASES: Record<GameMap, string[]> = {
 };
 
 /** Aliases too short/ambiguous to trust without nearby usage context. */
-const WEAK_ALIASES = new Set(['信', '令', '明', '花']);
+const WEAK_ALIASES = new Set(['信', '令', '明', '花', '大狙']);
 
 /** Words that indicate the player is actually using this character. */
 const USE_CONTEXT =

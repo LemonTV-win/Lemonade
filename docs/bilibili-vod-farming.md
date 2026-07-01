@@ -146,3 +146,12 @@ bun run vod:farm:bilibili --since 2026-05-19 --insert true --out tmp/bilibili-vo
 ```
 
 The script still skips URLs already present in the DB, and it pre-fills map/characters when aliases are confidently found in the title.
+
+If Bilibili search starts returning 412/risk-control responses, run the farm with a temporary cookie header:
+
+```bash
+BILIBILI_COOKIE='buvid3=...; buvid4=...; SESSDATA=...' \
+  bun run vod:farm:bilibili --since 2026-05-19 --insert true --searchPages 5
+```
+
+Do not commit cookies or write them into repo files. Prefer a temporary env file under `/tmp` and delete it after the run.
