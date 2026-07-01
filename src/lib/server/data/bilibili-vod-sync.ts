@@ -34,6 +34,16 @@ export const BILIBILI_VOD_SUBSCRIPTIONS: BilibiliVodSubscription[] = [
 		type: 'ranked',
 		since: '2025-08-26',
 		minDurationSeconds: 480
+	},
+	{
+		id: 'xiaoyao-sama-tournament-pov',
+		name: '逍遥Samaノ · 卡拉彼丘比赛pov',
+		mid: 485937243,
+		seasonId: 5167160,
+		url: 'https://space.bilibili.com/485937243/lists/5167160?type=season',
+		player: '逍遥Samaノ',
+		server: 'CN',
+		type: 'tournament'
 	}
 ];
 
