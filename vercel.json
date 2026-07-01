@@ -1,0 +1,8 @@
+{
+	"crons": [
+		{
+			"path": "/api/cron/bilibili-vod-sync",
+			"schedule": "17 19 * * *"
+		}
+	]
+}
