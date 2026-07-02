@@ -9,6 +9,7 @@
 	import CauchyDistrict from '$lib/assets/maps/cauchy_district.jpg';
 	import Cosmite from '$lib/assets/maps/cosmite.jpg';
 	import Ocarnus from '$lib/assets/maps/ocarnus.png';
+	import LebrunCity from '$lib/assets/maps/lebrun_city.jpg';
 
 	const MAP_2_IMAGE: Record<GameMap, string> = {
 		base_404: Base404,
@@ -18,7 +19,8 @@
 		space_lab: SpaceLab,
 		cauchy_district: CauchyDistrict,
 		cosmite: Cosmite,
-		ocarnus: Ocarnus
+		ocarnus: Ocarnus,
+		lebrun_city: LebrunCity
 	};
 
 	const MAP_2_NAME: Record<GameMap, string> = {
@@ -29,7 +31,8 @@
 		space_lab: 'Space Lab',
 		cauchy_district: 'Cauchy District',
 		cosmite: 'Cosmite',
-		ocarnus: 'Orcanus'
+		ocarnus: 'Orcanus',
+		lebrun_city: 'Lebrun City'
 	};
 
 	let { map }: { map: GameMap } = $props();

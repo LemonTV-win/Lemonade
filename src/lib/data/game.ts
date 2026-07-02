@@ -78,7 +78,8 @@ export const MAPS = [
 	'space_lab',
 	'cauchy_district',
 	'cosmite',
-	'ocarnus'
+	'ocarnus',
+	'lebrun_city'
 ] as const;
 export type GameMap = (typeof MAPS)[number];
 
@@ -95,7 +96,8 @@ export const MAP_SCALE_FACTOR: Record<GameMap, number> = {
 	port_euler: 1,
 	space_lab: 1,
 	cauchy_district: 1,
-	cosmite: 1
+	cosmite: 1,
+	lebrun_city: 1
 };
 
 export const MAP_NAMES: Record<GameMap, () => string> = {
@@ -106,7 +108,8 @@ export const MAP_NAMES: Record<GameMap, () => string> = {
 	windy_town: m['game.map.windy_town'],
 	cauchy_district: m['game.map.cauchy_district'],
 	cosmite: m['game.map.cosmite'],
-	ocarnus: m['game.map.ocarnus']
+	ocarnus: m['game.map.ocarnus'],
+	lebrun_city: m['game.map.lebrun_city']
 };
 // #endregion
 
