@@ -3,6 +3,10 @@
 		{
 			"path": "/api/cron/bilibili-vod-sync",
 			"schedule": "17 19 * * *"
+		},
+		{
+			"path": "/api/cron/youtube-vod-sync",
+			"schedule": "47 19 * * *"
 		}
 	]
 }
