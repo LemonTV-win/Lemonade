@@ -1,7 +1,7 @@
 import type { Actions, PageServerLoad } from './$types';
 import { addVOD, addVODs, getExistingVodUrls, getVODs, updateVOD } from '$lib/server/data/vods';
 import { fail } from '@sveltejs/kit';
-import { randomUUID } from 'crypto';
+import { randomUUID } from 'node:crypto';
 import type { Character } from '$lib/data/game';
 import type { GameMap } from '$lib/data/game';
 import type { Rank } from '$lib/data/game';

@@ -6,7 +6,7 @@ import {
 	uploadedFile
 } from '$lib/server/db/schema';
 import { eq } from 'drizzle-orm';
-import { randomUUID } from 'crypto';
+import { randomUUID } from 'node:crypto';
 
 export interface InterceptorWithRelations {
 	id: string;
