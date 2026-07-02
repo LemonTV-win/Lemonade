@@ -43,12 +43,59 @@ export const MAP_ALIASES: Record<GameMap, string[]> = {
 	base_404: ['404基地', '基地404', '404', 'Base 404', 'base404'],
 	area_88: ['88区', '88區', 'Area 88', 'area88'],
 	port_euler: ['欧拉港口', '歐拉港口', '欧拉港', '港口', 'Port Euler'],
-	windy_town: ['风曳镇', '風曳鎮', '风曳', 'Windy Town'],
+	windy_town: ['风曳镇', '風曳鎮', '风曳', '枫叶镇', '风叶镇', 'Windy Town'],
 	space_lab: ['空间实验室', '空間實驗室', '空间站', '空间', 'Space Lab'],
 	cauchy_district: ['柯西街区', '柯西街區', '柯西', 'Cauchy'],
-	cosmite: ['科斯迷特', '科斯米特', '科斯', 'Cosmite'],
-	ocarnus: ['奥卡努斯', '奧卡努斯', 'Ocarnus']
+	cosmite: ['科斯迷特', '科斯米特', '柯斯迷特', '科斯', 'Cosmite'],
+	ocarnus: ['奥卡努斯', '奧卡努斯', 'Ocarnus'],
+	lebrun_city: ['莱布伦城', '莱布伦', 'Lebrun City', 'Lebrun']
 };
+
+/**
+ * Terms that identify the game itself, across the languages VOD titles appear in
+ * (EN / JP / CN). Used to gate discovery on mixed-content channels (e.g. a
+ * variety streamer who also uploads Overwatch) before trusting map/character
+ * aliases. Case-insensitive for latin terms.
+ */
+export const STRINOVA_GAME_TERMS = [
+	'strinova',
+	'ストリノヴァ',
+	'ルブランシティ',
+	'カラビヤウ',
+	'卡拉彼丘',
+	'卡丘',
+	'calabiyau',
+	'스트리노바',
+	'стринова',
+	// Strinova-specific jargon: rank tiers (奇点/超弦 Singularity/Superstring) and
+	// the string-flatten mechanic (弦化). These reliably identify Strinova footage
+	// even when the title never names the game. (Map names like 莱布伦城 are already
+	// covered by MAP_ALIASES above.)
+	'奇点局',
+	'超弦局',
+	'超奇',
+	'弦化'
+];
+
+/**
+ * Whether a title plausibly describes Strinova content. True when it mentions
+ * the game by name, or names a known map or character. Latin comparison is
+ * case-insensitive; CJK aliases are matched as-is.
+ */
+export function isStrinovaRelevantTitle(title: string): boolean {
+	const lower = title.toLowerCase();
+	if (STRINOVA_GAME_TERMS.some((term) => lower.includes(term.toLowerCase()))) return true;
+	for (const aliases of Object.values(MAP_ALIASES)) {
+		if (aliases.some((alias) => lower.includes(alias.toLowerCase()))) return true;
+	}
+	for (const aliases of Object.values(CHARACTER_ALIASES)) {
+		// Skip weak single-character aliases here: on their own they are far too
+		// noisy to certify a whole video as Strinova-related.
+		if (aliases.some((alias) => !WEAK_ALIASES.has(alias) && lower.includes(alias.toLowerCase())))
+			return true;
+	}
+	return false;
+}
 
 /** Aliases too short/ambiguous to trust without nearby usage context. */
 const WEAK_ALIASES = new Set(['信', '令', '明', '花', '大狙']);
@@ -76,22 +123,50 @@ export function detectGameVersionFromTitle(title: string): GameVersion {
 }
 
 export function detectVodFormatFromTitle(title: string): VodFormat {
-	if (/(高光|集锦|集錦|精彩时刻|精彩時刻|击杀秀|擊殺秀|五杀|ACE|ace|混剪|短片)/.test(title)) {
+	// Highlight reels / montages / clutch compilations. English/JP keywords are
+	// kept narrow ("clutch moments", not bare "clutch") so single-match POVs with
+	// a clutch in the title aren't swept up.
+	if (
+		/(高光|集锦|集錦|精彩时刻|精彩時刻|击杀秀|擊殺秀|五杀|混剪|短片|ハイライト|キル集)/.test(
+			title
+		) ||
+		/\bACE\b|\bmontage\b|\bhighlights?\b|\bfrag\b|clutch (moments|compilation)|best (moments|clutches)/i.test(
+			title
+		)
+	) {
 		return 'highlight';
 	}
 	if (/(复盘|復盤|review|Review)/.test(title)) {
 		if (/(杯|赛|賽|决赛|決賽|半决|半決|总决|總決|BO[135]|vs|VS)/.test(title)) return 'team_review';
 		return 'pov_review';
 	}
-	if (/(直播回放|解说|解說|官方|全场|全場|完整|录像|錄像)/.test(title)) return 'broadcast';
+	if (/(直播回放|解说|解說|官方|全场|全場|完整|录像|錄像)|full stream|live stream/i.test(title))
+		return 'broadcast';
 	if (
-		/(杯|赛|賽|决赛|決賽|半决|半決|总决|總決|BO[135]|vs|VS|图[一二三四五12345]|圖[一二三四五12345])/.test(
+		/(杯|赛|賽|决赛|決賽|半决|半決|总决|總決|BO[135]|图[一二三四五12345]|圖[一二三四五12345])/.test(
 			title
-		)
+		) ||
+		/\bvs\.?\b|qualifiers?|grand finals?|group stage|playoffs/i.test(title)
 	) {
 		return 'tournament_vod';
 	}
-	if (/(教学|教學|教程|指南|干货|技巧|思路|公式|打法)/.test(title)) return 'guide';
+	// Guides / tutorials / tier lists / settings (CN + EN + JP).
+	if (
+		/(教学|教學|教程|指南|干货|技巧|思路|公式|打法|攻略|講座|入門|初心者|設定|紹介|ランキング|Tier表)/.test(
+			title
+		) ||
+		/\bguide\b|\btutorial\b|\btips\b|\btricks\b|tier ?list|beginner|\bsettings\b|explained|lineups?/i.test(
+			title
+		)
+	) {
+		return 'guide';
+	}
+	// Opinion / commentary / news essays — only unambiguous editorial phrasings.
+	if (
+		/dead game|hidden gem|what happened to|fanservice|(serious|massive|big) problem/i.test(title)
+	) {
+		return 'other';
+	}
 	return 'player_pov';
 }
 
