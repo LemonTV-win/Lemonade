@@ -17,6 +17,8 @@
 		"db:studio": "drizzle-kit studio",
 		"i18n:check": "bun scripts/check-messages.ts",
 		"vod:farm:bilibili": "bun scripts/farm-bilibili-vods.ts",
+		"vod:farm:youtube": "bun scripts/farm-youtube-vods.ts",
+		"vod:update:authors": "bun scripts/update-bilibili-authors.ts",
 		"vod:annotate:title": "bun scripts/annotate-vods-from-title.ts"
 	},
 	"devDependencies": {
