@@ -26,6 +26,7 @@
 	import * as m from '$lib/paraglide/messages';
 	import RankIcon from '$lib/components/RankIcon.svelte';
 	import MapIcon from '$lib/components/MapIcon.svelte';
+	import PlatformIcon from '$lib/components/PlatformIcon.svelte';
 
 	let {
 		platforms = $bindable([]),
@@ -139,10 +140,17 @@
 			{#each platforms.filter(isString) as platform}
 				<button
 					type="button"
-					class={`rounded border px-3 py-1 text-sm font-medium transition-colors focus:ring-2 focus:ring-amber-400 focus:outline-none ${selectedPlatforms.includes(platform) ? 'border-amber-500 bg-gradient-to-r from-yellow-300 to-amber-500 text-black shadow' : 'border-gray-700 bg-zinc-900 text-amber-200 hover:border-amber-400 hover:bg-amber-400/10'}`}
+					class={[
+						'flex items-center gap-2 rounded border py-1 pr-3 pl-2.5 text-sm font-medium transition-colors focus:ring-2 focus:ring-amber-400 focus:outline-none',
+						selectedPlatforms.includes(platform)
+							? 'border-amber-500 bg-gradient-to-r from-yellow-300 to-amber-500 text-black shadow'
+							: 'border-gray-700 bg-zinc-900 text-amber-200 hover:border-amber-400 hover:bg-amber-400/10'
+					]}
 					onclick={() => (selectedPlatforms = toggleFilter(selectedPlatforms, platform))}
-					>{VOD_PLATFORMS_LABELS[platform as VodPlatform]}</button
 				>
+					<PlatformIcon platform={platform as VodPlatform} class="h-4 w-4" />
+					<span>{VOD_PLATFORMS_LABELS[platform as VodPlatform]}</span>
+				</button>
 			{/each}
 		</div>
 	</div>
