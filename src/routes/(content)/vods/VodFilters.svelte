@@ -66,6 +66,13 @@
 	let selectedTypes: string[] = $state([]);
 	let selectedFormats: string[] = $state([]);
 	let selectedGameVersions: string[] = $state([]);
+	let playersExpanded = $state(false);
+
+	const playerOptions = $derived(players.filter(isString));
+	const visibleSelectedPlayers = $derived(
+		selectedPlayers.filter((player) => playerOptions.includes(player))
+	);
+
 	function toggleFilter(arr: string[], value: string) {
 		if (arr.includes(value)) {
 			return arr.filter((v) => v !== value);
@@ -259,14 +266,24 @@
 		</div>
 	</div>
 	<div class="min-w-[160px]">
-		<label class="mb-2 block text-sm font-semibold text-amber-200">{m.player()}</label>
+		<div class="mb-2 flex items-center justify-between gap-3">
+			<span class="block text-sm font-semibold text-amber-200">{m.player()}</span>
+			<button
+				type="button"
+				class="rounded border border-gray-700 bg-zinc-900 px-2 py-0.5 text-xs font-medium text-amber-200 transition-colors hover:border-amber-400 hover:bg-amber-400/10 focus:ring-2 focus:ring-amber-400 focus:outline-none"
+				aria-expanded={playersExpanded}
+				onclick={() => (playersExpanded = !playersExpanded)}
+			>
+				{playersExpanded ? 'Hide' : `Show ${playerOptions.length}`}
+			</button>
+		</div>
 		<div class="flex flex-wrap gap-2">
 			<button
 				type="button"
 				class={`rounded border px-3 py-1 text-sm font-medium transition-colors focus:ring-2 focus:ring-amber-400 focus:outline-none ${selectedPlayers.length === 0 ? 'border-amber-500 bg-gradient-to-r from-yellow-300 to-amber-500 text-black shadow' : 'border-gray-700 bg-zinc-900 text-amber-200 hover:border-amber-400 hover:bg-amber-400/10'}`}
 				onclick={() => (selectedPlayers = [])}>{m.all()}</button
 			>
-			{#each players.filter(isString) as player}
+			{#each playersExpanded ? playerOptions : visibleSelectedPlayers as player}
 				<button
 					type="button"
 					class={`rounded border px-3 py-1 text-sm font-medium transition-colors focus:ring-2 focus:ring-amber-400 focus:outline-none ${selectedPlayers.includes(player) ? 'border-amber-500 bg-gradient-to-r from-yellow-300 to-amber-500 text-black shadow' : 'border-gray-700 bg-zinc-900 text-amber-200 hover:border-amber-400 hover:bg-amber-400/10'}`}
