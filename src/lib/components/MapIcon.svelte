@@ -35,7 +35,18 @@
 		lebrun_city: 'Lebrun City'
 	};
 
-	let { map }: { map: GameMap } = $props();
+	let { map, class: className = '' }: { map: GameMap; class?: string } = $props();
 </script>
 
-<img src={MAP_2_IMAGE[map]} alt={MAP_2_NAME[map]} class="h-6 w-10 rounded object-cover" />
+<img
+	src={MAP_2_IMAGE[map]}
+	alt={MAP_2_NAME[map]}
+	title={MAP_2_NAME[map]}
+	class={[
+		className.includes('h-') ? undefined : 'h-6',
+		className.includes('w-') ? undefined : 'w-10',
+		className.includes('rounded') ? undefined : 'rounded',
+		'object-cover',
+		className
+	]}
+/>

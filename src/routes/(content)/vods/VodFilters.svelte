@@ -25,6 +25,7 @@
 	import CharacterIcon from '$lib/components/CharacterIcon.svelte';
 	import * as m from '$lib/paraglide/messages';
 	import RankIcon from '$lib/components/RankIcon.svelte';
+	import MapIcon from '$lib/components/MapIcon.svelte';
 
 	let {
 		platforms = $bindable([]),
@@ -156,10 +157,17 @@
 			{#each maps.filter(isString) as map}
 				<button
 					type="button"
-					class={`rounded border px-3 py-1 text-sm font-medium transition-colors focus:ring-2 focus:ring-amber-400 focus:outline-none ${selectedMaps.includes(map) ? 'border-amber-500 bg-gradient-to-r from-yellow-300 to-amber-500 text-black shadow' : 'border-gray-700 bg-zinc-900 text-amber-200 hover:border-amber-400 hover:bg-amber-400/10'}`}
+					class={[
+						'flex items-center gap-2 rounded border py-1 pr-3 pl-2 text-sm font-medium transition-colors focus:ring-2 focus:ring-amber-400 focus:outline-none',
+						selectedMaps.includes(map)
+							? 'border-amber-500 bg-gradient-to-r from-yellow-300 to-amber-500 text-black shadow'
+							: 'border-gray-700 bg-zinc-900 text-amber-200 hover:border-amber-400 hover:bg-amber-400/10'
+					]}
 					onclick={() => (selectedMaps = toggleFilter(selectedMaps, map))}
-					>{MAP_NAMES[map as GameMap]()}</button
 				>
+					<MapIcon map={map as GameMap} class="h-6 w-11 rounded-sm" />
+					<span>{MAP_NAMES[map as GameMap]()}</span>
+				</button>
 			{/each}
 		</div>
 	</div>
