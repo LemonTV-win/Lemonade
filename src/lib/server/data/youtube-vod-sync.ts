@@ -156,13 +156,20 @@ async function deriveSeedChannels(apiKey: string): Promise<YoutubeSeedChannel[]>
 	}
 	if (byPlayer.size === 0) return [];
 
-	// Resolve every representative video id to its channel id in one request.
+	// Resolve every representative video id to its channel id. videos.list
+	// accepts at most 50 ids per request and rejects longer lists with
+	// "invalid filter parameter".
 	const players = [...byPlayer.keys()];
 	const ids = players.map((player) => byPlayer.get(player)!.videoId);
-	const json = await fetchJson(`${YT_API}/videos?part=snippet&id=${ids.join(',')}&key=${apiKey}`);
 	const channelByVideo = new Map<string, string>();
-	for (const item of json.items ?? []) {
-		if (item?.id && item?.snippet?.channelId) channelByVideo.set(item.id, item.snippet.channelId);
+	for (let i = 0; i < ids.length; i += 50) {
+		const batch = ids.slice(i, i + 50);
+		const json = await fetchJson(
+			`${YT_API}/videos?part=snippet&id=${batch.join(',')}&key=${apiKey}`
+		);
+		for (const item of json.items ?? []) {
+			if (item?.id && item?.snippet?.channelId) channelByVideo.set(item.id, item.snippet.channelId);
+		}
 	}
 
 	const seeds: YoutubeSeedChannel[] = [];
@@ -210,14 +217,19 @@ async function fetchChannelUploads(
 	return uploads.slice(0, maxVideos);
 }
 
-/** Fetch duration + snippet detail for up to 50 video ids in one request. */
+/** Fetch duration + snippet detail for video ids, batched 50 per request. */
 async function fetchVideoDetails(videoIds: string[], apiKey: string): Promise<YoutubeUpload[]> {
 	if (videoIds.length === 0) return [];
-	const json = await fetchJson(
-		`${YT_API}/videos?part=snippet,contentDetails&id=${videoIds.join(',')}&key=${apiKey}`
-	);
+	const items: unknown[] = [];
+	for (let i = 0; i < videoIds.length; i += 50) {
+		const batch = videoIds.slice(i, i + 50);
+		const json = await fetchJson(
+			`${YT_API}/videos?part=snippet,contentDetails&id=${batch.join(',')}&key=${apiKey}`
+		);
+		items.push(...(json.items ?? []));
+	}
 	const details: YoutubeUpload[] = [];
-	for (const item of json.items ?? []) {
+	for (const item of items as any[]) {
 		if (!item?.id || !item?.snippet) continue;
 		const publishedAt = item.snippet.publishedAt
 			? Math.floor(new Date(item.snippet.publishedAt).getTime() / 1000)
