@@ -12,7 +12,8 @@
 	},
 	"routes": [
 		{ "pattern": "lemonade.strinova.win", "custom_domain": true },
-		{ "pattern": "nade.lemontv.win", "custom_domain": true }
+		{ "pattern": "nade.lemontv.win", "custom_domain": true },
+		{ "pattern": "lemonade.mkpo.li", "custom_domain": true }
 	],
 	"observability": {
 		"enabled": true
