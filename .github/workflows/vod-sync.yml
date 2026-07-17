@@ -1,0 +1,35 @@
+name: VOD sync
+
+on:
+  schedule:
+    - cron: '17 19 * * *'
+    - cron: '47 19 * * *'
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: Run without inserting
+        type: boolean
+        default: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+      - run: bun install --frozen-lockfile
+      - run: bunx svelte-kit sync
+      - name: Bilibili sync
+        if: github.event.schedule != '47 19 * * *'
+        run: bun --preload ./scripts/vod-sync/preload.ts scripts/vod-sync/main.ts --bilibili ${{ inputs.dry_run && '--dry-run' || '' }}
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          DATABASE_AUTH_TOKEN: ${{ secrets.DATABASE_AUTH_TOKEN }}
+          BILIBILI_COOKIE: ${{ secrets.BILIBILI_COOKIE }}
+      - name: YouTube sync
+        if: github.event.schedule != '17 19 * * *'
+        run: bun --preload ./scripts/vod-sync/preload.ts scripts/vod-sync/main.ts --youtube ${{ inputs.dry_run && '--dry-run' || '' }}
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          DATABASE_AUTH_TOKEN: ${{ secrets.DATABASE_AUTH_TOKEN }}
+          GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
